@@ -1,0 +1,82 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import SealRule from "../components/SealRule.astro";
+
+const tools = [
+  {
+    name: "Back-office assistant",
+    who: "for SMEs, accountants, payroll & contracts",
+    href: "/#audit",
+    body: "Routine bookings, bank reconciliation, recurring invoices and document filing. Anything outside its confidence zone is queued for the accountant your organisation already has.",
+    state: "live",
+  },
+  {
+    name: "Learning hub",
+    who: "for learners young & old, academic study, schools with parents",
+    href: "/learn",
+    body: "A tutor that can be audited by learner, parent and teacher — and that doesn't drift between sessions. Picks up next week exactly where it left off.",
+    state: "live",
+  },
+  {
+    name: "Your track",
+    who: "for a niche, a population, a method we don't cover yet",
+    href: "/hub",
+    body: "Carry expertise entrosana hasn't built for? Propose a track. You bring the domain; the foundation provides the scaffolding.",
+    state: "open",
+  },
+];
+---
+<Layout title="Tools — one deterministic engine, many operational tracks">
+  <PageHero
+    eyebrow="The catalog"
+    title="One engine. Many tools."
+    lede="Each track is an operational tool with a clear who-it's-for — built in-house with the people who use it, or contributed by aligned practitioners. Every one inherits the same DLM engine, signed audit trail and Swiss data residency." />
+  <SealRule sig="4d8a02…c1f7" />
+
+  <section class="section">
+    <div class="wrap">
+      <div class="tools">
+        {tools.map((t) => (
+          <a href={t.href} class="card tool">
+            <div class="tool__head">
+              <h3>{t.name}</h3>
+              <span class:list={["tool__state mono", t.state]}>{t.state}</span>
+            </div>
+            <span class="tool__who mono">{t.who}</span>
+            <p>{t.body}</p>
+            <span class="tool__more mono">Open →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--ink">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">Shared by every tool</span>
+        <h2 class="display tools__h">Build the tool once. Inherit the guarantees.</h2>
+      </div>
+      <div>
+        <p>A track never re-implements the hard parts. The pinned model version, the deterministic retrieval order, the signed audit trail and Swiss residency apply automatically — so a new tool starts audit-grade on day one.</p>
+        <a href="/hub" class="btn btn--ghost">How tracks are contributed</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .tools { display: grid; gap: clamp(1rem, 0.5rem + 2vw, 1.5rem); }
+  @media (min-width: 820px) { .tools { grid-template-columns: repeat(3, 1fr); } }
+  .tool { display: flex; flex-direction: column; gap: 0.5rem; transition: border-color .15s, transform .1s; }
+  .tool:hover { border-color: var(--seal); transform: translateY(-2px); }
+  .tool__head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+  .tool__state { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.15em 0.5em; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  .tool__state.live { color: var(--verify); border-color: color-mix(in srgb, var(--verify) 40%, var(--line)); }
+  .tool__state.open { color: var(--seal); border-color: color-mix(in srgb, var(--seal) 40%, var(--line)); }
+  .tool__who { font-size: var(--step--1); color: var(--seal); }
+  .tool p { color: var(--ink-2); flex: 1; }
+  .tool__more { color: var(--seal); font-size: var(--step--1); margin-top: 0.4rem; }
+  .tools__h { font-size: var(--step-3); max-width: 16ch; }
+</style>

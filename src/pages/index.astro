@@ -47,16 +47,30 @@ const deployments = [
     </div>
   </section>
 
-  <!-- What it does -->
+  <!-- Three pillars: what's built on the engine -->
   <section class="section">
-    <div class="wrap split">
-      <div>
-        <span class="eyebrow">What it does</span>
-        <h2 class="display h2">The routine work, handled. The judgement, kept human.</h2>
-      </div>
-      <div>
-        <p>The deterministic agent handles routine bookings, bank reconciliation, recurring invoices and document filing. Anything outside its confidence zone is queued for the accountant your organisation already has.</p>
-        <p class="human small">The AI remembers what it explained and how — so next week's answer picks up where this one left off, not somewhere slightly different because the model drifted.</p>
+    <div class="wrap">
+      <span class="eyebrow">Built on the engine</span>
+      <h2 class="display h2 pillars3__h">One deterministic engine. Three ways it shows up.</h2>
+      <div class="grid grid--3 pillars3">
+        <a href="/tools" class="card pillar3">
+          <span class="tag">Tools</span>
+          <h3>Back-office, handled</h3>
+          <p>Bookkeeping, payroll, contracts, reconciliation. The routine work runs deterministically; the judgement stays with the accountant you already have.</p>
+          <span class="pillar3__more mono">View tools →</span>
+        </a>
+        <a href="/learn" class="card pillar3">
+          <span class="tag">Learn</span>
+          <h3>A tutor that doesn't drift</h3>
+          <p>For learners young and old, academic study, and schools where parents and teachers can audit every answer the AI gave.</p>
+          <span class="pillar3__more mono">See learning →</span>
+        </a>
+        <a href="/hub" class="card pillar3">
+          <span class="tag">Hub</span>
+          <h3>An open foundation</h3>
+          <p>Contribute a dedicated track and inherit the engine, the signed audit trail and Swiss residency — open-source, on a shared runway.</p>
+          <span class="pillar3__more mono">Explore the hub →</span>
+        </a>
       </div>
     </div>
   </section>
@@ -64,7 +78,7 @@ const deployments = [
   <SealRule sig="7c44ab…0e19" />
 
   <!-- Deployment -->
-  <section class="section">
+  <section class="section" id="deploy">
     <div class="wrap">
       <span class="eyebrow">Three ways to run it</span>
       <h2 class="display h2 deploy__h">Same engine. Same audit trail. Same Swiss residency. You choose where it runs.</h2>
@@ -81,17 +95,19 @@ const deployments = [
     </div>
   </section>
 
-  <!-- Hub teaser -->
+  <!-- Closing CTA -->
   <section class="section section--ink">
     <div class="wrap split">
       <div>
-        <span class="eyebrow">The foundation</span>
-        <h2 class="display h2">Co-create with the hub.</h2>
+        <span class="eyebrow">Get started</span>
+        <h2 class="display h2">Audit-grade AI, on your terms.</h2>
       </div>
       <div>
-        <p>Beyond bookkeeping, the foundation hosts further tracks — each an operational tool with a clear who-it's-for, contributed by aligned practitioners or built in-house with the people who'll use it.</p>
-        <p>Bring the expertise. We provide the scaffolding: the same DLM engine, the same audit trail, the same Swiss data residency, automatically.</p>
-        <a href="/hub" class="btn btn--ghost">Explore the hub</a>
+        <p>Start hosted in Switzerland, keep sensitive documents on-premises, or run the full stack yourself. Same engine, same signed audit trail, every way.</p>
+        <div class="hero__cta">
+          <a href="/hub" class="btn">Request access</a>
+          <a href="/#deploy" class="btn btn--ghost">Compare deployment</a>
+        </div>
       </div>
     </div>
   </section>
@@ -121,4 +137,11 @@ const deployments = [
   .deploy__card:hover { border-color: var(--seal); transform: translateY(-2px); }
   .deploy__card p { color: var(--ink-2); flex: 1; }
   .deploy__more { color: var(--seal); font-size: var(--step--1); margin-top: 0.5rem; }
+
+  .pillars3__h { max-width: 20ch; margin-bottom: 2.5rem; }
+  .pillars3 { align-items: stretch; }
+  .pillar3 { display: flex; flex-direction: column; gap: 0.5rem; transition: border-color .15s, transform .1s; }
+  .pillar3:hover { border-color: var(--seal); transform: translateY(-2px); }
+  .pillar3 p { color: var(--ink-2); flex: 1; }
+  .pillar3__more { color: var(--seal); font-size: var(--step--1); margin-top: 0.5rem; }
 </style>

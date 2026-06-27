@@ -1,10 +1,10 @@
 ---
 const path = Astro.url.pathname;
 const links = [
+  { href: "/tools", label: "Tools" },
+  { href: "/learn", label: "Learn" },
   { href: "/hub", label: "Hub" },
-  { href: "/hosted", label: "Hosted" },
-  { href: "/hybrid", label: "Hybrid" },
-  { href: "/on-premises", label: "On-premises" },
+  { href: "/#deploy", label: "Deploy" },
 ];
 const isActive = (href: string) => path === href || path === href + "/";
 ---

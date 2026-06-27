@@ -3,68 +3,79 @@ import Layout from "../layouts/Layout.astro";
 import PageHero from "../components/PageHero.astro";
 import SealRule from "../components/SealRule.astro";
 
-const reviewers = [
-  { who: "The learner", tag: "self-serve",
-    body: "For low-stakes work, the deterministic agent answers directly and shows its signed reasoning. The person in the loop is the user." },
-  { who: "A frontier model on standby", tag: "Claude Sonnet · per-check",
-    body: "When the deterministic agent isn't confident, Claude Sonnet re-examines the case and attaches plain-language reasoning before the answer reaches the learner. Costs Claude API per check." },
-  { who: "A real teacher", tag: "premium tier",
-    body: "A human reviews flagged cases. For school deployments and high-stakes contexts where every AI interaction needs human oversight." },
+const steps = [
+  ["Bring the expertise", "You carry the domain — a niche, a population, a method entrosana doesn't cover yet. Propose it as a track."],
+  ["We provide the scaffolding", "We pair the proposal with the technical scaffolding: the agent service, the audit plumbing, the deployment pipeline."],
+  ["It inherits the guarantees", "The same DLM engine, the same signed audit trail, the same Swiss data residency apply automatically — not re-implemented per track."],
+];
+
+const open = [
+  ["Open source", "The full monorepo — agent service, public site, infrastructure config, deployment pipelines. Self-hosted GitLab in Switzerland, AGPL-3.0 where applicable."],
+  ["Tests as spec", "CI/CD with tests-as-spec. Every deploy is reversible. Open where it makes sense, closed where data residency demands it."],
+  ["Shared runway", "Cloud infrastructure via AWS Activate. Every track inherits the runway — no per-partner cloud-cost negotiations, no infrastructure bills passed through to schools or learners."],
 ];
 ---
-<Layout title="The hub — co-create audit-grade tracks on one DLM engine">
+<Layout title="Hub — an open foundation of audit-grade tracks">
   <PageHero
-    eyebrow="The foundation"
-    title="Co-create with the hub."
-    lede="One deterministic engine, many operational tracks. Each track is a tool with a clear who-it's-for — contributed by aligned practitioners, or built in-house with the people who use it." />
+    eyebrow="The open foundation"
+    title="Co-create the platform."
+    lede="entrosana is a foundation that hosts dedicated tracks — operational tools contributed by aligned practitioners or built in-house. One deterministic engine underneath, many tools on top." />
   <SealRule sig="c2e7a9…f013" />
 
-  <!-- Review tiers -->
+  <!-- Contribution model -->
   <section class="section">
     <div class="wrap">
-      <span class="eyebrow">Who reviews the hard cases</span>
-      <p class="human hub__lead">The DLM is the same across every hub deployment. What changes is who reviews the cases it is not sure about.</p>
-      <div class="grid grid--3 hub__tiers">
-        {reviewers.map((r) => (
-          <div class="card hub__tier">
-            <span class="tag">{r.tag}</span>
-            <h3>{r.who}</h3>
-            <p>{r.body}</p>
+      <span class="eyebrow">The contribution model</span>
+      <h2 class="display hub__h">Carry a scope we don't cover yet? Propose a track.</h2>
+      <div class="grid grid--3 steps">
+        {steps.map(([k, v], i) => (
+          <div class="card step">
+            <span class="step__n mono">{String(i + 1).padStart(2, "0")}</span>
+            <h3>{k}</h3>
+            <p>{v}</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- Propose a track -->
+  <!-- Open + runway -->
   <section class="section section--ink">
-    <div class="wrap split">
-      <div>
-        <span class="eyebrow">Bring a track</span>
-        <h2 class="display hub__h">Carry a scope we don't cover yet? Propose it.</h2>
-      </div>
-      <div>
-        <p>A niche, a population, a method — the foundation is structured to host new tracks from aligned practitioners. You bring the expertise; we pair it with the technical scaffolding.</p>
-        <p>The same DLM engine, the same signed audit trail, the same Swiss data residency apply automatically — every track inherits them, not re-implements them.</p>
-        <a href="/#audit" class="btn btn--ghost">How the engine works</a>
+    <div class="wrap">
+      <span class="eyebrow">Open by default</span>
+      <p class="human hub__lead">Open where it makes sense, closed where data residency demands it.</p>
+      <div class="facts">
+        {open.map(([k, v]) => (
+          <div class="fact"><span class="fact__k">{k}</span><p class="fact__v">{v}</p></div>
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- Runway -->
+  <!-- CTA -->
   <section class="section">
-    <div class="wrap facts">
-      <div class="fact"><span class="fact__k">Shared runway</span><p class="fact__v">Cloud infrastructure via AWS Activate. Once approved, every track inherits the runway — no per-partner cloud-cost negotiations.</p></div>
-      <div class="fact"><span class="fact__k">No pass-through bills</span><p class="fact__v">No infrastructure costs passed through to schools or learners. The foundation carries the platform.</p></div>
-      <div class="fact"><span class="fact__k">Open by default</span><p class="fact__v">The full monorepo, self-hosted GitLab in Switzerland, AGPL-3.0 where applicable. Open where it makes sense, closed where data residency demands it.</p></div>
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">Browse what's built</span>
+        <h2 class="display hub__h">See the tools already running on the engine.</h2>
+      </div>
+      <div>
+        <p>The back-office assistant and the learning hub are live tracks today. Each is an operational tool with a clear who-it's-for — and a template for the next one.</p>
+        <div class="hub__cta">
+          <a href="/tools" class="btn">View tools</a>
+          <a href="/learn" class="btn btn--ghost">See the learning track</a>
+        </div>
+      </div>
     </div>
   </section>
 </Layout>
 
 <style>
-  .hub__lead { max-width: 30ch; margin-bottom: 2.5rem; }
-  .hub__tiers { align-items: stretch; }
-  .hub__tier { display: flex; flex-direction: column; gap: 0.5rem; }
-  .hub__tier p { color: var(--ink-2); }
-  .hub__h { font-size: var(--step-3); max-width: 16ch; }
+  .hub__h { font-size: var(--step-3); max-width: 18ch; margin-bottom: 2.5rem; }
+  .steps { align-items: stretch; }
+  .step { display: flex; flex-direction: column; gap: 0.4rem; }
+  .step__n { color: var(--seal); font-size: var(--step-1); }
+  .step p { color: var(--ink-2); }
+  .hub__lead { max-width: 28ch; margin-bottom: 2.5rem; }
+  .hub__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.2rem; }
 </style>

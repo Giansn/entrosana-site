@@ -1,0 +1,83 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import SealRule from "../components/SealRule.astro";
+
+const audiences = [
+  ["Young learners", "School-age study with a tutor that explains its reasoning and never quietly changes its mind."],
+  ["Adult & academic", "Self-directed and academic learners who need traceable, citable answers — not a black box."],
+  ["Schools with parents", "Classroom deployments where parents and teachers can review exactly what the AI told a child, and why."],
+];
+
+const reviewers = [
+  { who: "The learner", tag: "self-serve",
+    body: "Low-stakes questions are answered directly by the deterministic agent, with its signed reasoning shown." },
+  { who: "A frontier model on standby", tag: "Claude Sonnet · per check",
+    body: "When the deterministic agent isn't confident, Claude Sonnet re-examines the case and attaches plain-language reasoning before the answer reaches the learner." },
+  { who: "A real teacher", tag: "premium · schools",
+    body: "A human reviews flagged cases. For school deployments and high-stakes contexts where every AI interaction needs human oversight." },
+];
+---
+<Layout title="Learn — an auditable tutor that doesn't drift">
+  <PageHero
+    eyebrow="The learning track"
+    title="A tutor that doesn't drift."
+    lede="Audit-grade AI for learning — young and old, academic study and the classroom. Every answer is traceable; the explanation a learner saw last week is the one they get this week." />
+  <SealRule sig="b7e3d1…48aa" />
+
+  <!-- Who it's for -->
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow">Who it's for</span>
+      <div class="grid grid--3 aud">
+        {audiences.map(([k, v]) => (
+          <div class="card aud__card">
+            <h3>{k}</h3>
+            <p>{v}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Auditable + no drift -->
+  <section class="section section--ink">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">Why it's different</span>
+        <p class="human">The AI remembers what it explained, and how — so next week's answer picks up where this one left off, not somewhere slightly different because the model drifted.</p>
+      </div>
+      <div class="facts">
+        <div class="fact"><span class="fact__k">Auditable by everyone</span><p class="fact__v">Every interaction is anchored to its model version, prompt version, retrieved sources and reasoning. Learners, parents and teachers can audit any past response.</p></div>
+        <div class="fact"><span class="fact__k">No session drift</span><p class="fact__v">Same question, same grounded answer. Continuity across a term, not a fresh roll of the dice each session.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Review tiers -->
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow">Who reviews the hard cases</span>
+      <p class="human learn__lead">The engine is the same everywhere. What changes is who reviews the cases it is not sure about — configured per deployment.</p>
+      <div class="grid grid--3 tiers">
+        {reviewers.map((r) => (
+          <div class="card tier">
+            <span class="tag">{r.tag}</span>
+            <h3>{r.who}</h3>
+            <p>{r.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .aud { margin-top: 1.5rem; }
+  .aud__card h3 { font-family: var(--font-mono); font-size: var(--step-1); margin-bottom: 0.5rem; }
+  .aud__card p { color: var(--ink-2); }
+  .learn__lead { max-width: 32ch; margin-bottom: 2.5rem; }
+  .tiers { align-items: stretch; }
+  .tier { display: flex; flex-direction: column; gap: 0.5rem; }
+  .tier p { color: var(--ink-2); }
+</style>
