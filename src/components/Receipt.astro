@@ -16,7 +16,7 @@ const input = "book invoice #2026-0473 · CHF 4,820.00 · VAT 8.1% · acct 1100"
       <span class="receipt__k">output</span>
       <code class="receipt__hash" data-hash>computing…</code>
     </div>
-    <div class="receipt__meta" data-meta>model det-llm@1.4 · prompt@7 · 3 sources · signed</div>
+    <div class="receipt__meta" data-meta>temperature 0 · pinned model + prompt · deterministic retrieval · signed</div>
     <div class="receipt__status" data-status aria-live="polite">—</div>
   </div>
   <div class="receipt__foot">
@@ -58,8 +58,8 @@ const input = "book invoice #2026-0473 · CHF 4,820.00 · VAT 8.1% · acct 1100"
       hashEl.textContent = "sha256:" + fmt(hex);
       modeEl.textContent = stochastic ? "stochastic" : "deterministic";
       metaEl.textContent = stochastic
-        ? "model gpt-x (sampled) · no pinned version · unsigned"
-        : "model det-llm@1.4 · prompt@7 · 3 sources · signed";
+        ? "sampled · unpinned model · unsigned"
+        : "temperature 0 · pinned model + prompt · deterministic retrieval · signed";
 
       if (stochastic) {
         statusEl.textContent = runs > 1 ? `✗ drifted — run ${runs} ≠ run ${runs - 1}` : "run 1 — try again";
@@ -67,7 +67,7 @@ const input = "book invoice #2026-0473 · CHF 4,820.00 · VAT 8.1% · acct 1100"
       } else {
         const identical = prev === null || prev === hex;
         statusEl.textContent = runs > 1 && identical
-          ? `✓ identical across ${runs} runs` : "✓ signed — run again to verify";
+          ? `✓ replays identical across ${runs} runs` : "✓ signed — run again to verify";
         statusEl.dataset.state = "ok";
       }
       prev = hex;

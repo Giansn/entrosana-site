@@ -10,9 +10,9 @@ const steps = [
 ];
 
 const open = [
-  ["Open source", "The full monorepo — agent service, public site, infrastructure config, deployment pipelines. Self-hosted GitLab in Switzerland, AGPL-3.0 where applicable."],
+  ["Open source", "The full monorepo — agent service, public site, infrastructure config, deployment pipelines. Open under AGPL-3.0."],
   ["Tests as spec", "CI/CD with tests-as-spec. Every deploy is reversible. Open where it makes sense, closed where data residency demands it."],
-  ["Shared runway", "Cloud infrastructure via AWS Activate. Every track inherits the runway — no per-partner cloud-cost negotiations, no infrastructure bills passed through to schools or learners."],
+  ["Shared runway", "Tracks share one cloud runway — no per-partner cloud-cost negotiations, no infrastructure bills passed through to schools or learners."],
 ];
 ---
 <Layout title="Hub — an open foundation of audit-grade tracks">
@@ -49,6 +49,9 @@ const open = [
           <div class="fact"><span class="fact__k">{k}</span><p class="fact__v">{v}</p></div>
         ))}
       </div>
+      <p class="hub__src">
+        <a href="https://gitlab.com/Giansn/entrosana-ai" class="btn btn--ghost" rel="noopener">View the source · gitlab.com/Giansn/entrosana-ai</a>
+      </p>
     </div>
   </section>
 
@@ -78,4 +81,5 @@ const open = [
   .step p { color: var(--ink-2); }
   .hub__lead { max-width: 28ch; margin-bottom: 2.5rem; }
   .hub__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.2rem; }
+  .hub__src { margin-top: 1.75rem; }
 </style>
