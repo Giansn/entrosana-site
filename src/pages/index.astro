@@ -5,7 +5,7 @@ import SealRule from "../components/SealRule.astro";
 
 const deployments = [
   { href: "/hosted", name: "Hosted", tag: "serverless · no idle cost",
-    body: "Fastest to start. We run the agent, storage, and integrations. Data stays in Switzerland." },
+    body: "Fastest to start. We run the agent, storage, and integrations. Swiss/EU data residency by design." },
   { href: "/hybrid", name: "Hybrid", tag: "edge-first · data stays put",
     body: "Sensitive documents never leave your premises. A small on-site device handles AI. Structured results sync to the cloud." },
   { href: "/on-premises", name: "On-premises", tag: "your hardware · full stack",
@@ -19,7 +19,7 @@ const deployments = [
       <div class="hero__copy">
         <span class="eyebrow">Deterministic Language Models</span>
         <h1 class="display hero__h">Same input.<br />Same output.<br />Every&nbsp;time.</h1>
-        <p class="lede">Audit-grade AI for bookkeeping, payroll, contracts, and the rest. Swiss-hosted, built on CashCtrl — every answer pinned, retrievable, and signed.</p>
+        <p class="lede">A deterministic, replayable decision path for back-office work — every decision pinned, retrievable, and signed. Built on CashCtrl as the system of record, with Swiss/EU data residency by design.</p>
         <div class="hero__cta">
           <a href="/hub" class="btn">Request access</a>
           <a href="#audit" class="btn btn--ghost">Why deterministic</a>
@@ -38,7 +38,7 @@ const deployments = [
   <section class="section section--ink" id="audit">
     <div class="wrap">
       <span class="eyebrow">The difference</span>
-      <p class="human">Stochastic AI agents can't be audited.<br />A DLM passes Swiss audit standards by construction.</p>
+      <p class="human">Stochastic AI agents can't be audited.<br />A DLM is auditable by construction.</p>
       <div class="grid grid--3 pillars">
         <div class="pillar"><span class="pillar__n mono">pinned model version</span><p>The exact model and weights behind every decision are recorded, never silently upgraded.</p></div>
         <div class="pillar"><span class="pillar__n mono">deterministic retrieval order</span><p>The same sources are read in the same order, so the same input resolves the same way.</p></div>
@@ -55,8 +55,8 @@ const deployments = [
       <div class="grid grid--3 pillars3">
         <a href="/tools" class="card pillar3">
           <span class="tag">Tools</span>
-          <h3>Back-office, handled</h3>
-          <p>Bookkeeping, payroll, contracts, reconciliation. The routine work runs deterministically; the judgement stays with the accountant you already have.</p>
+          <h3>Back-office work</h3>
+          <p>Bookkeeping, payroll, contracts, reconciliation — built to run deterministically on CashCtrl, with the judgement kept with the accountant you already have.</p>
           <span class="pillar3__more mono">View tools →</span>
         </a>
         <a href="/learn" class="card pillar3">
@@ -68,7 +68,7 @@ const deployments = [
         <a href="/hub" class="card pillar3">
           <span class="tag">Hub</span>
           <h3>An open foundation</h3>
-          <p>Contribute a dedicated track and inherit the engine, the signed audit trail and Swiss residency — open-source, on a shared runway.</p>
+          <p>Contribute a dedicated track and inherit the engine, the signed audit trail and Swiss/EU residency by design — open-source, on a shared runway.</p>
           <span class="pillar3__more mono">Explore the hub →</span>
         </a>
       </div>
@@ -81,7 +81,7 @@ const deployments = [
   <section class="section" id="deploy">
     <div class="wrap">
       <span class="eyebrow">Three ways to run it</span>
-      <h2 class="display h2 deploy__h">Same engine. Same audit trail. Same Swiss residency. You choose where it runs.</h2>
+      <h2 class="display h2 deploy__h">Same engine. Same audit trail. Same Swiss/EU residency by design. You choose where it runs.</h2>
       <div class="grid grid--3 deploy">
         {deployments.map((d) => (
           <a href={d.href} class="card deploy__card">
@@ -103,7 +103,7 @@ const deployments = [
         <h2 class="display h2">Audit-grade AI, on your terms.</h2>
       </div>
       <div>
-        <p>Start hosted in Switzerland, keep sensitive documents on-premises, or run the full stack yourself. Same engine, same signed audit trail, every way.</p>
+        <p>Run it hosted in the EU, keep sensitive documents on-premises, or run the full stack yourself. Same engine, same signed audit trail, every way.</p>
         <div class="hero__cta">
           <a href="/hub" class="btn">Request access</a>
           <a href="/#deploy" class="btn btn--ghost">Compare deployment</a>
