@@ -26,4 +26,21 @@ pnpm preview    # serve dist/
 ```
 
 ## Hosting
-Served from e14 via `tailscale funnel` (preview) for now; canonical domain `entrosana.com`. The live EC2 site is untouched until an explicit DNS cutover.
+Durable on **e14** as a `systemd --user` service:
+
+- **`entrosana-site.service`** runs `node server.mjs` (sirv: gzip/brotli, immutable
+  asset caching, clean URLs) on `:4321`, `Restart=always`, `WantedBy=default.target`.
+  Tracked copy at [`deploy/entrosana-site.service`](deploy/entrosana-site.service).
+- **Linger** (`loginctl enable-linger g2thek`) → the service starts at boot with no
+  login session.
+- **Public** via **Tailscale Funnel** at `https://e14-1.tailff64b5.ts.net/`. The funnel
+  config lives in tailscaled state and is restored on boot.
+
+### Deploy
+```sh
+pnpm deploy        # astro build && systemctl --user restart entrosana-site
+# logs:  ~/.sygnif/logs/entrosana-site.log
+```
+
+The canonical domain `entrosana.com` still points at the old EC2 site; DNS cutover is a
+separate, explicit step.

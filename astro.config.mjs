@@ -4,7 +4,9 @@ import { defineConfig } from 'astro/config';
 // domain is entrosana.com. `site` is used for canonical URLs / sitemap.
 export default defineConfig({
   site: 'https://entrosana.com',
-  build: { inlineStylesheets: 'auto' },
+  // format:'file' → dist/hub.html etc., so the sirv server resolves clean,
+  // extensionless URLs (/hub) without trailing-slash redirects.
+  build: { inlineStylesheets: 'auto', format: 'file' },
   // The preview server sits behind a Tailscale Funnel; allow its public host
   // (Vite blocks unknown Host headers by default as anti-DNS-rebinding).
   vite: {
