@@ -1,0 +1,11 @@
+---
+// A divider that asserts "every section is signed." The hash is illustrative
+// of the audit motif, not a real signature.
+interface Props { sig?: string; }
+const { sig = "a3f1c0…9c2e" } = Astro.props;
+---
+<div class="wrap">
+  <div class="sealrule" role="separator" aria-label="section boundary">
+    <span class="sig">signed · sha256:<b>{sig}</b></span>
+  </div>
+</div>

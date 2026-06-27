@@ -1,0 +1,124 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Receipt from "../components/Receipt.astro";
+import SealRule from "../components/SealRule.astro";
+
+const deployments = [
+  { href: "/hosted", name: "Hosted", tag: "serverless · no idle cost",
+    body: "Fastest to start. We run the agent, storage, and integrations. Data stays in Switzerland." },
+  { href: "/hybrid", name: "Hybrid", tag: "edge-first · data stays put",
+    body: "Sensitive documents never leave your premises. A small on-site device handles AI. Structured results sync to the cloud." },
+  { href: "/on-premises", name: "On-premises", tag: "your hardware · full stack",
+    body: "Same engine, your hardware. For organisations or federations that want the full stack on their own infrastructure." },
+];
+---
+<Layout>
+  <!-- Hero: the thesis, proven by a live signed receipt -->
+  <section class="section hero">
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <span class="eyebrow">Deterministic Language Models</span>
+        <h1 class="display hero__h">Same input.<br />Same output.<br />Every&nbsp;time.</h1>
+        <p class="lede">Audit-grade AI for bookkeeping, payroll, contracts, and the rest. Swiss-hosted, built on CashCtrl — every answer pinned, retrievable, and signed.</p>
+        <div class="hero__cta">
+          <a href="/hub" class="btn">Request access</a>
+          <a href="#audit" class="btn btn--ghost">Why deterministic</a>
+        </div>
+      </div>
+      <div class="hero__demo">
+        <Receipt />
+        <p class="hero__demohint mono muted">Run it. The signature never changes — until you switch to a stochastic model.</p>
+      </div>
+    </div>
+  </section>
+
+  <SealRule sig="a3f1c0…9c2e" />
+
+  <!-- Audit thesis -->
+  <section class="section section--ink" id="audit">
+    <div class="wrap">
+      <span class="eyebrow">The difference</span>
+      <p class="human">Stochastic AI agents can't be audited.<br />A DLM passes Swiss audit standards by construction.</p>
+      <div class="grid grid--3 pillars">
+        <div class="pillar"><span class="pillar__n mono">pinned model version</span><p>The exact model and weights behind every decision are recorded, never silently upgraded.</p></div>
+        <div class="pillar"><span class="pillar__n mono">deterministic retrieval order</span><p>The same sources are read in the same order, so the same input resolves the same way.</p></div>
+        <div class="pillar"><span class="pillar__n mono">signed audit trail per interaction</span><p>Every answer is anchored to its model version, prompt version, retrieved sources, and reasoning.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What it does -->
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">What it does</span>
+        <h2 class="display h2">The routine work, handled. The judgement, kept human.</h2>
+      </div>
+      <div>
+        <p>The deterministic agent handles routine bookings, bank reconciliation, recurring invoices and document filing. Anything outside its confidence zone is queued for the accountant your organisation already has.</p>
+        <p class="human small">The AI remembers what it explained and how — so next week's answer picks up where this one left off, not somewhere slightly different because the model drifted.</p>
+      </div>
+    </div>
+  </section>
+
+  <SealRule sig="7c44ab…0e19" />
+
+  <!-- Deployment -->
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow">Three ways to run it</span>
+      <h2 class="display h2 deploy__h">Same engine. Same audit trail. Same Swiss residency. You choose where it runs.</h2>
+      <div class="grid grid--3 deploy">
+        {deployments.map((d) => (
+          <a href={d.href} class="card deploy__card">
+            <span class="tag">{d.tag}</span>
+            <h3>{d.name}</h3>
+            <p>{d.body}</p>
+            <span class="deploy__more mono">Read more →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Hub teaser -->
+  <section class="section section--ink">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">The foundation</span>
+        <h2 class="display h2">Co-create with the hub.</h2>
+      </div>
+      <div>
+        <p>Beyond bookkeeping, the foundation hosts further tracks — each an operational tool with a clear who-it's-for, contributed by aligned practitioners or built in-house with the people who'll use it.</p>
+        <p>Bring the expertise. We provide the scaffolding: the same DLM engine, the same audit trail, the same Swiss data residency, automatically.</p>
+        <a href="/hub" class="btn btn--ghost">Explore the hub</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero { padding-top: clamp(2.5rem, 1.5rem + 4vw, 5rem); }
+  .hero__grid { display: grid; gap: clamp(2rem, 1rem + 5vw, 4rem); align-items: center; }
+  @media (min-width: 900px) { .hero__grid { grid-template-columns: 1.05fr 0.95fr; } }
+  .hero__h { font-size: var(--step-4); margin: 0.4rem 0 1.4rem; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.8rem; }
+  .hero__demo { display: flex; flex-direction: column; gap: 0.9rem; }
+  .hero__demohint { font-size: 0.72rem; max-width: 40ch; }
+
+  .h2 { font-size: var(--step-3); max-width: 18ch; }
+  .pillars { margin-top: 2.5rem; }
+  .pillar__n { display: block; color: #fff; font-size: var(--step-0); margin-bottom: 0.5rem; }
+  .pillar__n::before { content: "› "; color: var(--seal); }
+
+  .split { display: grid; gap: clamp(1.5rem, 1rem + 3vw, 3.5rem); }
+  @media (min-width: 820px) { .split { grid-template-columns: 1fr 1fr; align-items: start; } }
+  .human.small { font-size: var(--step-1); margin-top: 1.2rem; color: var(--ink-2); }
+  .section--ink .human.small { color: #C7CBD2; }
+
+  .deploy__h { max-width: 24ch; margin-bottom: 2.5rem; }
+  .deploy__card { display: flex; flex-direction: column; gap: 0.5rem; transition: border-color .15s, transform .1s; }
+  .deploy__card:hover { border-color: var(--seal); transform: translateY(-2px); }
+  .deploy__card p { color: var(--ink-2); flex: 1; }
+  .deploy__more { color: var(--seal); font-size: var(--step--1); margin-top: 0.5rem; }
+</style>

@@ -1,0 +1,70 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import SealRule from "../components/SealRule.astro";
+
+const reviewers = [
+  { who: "The learner", tag: "self-serve",
+    body: "For low-stakes work, the deterministic agent answers directly and shows its signed reasoning. The person in the loop is the user." },
+  { who: "A frontier model on standby", tag: "Claude Sonnet · per-check",
+    body: "When the deterministic agent isn't confident, Claude Sonnet re-examines the case and attaches plain-language reasoning before the answer reaches the learner. Costs Claude API per check." },
+  { who: "A real teacher", tag: "premium tier",
+    body: "A human reviews flagged cases. For school deployments and high-stakes contexts where every AI interaction needs human oversight." },
+];
+---
+<Layout title="The hub — co-create audit-grade tracks on one DLM engine">
+  <PageHero
+    eyebrow="The foundation"
+    title="Co-create with the hub."
+    lede="One deterministic engine, many operational tracks. Each track is a tool with a clear who-it's-for — contributed by aligned practitioners, or built in-house with the people who use it." />
+  <SealRule sig="c2e7a9…f013" />
+
+  <!-- Review tiers -->
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow">Who reviews the hard cases</span>
+      <p class="human hub__lead">The DLM is the same across every hub deployment. What changes is who reviews the cases it is not sure about.</p>
+      <div class="grid grid--3 hub__tiers">
+        {reviewers.map((r) => (
+          <div class="card hub__tier">
+            <span class="tag">{r.tag}</span>
+            <h3>{r.who}</h3>
+            <p>{r.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Propose a track -->
+  <section class="section section--ink">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">Bring a track</span>
+        <h2 class="display hub__h">Carry a scope we don't cover yet? Propose it.</h2>
+      </div>
+      <div>
+        <p>A niche, a population, a method — the foundation is structured to host new tracks from aligned practitioners. You bring the expertise; we pair it with the technical scaffolding.</p>
+        <p>The same DLM engine, the same signed audit trail, the same Swiss data residency apply automatically — every track inherits them, not re-implements them.</p>
+        <a href="/#audit" class="btn btn--ghost">How the engine works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Runway -->
+  <section class="section">
+    <div class="wrap facts">
+      <div class="fact"><span class="fact__k">Shared runway</span><p class="fact__v">Cloud infrastructure via AWS Activate. Once approved, every track inherits the runway — no per-partner cloud-cost negotiations.</p></div>
+      <div class="fact"><span class="fact__k">No pass-through bills</span><p class="fact__v">No infrastructure costs passed through to schools or learners. The foundation carries the platform.</p></div>
+      <div class="fact"><span class="fact__k">Open by default</span><p class="fact__v">The full monorepo, self-hosted GitLab in Switzerland, AGPL-3.0 where applicable. Open where it makes sense, closed where data residency demands it.</p></div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hub__lead { max-width: 30ch; margin-bottom: 2.5rem; }
+  .hub__tiers { align-items: stretch; }
+  .hub__tier { display: flex; flex-direction: column; gap: 0.5rem; }
+  .hub__tier p { color: var(--ink-2); }
+  .hub__h { font-size: var(--step-3); max-width: 16ch; }
+</style>

@@ -1,0 +1,111 @@
+---
+// Signature element: a signed audit receipt. Deterministic mode re-runs to the
+// SAME hash every time; the stochastic toggle drifts. Proves the thesis instead
+// of asserting it. Hashing is real (SHA-256 of the input), computed client-side.
+const input = "book invoice #2026-0473 · CHF 4,820.00 · VAT 8.1% · acct 1100";
+---
+<div class="receipt" data-receipt data-input={input}>
+  <div class="receipt__perf" aria-hidden="true"></div>
+  <div class="receipt__body">
+    <div class="receipt__row">
+      <span class="receipt__k">input</span>
+      <code class="receipt__in">{input}</code>
+    </div>
+    <hr class="rule" />
+    <div class="receipt__row">
+      <span class="receipt__k">output</span>
+      <code class="receipt__hash" data-hash>computing…</code>
+    </div>
+    <div class="receipt__meta" data-meta>model det-llm@1.4 · prompt@7 · 3 sources · signed</div>
+    <div class="receipt__status" data-status aria-live="polite">—</div>
+  </div>
+  <div class="receipt__foot">
+    <button class="btn" data-run type="button">Run again</button>
+    <label class="toggle">
+      <input type="checkbox" data-stochastic />
+      <span class="toggle__track"><span class="toggle__dot"></span></span>
+      <span class="toggle__label mono" data-mode>deterministic</span>
+    </label>
+  </div>
+</div>
+
+<script>
+  const els = document.querySelectorAll<HTMLElement>("[data-receipt]");
+  els.forEach((root) => {
+    const input = root.dataset.input ?? "";
+    const hashEl = root.querySelector<HTMLElement>("[data-hash]")!;
+    const statusEl = root.querySelector<HTMLElement>("[data-status]")!;
+    const metaEl = root.querySelector<HTMLElement>("[data-meta]")!;
+    const runBtn = root.querySelector<HTMLButtonElement>("[data-run]")!;
+    const stoch = root.querySelector<HTMLInputElement>("[data-stochastic]")!;
+    const modeEl = root.querySelector<HTMLElement>("[data-mode]")!;
+
+    let runs = 0;
+    let prev: string | null = null;
+
+    const fmt = (hex: string) => `${hex.slice(0, 8)}…${hex.slice(-4)}`;
+
+    async function sha256(text: string): Promise<string> {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+      return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function run() {
+      const stochastic = stoch.checked;
+      const payload = stochastic ? `${input}::${crypto.randomUUID()}` : input;
+      const hex = await sha256(payload);
+      runs += 1;
+      hashEl.textContent = "sha256:" + fmt(hex);
+      modeEl.textContent = stochastic ? "stochastic" : "deterministic";
+      metaEl.textContent = stochastic
+        ? "model gpt-x (sampled) · no pinned version · unsigned"
+        : "model det-llm@1.4 · prompt@7 · 3 sources · signed";
+
+      if (stochastic) {
+        statusEl.textContent = runs > 1 ? `✗ drifted — run ${runs} ≠ run ${runs - 1}` : "run 1 — try again";
+        statusEl.dataset.state = "warn";
+      } else {
+        const identical = prev === null || prev === hex;
+        statusEl.textContent = runs > 1 && identical
+          ? `✓ identical across ${runs} runs` : "✓ signed — run again to verify";
+        statusEl.dataset.state = "ok";
+      }
+      prev = hex;
+    }
+
+    runBtn.addEventListener("click", run);
+    stoch.addEventListener("change", () => { runs = 0; prev = null; statusEl.dataset.state = ""; run(); });
+    run();
+  });
+</script>
+
+<style>
+  .receipt {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 0 var(--line), 0 18px 40px -28px rgba(20,24,40,0.4);
+    overflow: hidden;
+    max-width: 460px;
+  }
+  .receipt__perf { height: 10px; background:
+    repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px); }
+  .receipt__body { padding: 1.25rem 1.4rem; }
+  .receipt__row { display: grid; grid-template-columns: 4.5rem 1fr; gap: 0.75rem; align-items: baseline; padding-block: 0.5rem; }
+  .receipt__k { font-family: var(--font-mono); font-size: var(--step--1); color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  .receipt__in { font-family: var(--font-mono); font-size: var(--step--1); color: var(--ink-2); word-break: break-word; }
+  .receipt__hash { font-family: var(--font-mono); font-size: var(--step-1); color: var(--seal); letter-spacing: 0.01em; }
+  .receipt__meta { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); margin-top: 0.4rem; }
+  .receipt__status { font-family: var(--font-mono); font-size: var(--step--1); margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--line); color: var(--muted); }
+  .receipt__status[data-state="ok"] { color: var(--verify); }
+  .receipt__status[data-state="warn"] { color: var(--warn); }
+  .receipt__foot { display: flex; align-items: center; gap: 1rem; padding: 0 1.4rem 1.3rem; }
+  .toggle { display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; }
+  .toggle input { position: absolute; opacity: 0; pointer-events: none; }
+  .toggle__track { width: 34px; height: 18px; border-radius: 999px; background: var(--line); border: 1px solid var(--line); position: relative; transition: background .15s; }
+  .toggle__dot { position: absolute; top: 1px; left: 1px; width: 14px; height: 14px; border-radius: 50%; background: var(--ink); transition: transform .15s; }
+  .toggle input:checked + .toggle__track { background: color-mix(in srgb, var(--warn) 30%, var(--line)); }
+  .toggle input:checked + .toggle__track .toggle__dot { transform: translateX(16px); background: var(--warn); }
+  .toggle input:focus-visible + .toggle__track { outline: 2px solid var(--seal); outline-offset: 2px; }
+  .toggle__label { font-size: var(--step--1); color: var(--ink-2); }
+</style>

@@ -1,0 +1,28 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import DeployNav from "../components/DeployNav.astro";
+import SealRule from "../components/SealRule.astro";
+const facts = [
+  ["Hardware", "Same engine, your hardware. The full stack runs on infrastructure you control."],
+  ["Who it's for", "Organisations or federations that need full sovereignty over data and compute."],
+  ["What you get", "The full monorepo — agent service, public site, infrastructure config, deployment pipelines."],
+  ["Source", "Self-hosted GitLab in Switzerland. AGPL-3.0 where applicable."],
+  ["Pipeline", "CI/CD with tests-as-spec. Every deploy is reversible."],
+];
+---
+<Layout title="Fully on-premises — the full stack on your infrastructure">
+  <PageHero
+    eyebrow="Deployment / On-premises"
+    title="Fully on-premises."
+    lede="Same engine, your hardware. For organisations or federations that want the full stack on their own infrastructure." />
+  <SealRule sig="0af2c8…71be" />
+  <section class="section">
+    <div class="wrap facts">
+      {facts.map(([k, v]) => (
+        <div class="fact"><span class="fact__k">{k}</span><p class="fact__v">{v}</p></div>
+      ))}
+    </div>
+  </section>
+  <DeployNav current="on-premises" />
+</Layout>

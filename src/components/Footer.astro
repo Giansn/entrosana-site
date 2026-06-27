@@ -1,0 +1,49 @@
+---
+const year = 2026;
+---
+<footer class="foot">
+  <div class="wrap foot__inner">
+    <div class="foot__brand">
+      <span class="foot__word mono">entrosana</span>
+      <p class="muted">Deterministic Language Models for back-office work. Swiss-hosted, audit-grade, built on CashCtrl.</p>
+    </div>
+    <nav class="foot__cols" aria-label="Footer">
+      <div>
+        <span class="foot__h mono">Platform</span>
+        <a href="/hub">Hub &amp; tracks</a>
+        <a href="/#audit">Why deterministic</a>
+      </div>
+      <div>
+        <span class="foot__h mono">Deployment</span>
+        <a href="/hosted">Hosted</a>
+        <a href="/hybrid">Hybrid</a>
+        <a href="/on-premises">On-premises</a>
+      </div>
+      <div>
+        <span class="foot__h mono">Residency</span>
+        <span class="muted">Switzerland / EU</span>
+        <span class="muted">EN · DE · ES</span>
+      </div>
+    </nav>
+  </div>
+  <div class="wrap foot__base">
+    <span class="mono muted">© {year} entrosana</span>
+    <span class="mono foot__stamp">signed · sha256:<b>e1a7…b40f</b></span>
+  </div>
+</footer>
+
+<style>
+  .foot { background: var(--ink); color: var(--paper); padding-block: clamp(2.5rem, 1.5rem + 4vw, 4rem) 1.5rem; }
+  .foot__inner { display: grid; gap: 2.5rem; }
+  @media (min-width: 760px) { .foot__inner { grid-template-columns: 1.3fr 2fr; } }
+  .foot__word { font-size: var(--step-1); }
+  .foot p { color: #aeb3bc; max-width: 38ch; margin-top: 0.6rem; }
+  .foot__cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .foot__h { display: block; font-size: var(--step--1); letter-spacing: 0.12em; text-transform: uppercase; color: #7d828c; margin-bottom: 0.8rem; }
+  .foot__cols a, .foot__cols span.muted { display: block; color: #C7CBD2; font-size: var(--step--1); margin-bottom: 0.45rem; }
+  .foot__cols a:hover { color: #fff; }
+  .foot__base { display: flex; justify-content: space-between; align-items: center; margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line-2); font-size: var(--step--1); }
+  .foot__stamp { color: #7d828c; }
+  .foot__stamp b { color: var(--seal); font-weight: 500; }
+  .foot .muted { color: #7d828c; }
+</style>

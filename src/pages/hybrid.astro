@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import DeployNav from "../components/DeployNav.astro";
+import SealRule from "../components/SealRule.astro";
+const facts = [
+  ["Documents", "Sensitive documents never leave your premises. The raw files stay on your side."],
+  ["On-site AI", "A small on-site device handles the AI locally — edge-first, close to the data."],
+  ["What syncs", "Only structured results sync to the cloud. The source material does not."],
+  ["Residency", "Swiss / EU data residency where it matters, by design rather than by promise."],
+];
+---
+<Layout title="Hybrid with local AI — sensitive data stays on-site">
+  <PageHero
+    eyebrow="Deployment / Hybrid"
+    title="Hybrid with local AI."
+    lede="Sensitive documents never leave your premises. A small on-site device handles AI. Structured results sync to the cloud." />
+  <SealRule sig="93b6f1…2d80" />
+  <section class="section">
+    <div class="wrap facts">
+      {facts.map(([k, v]) => (
+        <div class="fact"><span class="fact__k">{k}</span><p class="fact__v">{v}</p></div>
+      ))}
+    </div>
+  </section>
+  <DeployNav current="hybrid" />
+</Layout>

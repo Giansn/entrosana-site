@@ -1,0 +1,30 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import DeployNav from "../components/DeployNav.astro";
+import SealRule from "../components/SealRule.astro";
+const facts = [
+  ["Operations", "We run the agent, storage, and integrations. Nothing to maintain on your side."],
+  ["Cost shape", "Serverless — no idle cost. You pay for what runs, not for a box that sits warm."],
+  ["Residency", "Data stays in Switzerland. Same audit trail and signed records as every other tier."],
+  ["Start time", "Fastest path to a working deployment. Connect CashCtrl and go."],
+];
+---
+<Layout title="Hosted by entrosana — deterministic AI, fully managed">
+  <PageHero
+    eyebrow="Deployment / Hosted"
+    title="Hosted by entrosana."
+    lede="Fastest to start. We run the agent, storage, and integrations. Data stays in Switzerland." />
+  <SealRule sig="11d9e2…ac57" />
+  <section class="section">
+    <div class="wrap facts">
+      {facts.map(([k, v]) => (
+        <div class="fact">
+          <span class="fact__k mono">{k}</span>
+          <p class="fact__v">{v}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+  <DeployNav current="hosted" />
+</Layout>
