@@ -5,4 +5,10 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://entrosana.com',
   build: { inlineStylesheets: 'auto' },
+  // The preview server sits behind a Tailscale Funnel; allow its public host
+  // (Vite blocks unknown Host headers by default as anti-DNS-rebinding).
+  vite: {
+    preview: { allowedHosts: ['e14-1.tailff64b5.ts.net'] },
+    server: { allowedHosts: ['e14-1.tailff64b5.ts.net'] },
+  },
 });
