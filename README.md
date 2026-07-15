@@ -25,22 +25,48 @@ pnpm build      # → dist/
 pnpm preview    # serve dist/
 ```
 
-## Hosting
-Durable on **e14** as a `systemd --user` service:
+## Hosting (two front doors — do not conflate)
 
-- **`entrosana-site.service`** runs `node server.mjs` (sirv: gzip/brotli, immutable
-  asset caching, clean URLs) on `:4321`, `Restart=always`, `WantedBy=default.target`.
-  Tracked copy at [`deploy/entrosana-site.service`](deploy/entrosana-site.service).
-- **Linger** (`loginctl enable-linger g2thek`) → the service starts at boot with no
-  login session.
-- **Public** via **Tailscale Funnel** at `https://e14-1.tailff64b5.ts.net/`. The funnel
-  config lives in tailscaled state and is restored on boot.
+| Surface | How | When laptop is off |
+|---------|-----|--------------------|
+| **`https://entrosana.com`** | **GitHub Pages** (this repo → Actions → Pages) | **stays up** |
+| **`https://e14-1.tailff64b5.ts.net/`** | Tailscale Funnel → e14 `:4321` | down with e14 |
+| **e14 LAN / preview** | `entrosana-site.service` → `node server.mjs` on `:4321` | local only |
+
+### e14 (preview / Funnel)
+- **`entrosana-site.service`** runs `node server.mjs` (sirv) on `:4321`.
+  Tracked copy: [`deploy/entrosana-site.service`](deploy/entrosana-site.service).
+- **Linger** so it survives reboot without login.
+- Funnel root path `/` → `127.0.0.1:4321` (Arboro paths on the same host are untouched).
+
+### GitHub Pages (canonical public domain)
+- Workflow: [`.github/workflows/pages.yml`](.github/workflows/pages.yml)
+- `public/CNAME` → `entrosana.com` (copied into `dist/` on build)
+- GitHub provisions Let’s Encrypt for the custom domain once DNS points at Pages
 
 ### Deploy
 ```sh
-pnpm deploy        # astro build && systemctl --user restart entrosana-site
-# logs:  ~/.sygnif/logs/entrosana-site.log
+pnpm deploy        # rebuild on e14 + restart systemd (Funnel/preview)
+git push origin master   # publishes Pages (entrosana.com) via Actions
+# logs (e14):  ~/.sygnif/logs/entrosana-site.log
 ```
 
-The canonical domain `entrosana.com` still points at the old EC2 site; DNS cutover is a
-separate, explicit step.
+### DNS (GoDaddy — NS is domaincontrol.com)
+**Do not change MX/TXT** (ProtonMail). Only replace the dead EC2 **A** for the web apex.
+
+Apex (required for GitHub Pages + HTTPS):
+```
+A   @     185.199.108.153
+A   @     185.199.109.153
+A   @     185.199.110.153
+A   @     185.199.111.153
+```
+www (optional):
+```
+CNAME  www  giansn.github.io
+```
+Remove the old apex **A** `3.64.28.14` (EC2 EIP — ports 80/443 are dead; EC2 itself is unrelated SYGNIF infra, leave the EIP alone, only DNS).
+
+After DNS propagates: GitHub repo → Settings → Pages → Custom domain `entrosana.com` → Enforce HTTPS.
+
+e14 unbound still split-horizons `entrosana.com` → tailnet (local preview of the systemd build). To see the public Pages origin from e14: `curl --resolve entrosana.com:443:185.199.108.153 https://entrosana.com/`.
