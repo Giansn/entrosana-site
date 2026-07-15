@@ -39,10 +39,11 @@ pnpm preview    # serve dist/
 - **Linger** so it survives reboot without login.
 - Funnel root path `/` → `127.0.0.1:4321` (Arboro paths on the same host are untouched).
 
-### GitHub Pages (canonical public domain)
+### GitHub Pages (optional backup only — no custom domain)
 - Workflow: [`.github/workflows/pages.yml`](.github/workflows/pages.yml)
-- `public/CNAME` → `entrosana.com` (copied into `dist/` on build)
-- GitHub provisions Let’s Encrypt for the custom domain once DNS points at Pages
+- Live at https://giansn.github.io/entrosana-site/ (HTTPS works here)
+- **Do not** set Pages custom domain to `entrosana.com` unless DNS A records point at GitHub Pages IPs — otherwise GH shows “domain not properly configured for HTTPS”
+- **Canonical production on e14:** see `deploy/edge/` (Caddy on LAN :443 → :4321)
 
 ### Deploy
 ```sh

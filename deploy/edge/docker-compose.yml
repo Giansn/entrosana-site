@@ -1,0 +1,15 @@
+name: entrosana-edge
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: entrosana-edge
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./certs:/certs:ro
+      - entrosana_caddy_data:/data
+      - entrosana_caddy_config:/config
+volumes:
+  entrosana_caddy_data:
+  entrosana_caddy_config:

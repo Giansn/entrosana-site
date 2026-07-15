@@ -30,8 +30,6 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - name: Ensure CNAME in dist
-        run: echo 'entrosana.com' > dist/CNAME
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

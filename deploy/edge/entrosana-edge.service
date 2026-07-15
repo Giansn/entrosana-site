@@ -1,0 +1,16 @@
+[Unit]
+Description=entrosana.com TLS edge (Caddy docker → :4321) on LAN :443
+After=network-online.target docker.service entrosana-site.service
+Wants=network-online.target entrosana-site.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/g2thek/entrosana-site/deploy/edge
+ExecStart=/usr/bin/docker compose up -d --remove-orphans
+ExecStop=/usr/bin/docker compose down
+TimeoutStartSec=120
+
+[Install]
+WantedBy=default.target
