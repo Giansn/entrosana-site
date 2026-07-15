@@ -21,14 +21,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: pnpm install --no-frozen-lockfile
-      - run: pnpm build
+          cache: npm
+      # package-lock may be absent (pnpm project); npm install still works from package.json
+      - run: npm install
+      - run: npx astro build
       - name: Ensure CNAME in dist
         run: echo 'entrosana.com' > dist/CNAME
       - uses: actions/upload-pages-artifact@v3
