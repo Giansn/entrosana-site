@@ -499,7 +499,27 @@ td b{font-size:1.05rem}
 .liveform h2{font-size:.95rem;margin:2.4rem 0 .2rem;color:#2BD4E8;
   border-bottom:1px solid #323843;padding-bottom:.45rem}
 .liveform .savebar{position:sticky;bottom:0;background:#1B1E24;
-  border-top:1px solid #323843;padding:.9rem 0;margin-top:1.5rem}"""
+  border-top:1px solid #323843;padding:.9rem 0;margin-top:1.5rem}
+/* Telefon (2026-09-08): Tabellen werden Blöcke, Kopfzeilen verschwinden, Knöpfe
+   bekommen Fingerhöhe. Die 70-vh-Regel für textarea gilt nur dem Rohtext-Editor. */
+textarea[rows]{height:auto;min-height:3.2rem}
+@media (max-width:760px){
+  body{padding:1rem .9rem}
+  h1{font-size:1.25rem;line-height:1.25} h2{font-size:1.05rem}
+  table,tbody,tr,td{display:block;width:100%;box-sizing:border-box}
+  thead,th,tr:has(th):not(:has(td)){display:none}
+  tr{border-bottom:1px solid #323843;padding:.7rem 0}
+  tr:last-child{border-bottom:0}
+  td{border:0;padding:.2rem 0}
+  td:empty{display:none}
+  .act{white-space:normal;display:inline-block;padding:.55rem 0;min-height:44px;box-sizing:border-box}
+  .desc{max-width:none}
+  .btn{display:inline-block;padding:.75em 1.3em;margin:.25rem .25rem .25rem 0;min-height:44px;box-sizing:border-box}
+  pre{white-space:pre-wrap;word-break:break-word;font-size:.9rem}
+  .mono{overflow-wrap:anywhere}
+  textarea[rows]{font-size:1rem}
+}
+"""
 
 
 def page(title, body):
