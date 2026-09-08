@@ -568,7 +568,7 @@ def _hub_wann(iso):
 def _hub_kopf(titel):
     return (f"<h1>entro<span style='color:#2BD4E8'>sana</span> admin · Hub · {titel}</h1>"
             "<p class='mono'><a href='/'>← Übersicht</a> · <a href='/hub'>Hub</a> · <a href='/hub/accounts'>Konten</a> · "
-            f"<a href='/hub/applications'>Bewerbungen</a> · <a href='/hub/requests'>Anfragen</a> · <a href='/hub/checklists'>Checklisten</a> · <a href='{HUB_CONSOLE}/contributions'>Beiträge (:8396)</a></p>")
+            f"<a href='/hub/applications'>Bewerbungen</a> · <a href='/hub/requests'>Anfragen</a> · <a href='/hub/checklists'>Checklisten</a> · <a href='/hub/pages'>Seiten</a> · <a href='{HUB_CONSOLE}/contributions'>Beiträge (:8396)</a></p>")
 
 
 STANDING_DE = {"collector": "Sammler", "contributor": "Beitragende", "reviewer": "Team", "owner": "Eigentümer", "service": "Dienst"}
@@ -690,6 +690,223 @@ def hub_checklist_save(key, data):
     return {"ok": True, "backup": bak.split("/")[-1], "pages": n, "commit": sha}
 
 
+# ── Hub-Seiten: Texte der statischen Seiten von entrosana.app ─────────────────
+# Nur Textknoten werden ersetzt, an ihrer Byteposition; Markup, Attribute, Skripte
+# und Einrückung bleiben unangetastet (anders als der WordPress-Editor oben).
+from html.parser import HTMLParser
+
+HUB_PAGE_ROUTES = {"index": "/", "tools": "/tools", "modules": "/modules", "contribute": "/contribute", "request": "/request",
+                   "projects": "/projects", "project": "/project", "records": "/records", "services": "/services", "me": "/me",
+                   "submit": "/contribute/submit", "status": "/contribute/status", "detail": None, "profile": None}
+_HUB_SKIP_TAGS = {"script", "style", "noscript", "svg", "template"}
+_HUB_VOID = {"br", "img", "input", "hr", "meta", "link", "source", "wbr", "area", "base", "col", "embed", "track", "param"}
+_HUB_SKIP_CLASSES = {"search", "search__g", "search__t", "iconbtn", "vh"}
+
+
+class _HubRuns(HTMLParser):
+    """Sammelt zusammenhängende Textläufe (Daten + Zeichenreferenzen) mit Anfang/Ende im Rohtext."""
+
+    def __init__(self, raw):
+        super().__init__(convert_charrefs=False)
+        self.raw = raw
+        self.lines = [0] + [m.end() for m in re.finditer("\n", raw)]
+        self.stack, self.skip, self.inmain, self.intitle = [], 0, False, False
+        self.runs, self.cur = [], None
+
+    def _off(self):
+        line, col = self.getpos()
+        return self.lines[line - 1] + col
+
+    def _flush(self):
+        if self.cur:
+            self.runs.append(self.cur)
+        self.cur = None
+
+    def handle_starttag(self, tag, attrs):
+        self._flush()
+        if tag in _HUB_SKIP_TAGS:
+            self.skip += 1
+        if tag == "main":
+            self.inmain = True
+        if tag == "title":
+            self.intitle = True
+        if tag not in _HUB_VOID:
+            cls = (dict(attrs).get("class") or "").split()
+            self.stack.append((tag, cls))
+
+    def handle_endtag(self, tag):
+        self._flush()
+        if tag in _HUB_SKIP_TAGS:
+            self.skip = max(0, self.skip - 1)
+        if tag == "main":
+            self.inmain = False
+        if tag == "title":
+            self.intitle = False
+        for k in range(len(self.stack) - 1, -1, -1):
+            if self.stack[k][0] == tag:
+                del self.stack[k:]
+                break
+
+    def _piece(self, length):
+        start = self._off()
+        end = start + length
+        if self.cur and self.cur["end"] == start:
+            self.cur["end"] = end
+            return
+        self._flush()
+        classes = {c for _, cl in self.stack for c in cl}
+        hidden = bool(classes & _HUB_SKIP_CLASSES) or any(tg == "kbd" for tg, _ in self.stack)
+        path = " > ".join(tg + ("." + cl[0] if cl else "") for tg, cl in self.stack[-2:])
+        self.cur = {"start": start, "end": end, "path": path, "ok": (self.inmain or self.intitle) and not self.skip and not hidden}
+
+    def handle_data(self, d):
+        self._piece(len(d))
+
+    def handle_entityref(self, name):
+        self._piece(len(name) + 2)
+
+    def handle_charref(self, name):
+        self._piece(len(name) + 3)
+
+    def handle_comment(self, data):
+        self._flush()
+
+    def close(self):
+        super().close()
+        self._flush()
+
+
+def hub_text_runs(raw):
+    """Sichtbare, editierbare Textläufe in Seitenreihenfolge: i, path, text (Weissraum gefaltet), start, end."""
+    p = _HubRuns(raw)
+    p.feed(raw)
+    p.close()
+    if p.rawdata:
+        raise ValueError("Seite nicht vollständig geparst (unvollständige Zeichenreferenz?)")
+    out = []
+    for r in p.runs:
+        if not r["ok"]:
+            continue
+        text = " ".join(html.unescape(raw[r["start"]:r["end"]]).split())
+        if not text or not re.search(r"[^\W_]", text):
+            continue
+        out.append({"i": len(out), "path": r["path"], "text": text, "start": r["start"], "end": r["end"]})
+    return out
+
+
+def hub_apply_edits(raw, edits):
+    """Ersetzt geänderte Läufe von hinten nach vorn; ein Lauf, dessen Ausgangstext nicht mehr stimmt, wird als Konflikt gemeldet."""
+    runs = hub_text_runs(raw)
+    changes, conflicts = [], []
+    by_i = {}
+    for e in edits:  # je Stelle zählt die letzte Angabe; zwei Ersetzungen derselben Spanne würden sich gegenseitig verschieben
+        try:
+            by_i[int(e.get("i"))] = e
+        except Exception:
+            continue
+    for i, e in sorted(by_i.items()):
+        if i < 0 or i >= len(runs) or runs[i]["text"] != str(e.get("was", "")):
+            conflicts.append(i)
+            continue
+        new = " ".join(str(e.get("text", "")).split())
+        if new == runs[i]["text"]:
+            continue
+        if not new:
+            conflicts.append(i)
+            continue
+        seg = raw[runs[i]["start"]:runs[i]["end"]]
+        lead, trail = seg[:len(seg) - len(seg.lstrip())], seg[len(seg.rstrip()):]
+        changes.append((runs[i]["start"], runs[i]["end"], lead + html.escape(new, quote=False) + trail))
+    for s, e, rep in sorted(changes, reverse=True):
+        raw = raw[:s] + rep + raw[e:]
+    return raw, len(changes), conflicts
+
+
+def hub_page_path(name):
+    if not re.match(r"^[a-z]+$", name or "") or name not in HUB_PAGE_ROUTES:
+        raise ValueError("unbekannte Seite")
+    f = APP_DIR / f"{name}.html"
+    if not f.is_file():
+        raise ValueError("Datei fehlt")
+    return f
+
+
+def hub_pages():
+    rows = []
+    for name in sorted(HUB_PAGE_ROUTES):
+        f = APP_DIR / f"{name}.html"
+        if not f.is_file():
+            continue
+        raw = f.read_text(encoding="utf-8")
+        runs = hub_text_runs(raw)
+        title = next((r["text"] for r in runs if r["path"].endswith("title")), name)
+        route = HUB_PAGE_ROUTES[name]
+        live = f"<a class='act' href='https://entrosana.app{route}' target='_blank'>ansehen</a>" if route else "<span class='desc'>Unterseite je Eintrag</span>"
+        rows.append(f"<tr><td><b>{html.escape(name)}</b><br><span class='desc'>{html.escape(title[:70])}</span></td>"
+                    f"<td class='mono'>{len(runs)} Textstellen</td><td><a class='act' href='/hub/pages/{name}'>bearbeiten</a></td><td>{live}</td></tr>")
+    note = ("<p class='note'>Die Texte der Seiten von entrosana.app, in Seitenreihenfolge. Geändert wird nur der Text selbst; Aufbau, Links, "
+            "Klassen und Skripte bleiben, wie sie sind. Gespeichertes geht binnen 5 s live, mit Sicherung und Commit. "
+            "Die Karten unter Tools und Modules kommen aus dem Katalog (assets/catalogue.js), die Checklisten stehen unter «Checklisten».</p>")
+    return page("Hub-Seiten", _hub_kopf("Seiten") + note + f"<table><tr><th>Seite</th><th>Umfang</th><th></th><th></th></tr>{''.join(rows)}</table>")
+
+
+def hub_page_edit(name, saved=None):
+    try:
+        f = hub_page_path(name)
+    except Exception as e:
+        return page("Hub-Seite", _hub_kopf("Seite") + f"<p class='err'>{html.escape(str(e))}</p>")
+    runs = hub_text_runs(f.read_text(encoding="utf-8"))
+    parts = []
+    for r in runs:
+        if r["path"].endswith("span.eyebrow"):
+            parts.append(f"<h2>{html.escape(r['text'])}</h2>")
+        rows = max(1, min(8, len(r["text"]) // 70 + 1))
+        parts.append(f"<p><label><span class='mono'>{html.escape(r['path'])}</span><br>"
+                     f"<textarea data-i='{r['i']}' rows='{rows}' style='width:100%;box-sizing:border-box'>{html.escape(r['text'])}</textarea></label></p>")
+    route = HUB_PAGE_ROUTES.get(name)
+    live = f" · <a href='https://entrosana.app{route}' target='_blank'>Seite ansehen</a>" if route else ""
+    msg = f"<p class='ok'>{int(saved)} Textstellen gespeichert.</p>" if saved else ""
+    body = (msg + f"<p class='note'>{len(runs)} Textstellen in <span class='mono'>{name}.html</span>{live}. Zeilenumbrüche werden zu Leerzeichen; "
+            "eine Stelle kann nicht geleert werden. Gespeichert wird nur, was sich geändert hat.</p>"
+            f"<form id='pg' data-name='{html.escape(name)}'>" + "".join(parts)
+            + "<div class='bar'><button class='btn' type='submit'>Speichern</button> <a class='act' href='/hub/pages'>zurück</a> <span id='msg' class='mono'></span></div></form>"
+            "<script>(function(){var f=document.getElementById('pg'),m=document.getElementById('msg');var ta=[].slice.call(f.querySelectorAll('textarea'));"
+            "ta.forEach(function(t){t.setAttribute('data-was',t.value);});"
+            "f.addEventListener('submit',function(e){e.preventDefault();var edits=[];ta.forEach(function(t){var v=t.value.split(/\\s+/).join(' ').trim();if(v!==t.getAttribute('data-was'))edits.push({i:+t.getAttribute('data-i'),was:t.getAttribute('data-was'),text:v});});"
+            "if(!edits.length){m.textContent='nichts geändert';return;}m.textContent='…';m.className='mono';"
+            "fetch('/hub/api/pages/'+f.getAttribute('data-name'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({edits:edits})})"
+            ".then(function(x){return x.json()}).then(function(j){if(j.ok){var s=j.changed+' gespeichert · Sicherung '+j.backup+(j.commit?' · Commit '+j.commit:'')+(j.conflicts&&j.conflicts.length?' · nicht übernommen: '+j.conflicts.join(', '):'');m.textContent=s;m.className='ok';"
+            "if(!(j.conflicts&&j.conflicts.length))setTimeout(function(){location.href='/hub/pages/'+f.getAttribute('data-name')+'?saved='+j.changed;},900);}else{m.textContent=j.error||'Fehler';m.className='err';}})"
+            ".catch(function(){m.textContent='nicht erreichbar';m.className='err';});});})();</script>")
+    return page("Hub-Seite " + name, _hub_kopf("Seite · " + html.escape(name)) + body)
+
+
+def hub_page_save(name, data):
+    f = hub_page_path(name)
+    raw = f.read_text(encoding="utf-8")
+    edits = data.get("edits") or []
+    if not isinstance(edits, list) or len(edits) > 500:
+        raise ValueError("ungültige Eingabe")
+    new, changed, conflicts = hub_apply_edits(raw, edits)
+    out = {"ok": True, "changed": changed, "conflicts": conflicts, "backup": None, "commit": None}
+    if changed:
+        BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+        stamp = time.strftime("%Y%m%d-%H%M%S")
+        bak = BACKUP_DIR / f"{name}.html.{stamp}.admin"
+        bak.write_text(raw, encoding="utf-8")
+        f.write_text(new, encoding="utf-8")
+        out["backup"] = bak.name
+        try:
+            subprocess.run(["git", "-C", str(APP_DIR), "commit", "-q", "-m",
+                            f"{name}: texte aus der konsole bearbeitet ({stamp})\n\nCo-Authored-By: entrosana-admin <sygnif@entrosana.com>",
+                            "--", f"{name}.html"], capture_output=True, text=True, timeout=20)
+            out["commit"] = subprocess.run(["git", "-C", str(APP_DIR), "log", "-1", "--format=%h", "--", f"{name}.html"],
+                                           capture_output=True, text=True).stdout.strip()
+        except Exception:
+            pass
+    return out
+
+
 def hub_dash():
     c1, actors = api_call("GET", "/api/actors")
     c2, apps = api_call("GET", "/api/applications")
@@ -702,7 +919,8 @@ def hub_dash():
             f"<tr><td><b>Bewerbungen</b><br><span class='mono'>{len(apps.get('items', []))} offen</span></td><td class='desc'>als Beitragende freigeben oder ablehnen, mit Begründung</td><td><a class='act' href='/hub/applications'>öffnen</a></td><td></td></tr>"
             f"<tr><td><b>Anfragen</b><br><span class='mono'>{len(reqs.get('items', []))} offen</span></td><td class='desc'>Module, Tracks, Werkzeuge, Dienste; gingen an info@</td><td><a class='act' href='/hub/requests'>öffnen</a></td><td></td></tr>"
             f"<tr><td><b>Beiträge</b><br><span class='mono'>{len(offen)} offen · {len(contribs.get('items', []))} gesamt</span></td><td class='desc'>Prüfung, Annahme, Veröffentlichung in der Hub-Konsole</td><td><a class='act' href='{HUB_CONSOLE}/contributions'>öffnen (:8396)</a></td><td></td></tr>"
-            + "<tr><td><b>Checklisten</b><br><span class='mono'>assets/seeds.js</span></td><td class='desc'>Titel, Schritte, Kartenzeilen, Details und Formular-Prompts der Projektvorlagen</td><td><a class='act' href='/hub/checklists'>öffnen</a></td><td></td></tr>")
+            + "<tr><td><b>Checklisten</b><br><span class='mono'>assets/seeds.js</span></td><td class='desc'>Titel, Schritte, Kartenzeilen, Details und Formular-Prompts der Projektvorlagen</td><td><a class='act' href='/hub/checklists'>öffnen</a></td><td></td></tr>"
+            + "<tr><td><b>Seiten</b><br><span class='mono'>index · tools · modules · contribute · …</span></td><td class='desc'>Texte der 14 Seiten von entrosana.app: Titel, Absätze, Karten, Listen, Knöpfe</td><td><a class='act' href='/hub/pages'>öffnen</a></td><td></td></tr>")
     return page("Hub", _hub_kopf("Übersicht") + "<p class='note'>Sammler registrieren sich frei. Beitragende und Beiträge werden hier freigegeben. Entscheide gehen der Person per Mail zu; die Kette des Dienstes hält sie fest.</p>"
                 + f"<table>{rows}</table>")
 
@@ -1064,6 +1282,13 @@ class H(BaseHTTPRequestHandler):
         if u.path == "/hub":
             self._send(200, hub_dash())
             return
+        if u.path == "/hub/pages":
+            self._send(200, hub_pages())
+            return
+        mpg = re.match(r"^/hub/pages/([a-z]+)$", u.path)
+        if mpg:
+            self._send(200, hub_page_edit(mpg.group(1), saved=(parse_qs(u.query).get("saved") or [None])[0]))
+            return
         if u.path == "/hub/checklists":
             self._send(200, hub_checklists())
             return
@@ -1112,7 +1337,10 @@ class H(BaseHTTPRequestHandler):
                        "<tr><td><b>Checklisten</b><br><span class='mono'>Projektverwaltung &middot; assets/seeds.js</span></td>"
                        "<td class='desc'>Vorlagen der Projektverwaltung auf entrosana.app: Titel, Schritte, Kartenzeilen, Details, Formular-Prompts; "
                        "mit Sicherung, Versionshebung und Commit</td>"
-                       "<td><a class='act' href='/hub/checklists'>oeffnen</a></td><td></td></tr>")
+                       "<td><a class='act' href='/hub/checklists'>oeffnen</a></td><td></td></tr>"
+                       "<tr><td><b>Hub-Seiten</b><br><span class='mono'>entrosana.app &middot; 14 Seiten</span></td>"
+                       "<td class='desc'>Texte von Workspace, Tools, Modules, Contribute, Request und den uebrigen Seiten; nur der Text, kein Markup</td>"
+                       "<td><a class='act' href='/hub/pages'>oeffnen</a></td><td></td></tr>")
             gestaltung = (
                 "<tr><td><b>Design controls</b><br><span class='mono'>Schriftgroesse &middot; Farbe &middot; Raster</span></td>"
                 "<td class='desc'>schreibt den verwalteten Block in <span class='mono'>theme/entrosana/assets/site.css</span> &mdash; "
@@ -1305,6 +1533,13 @@ class H(BaseHTTPRequestHandler):
             else:
                 detail = res.get("message") if isinstance(res, dict) else str(res)
                 self._send(200, live_edit_page(pid, err=detail or "Speichern fehlgeschlagen"))
+            return
+        mps = re.match(r"^/hub/api/pages/([a-z]+)$", u.path)
+        if mps:
+            try:
+                self._json(hub_page_save(mps.group(1), json.loads(raw or b"{}")))
+            except Exception as e:
+                self._json({"ok": False, "error": str(e)}, 400)
             return
         mcs = re.match(r"^/hub/api/checklists/([a-z]+/\d{3})$", u.path)
         if mcs:
