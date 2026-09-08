@@ -537,6 +537,7 @@ def page(title, body):
 # dort — sie gilt damit fuer diesen Weg genauso wie fuer wp-admin.
 
 import urllib.request, urllib.error
+import time
 
 
 # ── Hub-Verwaltung (Konten, Bewerbungen, Anfragen) ─────────────────────────────
@@ -567,11 +568,126 @@ def _hub_wann(iso):
 def _hub_kopf(titel):
     return (f"<h1>entro<span style='color:#2BD4E8'>sana</span> admin · Hub · {titel}</h1>"
             "<p class='mono'><a href='/'>← Übersicht</a> · <a href='/hub'>Hub</a> · <a href='/hub/accounts'>Konten</a> · "
-            f"<a href='/hub/applications'>Bewerbungen</a> · <a href='/hub/requests'>Anfragen</a> · <a href='{HUB_CONSOLE}/contributions'>Beiträge (:8396)</a></p>")
+            f"<a href='/hub/applications'>Bewerbungen</a> · <a href='/hub/requests'>Anfragen</a> · <a href='/hub/checklists'>Checklisten</a> · <a href='{HUB_CONSOLE}/contributions'>Beiträge (:8396)</a></p>")
 
 
 STANDING_DE = {"collector": "Sammler", "contributor": "Beitragende", "reviewer": "Team", "owner": "Eigentümer", "service": "Dienst"}
 ROLE_DE = {"teacher": "Lehrperson", "student": "Lernende", "parent": "Eltern", "social-worker": "Soziale Arbeit", "developer": "Entwicklung", "researcher": "Forschung", "other": "andere"}
+
+
+SEEDS_FILE = HOME / "entrosana-app" / "assets" / "seeds.js"
+APP_DIR = HOME / "entrosana-app"
+BACKUP_DIR = HOME / "entrosana-app-backups"
+
+
+def seeds_read():
+    """seeds.js ist ein Kommentarkopf plus `window.__seeds = {...};` mit striktem JSON."""
+    raw = SEEDS_FILE.read_text(encoding="utf-8")
+    m = re.search(r"window\.__seeds\s*=\s*(\{.*\})\s*;?\s*$", raw, re.S)
+    if not m:
+        raise ValueError("seeds.js: Zuweisung window.__seeds nicht gefunden")
+    return raw[:m.start()], json.loads(m.group(1))
+
+
+def seeds_write(head, seeds):
+    """Sicherung, dann Datei neu schreiben, dann die Version in allen Seiten heben (Kante hält 4 h)."""
+    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+    stamp = time.strftime("%Y%m%d-%H%M%S")
+    bak = BACKUP_DIR / f"seeds.js.{stamp}.admin"
+    bak.write_text(SEEDS_FILE.read_text(encoding="utf-8"), encoding="utf-8")
+    body = json.dumps(seeds, ensure_ascii=False, indent=1)
+    SEEDS_FILE.write_text(head + "window.__seeds = " + body + ";\n", encoding="utf-8")
+    ver = time.strftime("%Y%m%d%H%M")
+    n = 0
+    for f in APP_DIR.glob("*.html"):
+        s = f.read_text(encoding="utf-8")
+        s2 = re.sub(r"/assets/seeds\.js(\?v=[0-9a-z]+)?\"", f"/assets/seeds.js?v={ver}\"", s)
+        if s2 != s:
+            f.write_text(s2, encoding="utf-8")
+            n += 1
+    # Bestmöglicher Commit der betroffenen Dateien (nur diese Pfade; Fehler brechen das Speichern nicht ab).
+    try:
+        paths = ["assets/seeds.js"] + sorted(str(f.relative_to(APP_DIR)) for f in APP_DIR.glob("*.html"))
+        subprocess.run(["git", "-C", str(APP_DIR), "commit", "-q", "-m",
+                        f"seeds: checkliste aus der konsole bearbeitet ({stamp})\n\nCo-Authored-By: entrosana-admin <sygnif@entrosana.com>",
+                        "--"] + paths, capture_output=True, text=True, timeout=20)
+    except Exception:
+        pass
+    return str(bak), n
+
+
+def hub_checklists():
+    try:
+        _, seeds = seeds_read()
+    except Exception as e:
+        return page("Checklisten", _hub_kopf("Checklisten") + f"<p class='err'>{html.escape(str(e))}</p>")
+    rows = "".join(f"<tr><td class='mono'>{html.escape(k)}</td><td><b>{html.escape(v.get('title', ''))}</b><br><span class='desc'>{html.escape(v.get('who', ''))}</span></td>"
+                   f"<td class='mono'>{len(v.get('steps', []))} Schritte{(' · ' + str(len(v['prompts'])) + ' Prompts') if v.get('prompts') else ''}</td>"
+                   f"<td><a class='act' href='/hub/checklists/{html.escape(k)}'>bearbeiten</a></td>"
+                   f"<td><a class='act' href='https://entrosana.app/project?p={html.escape(k)}' target='_blank'>ansehen</a></td></tr>" for k, v in seeds.items())
+    return page("Checklisten", _hub_kopf("Checklisten") + "<p class='note'>Die Checklisten der Projektverwaltung (assets/seeds.js). Jede Änderung wird gesichert und geht binnen 5 s live; die Seiten laden die neue Fassung mit frischer Version. "
+                "Wer eine Liste schon geöffnet hat, behält seine Kopie auf dem Gerät.</p>" + f"<table><tr><th>Schlüssel</th><th>Titel</th><th>Umfang</th><th></th><th></th></tr>{rows}</table>")
+
+
+def hub_checklist_edit(key):
+    try:
+        _, seeds = seeds_read()
+    except Exception as e:
+        return page("Checkliste", _hub_kopf("Checkliste") + f"<p class='err'>{html.escape(str(e))}</p>")
+    s = seeds.get(key)
+    if not s:
+        return page("Checkliste", _hub_kopf("Checkliste") + f"<p class='err'>unbekannt: {html.escape(key)}</p>")
+    def fld(label, name, value, rows=None, hint=""):
+        inner = (f"<textarea name='{name}' rows='{rows}' style='width:100%'>{html.escape(value)}</textarea>" if rows
+                 else f"<input name='{name}' value='{html.escape(value)}' style='width:100%'>")
+        return f"<p><label><span class='mono'>{label}</span><br>{inner}</label>{('<br><span class=desc>' + hint + '</span>') if hint else ''}</p>"
+    steps = s.get("steps", []) + [{}, {}]
+    step_html = "".join(f"<fieldset style='border:1px solid #323843;border-radius:8px;padding:.6rem .9rem;margin:.6rem 0'><legend class='mono'>Schritt {i + 1}{'' if st else ' (leer = wird nicht gespeichert)'}</legend>"
+                        + fld("Titel (t)", f"t{i}", st.get("t", "")) + fld("Zeile auf der Karte (n)", f"n{i}", st.get("n", ""), 2)
+                        + fld("Details im Popup (i)", f"i{i}", st.get("i", ""), 3) + "</fieldset>" for i, st in enumerate(steps))
+    form = (f"<form id='ck' data-key='{html.escape(key)}'>" + fld("Titel", "title", s.get("title", "")) + fld("Untertitel (who)", "who", s.get("who", ""))
+            + fld("Prompts fürs Vorschlagsformular, eine je Zeile (leer lassen, wenn keine)", "prompts", "\n".join(s.get("prompts", [])), 6,
+                  "Nur die Liste contribute/000 braucht sie: aus ihnen wird der vorbelegte Vorschlagstext.")
+            + f"<h2>Schritte ({len(s.get('steps', []))})</h2><p class='note'>Reihenfolge wie hier. Ein Schritt ohne Titel fällt weg; zwei leere Blöcke stehen zum Anfügen bereit.</p>" + step_html
+            + f"<div class='bar'><button class='btn' type='submit'>Speichern</button> <a class='act' href='/hub/checklists'>zurück</a> <span id='msg' class='mono'></span></div></form>"
+            "<script>document.getElementById('ck').addEventListener('submit',function(e){e.preventDefault();var f=e.target,m=document.getElementById('msg');var steps=[];"
+            f"for(var i=0;i<{len(steps)};i++){{var t=f['t'+i].value.trim();if(!t)continue;steps.push({{t:t,n:f['n'+i].value.trim(),i:f['i'+i].value.trim()}});}}"
+            "var prompts=f.prompts.value.split('\\n').map(function(x){return x.trim()}).filter(Boolean);m.textContent='…';"
+            "fetch('/hub/api/checklists/'+f.getAttribute('data-key'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title:f.title.value.trim(),who:f.who.value.trim(),prompts:prompts,steps:steps})})"
+            ".then(function(x){return x.json()}).then(function(j){if(j.ok){m.textContent='gespeichert · Sicherung '+j.backup+' · '+j.pages+' Seiten neu versioniert'+(j.commit?' · Commit '+j.commit:'');m.className='ok';}else{m.textContent=j.error||'Fehler';m.className='err';}})"
+            ".catch(function(){m.textContent='nicht erreichbar';m.className='err';});});</script>")
+    return page("Checkliste " + key, _hub_kopf("Checkliste · " + html.escape(key)) + form)
+
+
+def hub_checklist_save(key, data):
+    head, seeds = seeds_read()
+    if key not in seeds:
+        raise ValueError("unbekannte Checkliste")
+    title = str(data.get("title", "")).strip()
+    if len(title) < 2:
+        raise ValueError("Titel fehlt")
+    steps = []
+    for st in data.get("steps", []):
+        t = str(st.get("t", "")).strip()
+        if not t:
+            continue
+        one = {"t": t[:200], "n": str(st.get("n", "")).strip()[:600]}
+        if str(st.get("i", "")).strip():
+            one["i"] = str(st.get("i", "")).strip()[:2000]
+        steps.append(one)
+    if not steps:
+        raise ValueError("mindestens ein Schritt")
+    new = dict(seeds[key])
+    new["title"], new["who"], new["steps"] = title[:120], str(data.get("who", "")).strip()[:200], steps
+    prompts = [str(x).strip()[:200] for x in data.get("prompts", []) if str(x).strip()]
+    if prompts:
+        new["prompts"] = prompts
+    else:
+        new.pop("prompts", None)
+    seeds[key] = new
+    bak, n = seeds_write(head, seeds)
+    sha = subprocess.run(["git", "-C", str(APP_DIR), "log", "-1", "--format=%h", "--", "assets/seeds.js"], capture_output=True, text=True).stdout.strip()
+    return {"ok": True, "backup": bak.split("/")[-1], "pages": n, "commit": sha}
 
 
 def hub_dash():
@@ -585,7 +701,8 @@ def hub_dash():
     rows = (f"<tr><td><b>Konten</b><br><span class='mono'>{len([a for a in actors.get('items', []) if a.get('kind') == 'email'])} Personen</span></td><td class='desc'>Profil, Stand, Rollen, Geräte</td><td><a class='act' href='/hub/accounts'>öffnen</a></td><td></td></tr>"
             f"<tr><td><b>Bewerbungen</b><br><span class='mono'>{len(apps.get('items', []))} offen</span></td><td class='desc'>als Beitragende freigeben oder ablehnen, mit Begründung</td><td><a class='act' href='/hub/applications'>öffnen</a></td><td></td></tr>"
             f"<tr><td><b>Anfragen</b><br><span class='mono'>{len(reqs.get('items', []))} offen</span></td><td class='desc'>Module, Tracks, Werkzeuge, Dienste; gingen an info@</td><td><a class='act' href='/hub/requests'>öffnen</a></td><td></td></tr>"
-            f"<tr><td><b>Beiträge</b><br><span class='mono'>{len(offen)} offen · {len(contribs.get('items', []))} gesamt</span></td><td class='desc'>Prüfung, Annahme, Veröffentlichung in der Hub-Konsole</td><td><a class='act' href='{HUB_CONSOLE}/contributions'>öffnen (:8396)</a></td><td></td></tr>")
+            f"<tr><td><b>Beiträge</b><br><span class='mono'>{len(offen)} offen · {len(contribs.get('items', []))} gesamt</span></td><td class='desc'>Prüfung, Annahme, Veröffentlichung in der Hub-Konsole</td><td><a class='act' href='{HUB_CONSOLE}/contributions'>öffnen (:8396)</a></td><td></td></tr>"
+            + "<tr><td><b>Checklisten</b><br><span class='mono'>assets/seeds.js</span></td><td class='desc'>Titel, Schritte, Kartenzeilen, Details und Formular-Prompts der Projektvorlagen</td><td><a class='act' href='/hub/checklists'>öffnen</a></td><td></td></tr>")
     return page("Hub", _hub_kopf("Übersicht") + "<p class='note'>Sammler registrieren sich frei. Beitragende und Beiträge werden hier freigegeben. Entscheide gehen der Person per Mail zu; die Kette des Dienstes hält sie fest.</p>"
                 + f"<table>{rows}</table>")
 
@@ -947,6 +1064,13 @@ class H(BaseHTTPRequestHandler):
         if u.path == "/hub":
             self._send(200, hub_dash())
             return
+        if u.path == "/hub/checklists":
+            self._send(200, hub_checklists())
+            return
+        mck = re.match(r"^/hub/checklists/([a-z]+/\d{3})$", u.path)
+        if mck:
+            self._send(200, hub_checklist_edit(mck.group(1)))
+            return
         if u.path == "/hub/accounts":
             self._send(200, hub_accounts())
             return
@@ -984,7 +1108,11 @@ class H(BaseHTTPRequestHandler):
 
             hub_row = ("<tr><td><b>Hub</b><br><span class='mono'>Konten &middot; Bewerbungen &middot; Anfragen</span></td>"
                        "<td class='desc'>Sammler und Beitragende, Freigaben, Anfragen an info@; Beitr&auml;ge in der Hub-Konsole :8396</td>"
-                       "<td><a class='act' href='/hub'>oeffnen</a></td><td></td></tr>")
+                       "<td><a class='act' href='/hub'>oeffnen</a></td><td></td></tr>"
+                       "<tr><td><b>Checklisten</b><br><span class='mono'>Projektverwaltung &middot; assets/seeds.js</span></td>"
+                       "<td class='desc'>Vorlagen der Projektverwaltung auf entrosana.app: Titel, Schritte, Kartenzeilen, Details, Formular-Prompts; "
+                       "mit Sicherung, Versionshebung und Commit</td>"
+                       "<td><a class='act' href='/hub/checklists'>oeffnen</a></td><td></td></tr>")
             gestaltung = (
                 "<tr><td><b>Design controls</b><br><span class='mono'>Schriftgroesse &middot; Farbe &middot; Raster</span></td>"
                 "<td class='desc'>schreibt den verwalteten Block in <span class='mono'>theme/entrosana/assets/site.css</span> &mdash; "
@@ -1177,6 +1305,13 @@ class H(BaseHTTPRequestHandler):
             else:
                 detail = res.get("message") if isinstance(res, dict) else str(res)
                 self._send(200, live_edit_page(pid, err=detail or "Speichern fehlgeschlagen"))
+            return
+        mcs = re.match(r"^/hub/api/checklists/([a-z]+/\d{3})$", u.path)
+        if mcs:
+            try:
+                self._json(hub_checklist_save(mcs.group(1), json.loads(raw or b"{}")))
+            except Exception as e:
+                self._json({"ok": False, "error": str(e)}, 400)
             return
         mh = re.match(r"^/hub/api/(applications|requests)/(\d{1,12})/(decide|handled)$", u.path)
         if mh:
