@@ -638,8 +638,8 @@ def hub_checklist_edit(key):
     if not s:
         return page("Checkliste", _hub_kopf("Checkliste") + f"<p class='err'>unbekannt: {html.escape(key)}</p>")
     def fld(label, name, value, rows=None, hint=""):
-        inner = (f"<textarea name='{name}' rows='{rows}' style='width:100%'>{html.escape(value)}</textarea>" if rows
-                 else f"<input name='{name}' value='{html.escape(value)}' style='width:100%'>")
+        inner = (f"<textarea name='{name}' rows='{rows}' style='width:100%;box-sizing:border-box'>{html.escape(value)}</textarea>" if rows
+                 else f"<input name='{name}' value='{html.escape(value)}' style='width:100%;box-sizing:border-box'>")
         return f"<p><label><span class='mono'>{label}</span><br>{inner}</label>{('<br><span class=desc>' + hint + '</span>') if hint else ''}</p>"
     steps = s.get("steps", []) + [{}, {}]
     step_html = "".join(f"<fieldset style='border:1px solid #323843;border-radius:8px;padding:.6rem .9rem;margin:.6rem 0'><legend class='mono'>Schritt {i + 1}{'' if st else ' (leer = wird nicht gespeichert)'}</legend>"
