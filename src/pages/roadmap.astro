@@ -83,7 +83,7 @@ const decisions = [
       <p class="eyebrow">Runs today</p>
       <h2 class="h2">The foundation is built.</h2>
       <p class="intro">These are the parts that cannot be retrofitted later without rebuilding everything, which is why they came first.</p>
-      <div class="grid grid--3">
+      <div class="grid grid--3" data-shape="strata">
         {today.map((t) => (
           <article class="card">
             <div class="card__head"><h3>{t.name}</h3><span class={chip(t.state)}>{t.label}</span></div>
@@ -120,12 +120,12 @@ const decisions = [
       <p class="eyebrow">Where it runs</p>
       <h2 class="h2">Three tiers, all in development.</h2>
       <p class="intro">The engine runs today as a single service against a database. Nothing is deployed to a customer target yet. Each tier names what it still needs. <a href={href("/service/#deploy")}>How the tiers differ</a>.</p>
-      <div class="grid grid--3">
+      <div class="grid grid--3" data-shape="spectrum">
         {tiers.map((t) => (
           <article class="card">
             <p class="tag">{t.tag}</p>
             <div class="card__head"><h3>{t.name}</h3><span class="chip chip--dev">in development</span></div>
-            <p><strong>Still needs:</strong> {t.needs}.</p>
+            <p>still needs · {t.needs}</p>
           </article>
         ))}
       </div>
@@ -133,7 +133,7 @@ const decisions = [
   </section>
 
   <section class="section" id="modules">
-    <div class="wrap split">
+    <div class="wrap split split--stack">
       <div>
         <p class="eyebrow">Modules &amp; the Hub</p>
         <h2 class="h2">Available now, because people deliver them.</h2>
@@ -152,12 +152,12 @@ const decisions = [
     </div>
   </section>
 
-  <section class="section band" id="decisions">
+  <section class="section" id="decisions">
     <div class="wrap">
       <p class="eyebrow">Where the difficulty sits</p>
       <h2 class="h2">Three decisions that are expensive to change later.</h2>
       <p class="intro">The domain work above is ordinary engineering: known, estimable and reversible. These three are not. They were built first because retrofitting any of them means starting again.</p>
-      <div class="grid grid--3">
+      <div class="grid grid--3" data-shape="principles">
         {decisions.map((d) => (
           <article class="card">
             <div class="card__head"><h3>{d.name}</h3><span class="chip chip--built">built</span></div>
@@ -168,27 +168,23 @@ const decisions = [
     </div>
   </section>
 
-  <section class="section" id="evidence">
-    <div class="wrap split">
-      <div>
-        <p class="eyebrow">Evidence</p>
-        <h2 class="h2">How we know, rather than believe.</h2>
-        <ul class="evidence">
-          <li>independent chain verifier</li>
-          <li>replay from inputs</li>
-          <li>external adversarial audit</li>
-          <li>findings published in the repository</li>
-        </ul>
-      </div>
-      <div>
-        <p>Claims about correctness are worth what the checking behind them is worth. Ours is public, and so are the findings against us.</p>
-        <p>Anyone holding the log can re-compute the chain themselves without our cooperation. A stored decision can be re-derived from its inputs and compared against what was recorded. In July an outside reviewer was asked to break the connector layer and reported nine findings; all nine were fixed, and both the brief and the report are in the repository. The gaps that remain are on this page rather than in a drawer.</p>
-        <div class="actions"><a class="btn btn--ghost" href={ext.source}>Read the source and the audits</a></div>
-      </div>
+  <section class="section band" id="evidence">
+    <div class="wrap">
+      <p class="eyebrow">Evidence</p>
+      <h2 class="h2">How we know, rather than believe.</h2>
+      <p class="intro">Claims about correctness are worth what the checking behind them is worth. Ours is public, and so are the findings against us.</p>
+      <ul class="evidence">
+        <li>independent chain verifier</li>
+        <li>replay from inputs</li>
+        <li>external adversarial audit</li>
+        <li>findings published in the repository</li>
+      </ul>
+      <p class="human small">Anyone holding the log can re-compute the chain themselves without our cooperation. A stored decision can be re-derived from its inputs and compared against what was recorded. In July an outside reviewer was asked to break the connector layer and reported nine findings; all nine were fixed, and both the brief and the report are in the repository. The gaps that remain are on this page rather than in a drawer.</p>
+      <div class="actions"><a class="link" href={ext.source}>Read the source and the audits</a></div>
     </div>
   </section>
 
-  <section class="section band section--tight">
+  <section class="section">
     <div class="wrap">
       <p class="eyebrow">How to read this page</p>
       <h2 class="h2">We publish what is not built.</h2>
@@ -197,35 +193,171 @@ const decisions = [
   </section>
 </Layout>
 
-<style>
-  .glance__list { list-style: none; display: grid; margin-top: 0.4rem; border-top: 1px solid var(--line); }
-  .glance__list li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.3rem 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--line); }
-  .glance__list a { color: var(--ink); text-decoration: none; font-weight: 700; font-size: 0.98rem; }
-  .glance__list a:hover { color: var(--seal); text-decoration: underline; }
+<style is:global>
+/* ── At a glance (prototype-only): drawn as a live register panel (§2e) ── */
+.ph .glance {
+  display: block;
+  padding: .4rem clamp(1.2rem, .6rem + 2vw, 2.6rem);              /* 6.4px 38.4px */
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: none;
+}
+.ph .glance > .tag { padding: 1.1rem 0 .55rem; letter-spacing: normal; color: var(--seal); }  /* mono 13.76px seal, as .tool__who */
+.glance__list { list-style: none; display: grid; margin: 0; padding: 0; }
+.glance__list li {
+  display: flex; flex-wrap: nowrap; align-items: baseline; justify-content: space-between; gap: .5rem;
+  padding: .7rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.glance__list li:last-child { border-bottom: 0; }
+.ph .glance__list a {
+  border-bottom: 1px solid transparent;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);                                         /* 16.8px */
+  font-weight: 500;
+  line-height: 1.3;
+  text-decoration: none;
+}
+.ph .glance__list a:hover { border-bottom-color: currentColor; color: var(--ink); text-decoration: none; }
 
-  .toc { display: flex; flex-wrap: wrap; gap: 0.5rem; padding-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
-  .toc a {
-    display: inline-flex; align-items: center; min-height: 40px; padding: 0 0.9rem;
-    border: 1px solid var(--control); border-radius: 999px;
-    font-family: var(--font-mono); font-size: var(--step--1); color: var(--ink); text-decoration: none;
+/* ── on this page (prototype-only): live jump links (.link-jump) in the
+   place of the hero's .chips line ── */
+.toc { padding: 1.6rem 0 var(--section); }
+.toc a {
+  display: inline-block;
+  margin: 0 1.4rem 0 0;                                             /* 22.4px */
+  padding: 0;
+  min-height: 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  background: none;
+  color: var(--seal);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);                                        /* 13.76px */
+  line-height: 1.6;
+  text-decoration: none;
+}
+.toc a:hover { border-bottom-color: currentColor; background: none; }
+
+/* ── The engine (live §2d sequence + §2e panel + §3) ── */
+.stages {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  margin: 0;
+  padding: .4rem clamp(1.2rem, .6rem + 2vw, 2.6rem);              /* 6.4px 38.4px */
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.stage {
+  display: flex; flex-direction: column; gap: .5rem;
+  padding: 1.7rem 0;                                                /* 27.2px */
+  border-bottom: 1px solid var(--line);
+}
+.stage:last-child { border-bottom: 0; }
+.stage__n { display: none; }                                        /* live shows the number from 820px only */
+.stage__head { display: flex; flex-wrap: nowrap; align-items: baseline; justify-content: space-between; gap: .5rem; }
+.stage__head h3 {
+  margin: 0 0 .6rem;                                                /* 9.6px */
+  font-family: var(--font-mono);
+  font-size: var(--step-1);                                         /* 22.4px */
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -.01em;
+}
+.stage .for { margin: 0; max-width: none; font-family: var(--font-mono); font-size: var(--step--1); line-height: 1.6; color: var(--seal); }
+.stage__body { margin: 0 0 1rem; color: var(--ink-2); }
+/* state pill = live .tool__state */
+.stage .chip,
+.ph .glance .chip {
+  display: block;
+  gap: 0;
+  padding: .15em .5em;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: .68rem;                                                /* 10.88px */
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.stage .chip::before,
+.ph .glance .chip::before { content: none; }
+.ph .glance .chip--built { color: var(--seal); border-color: color-mix(in srgb, var(--seal) 40%, var(--line)); }
+@media (min-width: 820px) {
+  .stage {
+    display: grid;
+    grid-template-columns: 3.4rem 16rem minmax(0, 1fr);             /* 54.4px | 256px | 1fr */
+    grid-template-rows: min-content auto min-content;
+    gap: .35rem 2.2rem;                                             /* 5.6px 35.2px */
+    align-items: start;
   }
-  .toc a:hover { border-color: var(--seal); background: var(--seal-soft); }
-
-  .stages { list-style: none; display: grid; gap: 0; border-top: 1px solid var(--line); }
-  .stage { display: grid; gap: 0.35rem 1.5rem; padding-block: 1.5rem; border-bottom: 1px solid var(--line); }
-  @media (min-width: 820px) {
-    .stage { grid-template-columns: 3.5rem 17rem 1fr; align-items: start; }
-    .stage__n { grid-row: 1 / span 2; }
-    .stage__head, .stage .for { grid-column: 2; }
-    .stage__body { grid-column: 3; grid-row: 1 / span 2; }
+  .stage__n {
+    display: block;
+    grid-column: 1; grid-row: 1;
+    padding-top: .2em;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);                                      /* 13.76px */
+    line-height: 1.6;
+    letter-spacing: .1em;
+    color: var(--seal);
   }
-  .stage__n { font-size: var(--step-2); color: var(--seal); line-height: 1; }
-  .stage__head { display: grid; gap: 0.5rem; justify-items: start; }
-  .stage__head h3 { font-size: var(--step-1); }
-  .stage .for { font-family: var(--font-mono); font-size: var(--step--1); color: var(--muted); margin: 0; }
-  .stage__body { color: var(--ink-2); margin: 0; }
+  .stage__head { grid-column: 2; grid-row: 1; align-self: start; }
+  .stage .for { grid-column: 2; grid-row: 2; align-self: start; }
+  .stage__body { grid-column: 3; grid-row: 1 / span 2; margin: 0; }
+}
 
-  .evidence { list-style: none; display: grid; gap: 0.5rem; margin-top: 1rem; }
-  .evidence li { font-family: var(--font-mono); font-size: var(--step--1); color: var(--ink-2); padding-left: 1.4rem; position: relative; }
-  .evidence li::before { content: "✓"; position: absolute; left: 0; color: var(--verify); font-weight: 700; }
+/* ── Modules & the Hub: live .chips (a line of facts, not pills) ── */
+#modules .status-list {
+  list-style: none;
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: .35rem 2rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+#modules .status-list li {
+  display: block;
+  padding: 0;
+  border: 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.9;
+  color: var(--ink-2);
+}
+#modules .status-list .what { font-weight: 400; }
+#modules .status-list .what::after { content: " · "; white-space: pre; }
+#modules .status-list .chip {
+  display: inline; padding: 0; border: 0; background: none;
+  font: inherit; letter-spacing: normal; text-transform: none; color: inherit;
+}
+#modules .status-list .chip::before { content: none; }
+
+/* ── Evidence: live .chips line, no tick marks ── */
+.evidence {
+  list-style: none;
+  display: flex; flex-wrap: wrap; align-items: baseline;
+  gap: .35rem 2rem;
+  margin: 0;
+  padding: 0;
+}
+.evidence li {
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.9;
+  color: var(--ink-2);
+}
+.evidence li::before { content: none; }
+
+#modules .status-list li { margin-bottom: 1rem; }
 </style>

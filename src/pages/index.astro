@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import RecordChain from "../components/RecordChain.astro";
 import HubStack from "../components/HubStack.astro";
+import DataLayers from "../components/DataLayers.astro";
 import { href, ext } from "../lib/site";
 ---
 <Layout>
@@ -19,10 +20,11 @@ import { href, ext } from "../lib/site";
           <a class="btn" href={href("/request-access/")}>Request pilot access</a>
           <a class="link" href={href("/modules/#available")}>Try the first module</a>
         </div>
-        <ul class="hero__facts" aria-label="Status">
-          <li><span class="chip chip--built">Sealed record · built</span></li>
-          <li><span class="chip chip--dev">Engine · in development</span></li>
-          <li class="mono small muted">Swiss/EU data residency · AGPL-3.0</li>
+        <ul class="hero__facts" aria-label="Facts">
+          <li>Sealed audit record</li>
+          <li>Swiss/EU residency</li>
+          <li>Open source · AGPL-3.0</li>
+          <li>Engine in development</li>
         </ul>
       </div>
       <div class="hero__demo">
@@ -40,7 +42,7 @@ import { href, ext } from "../lib/site";
       <p class="intro">Both come in formats adapted to your needs. You can implement and self-host the tools and modules yourself; otherwise we guide, implement, host and maintain them for you.</p>
       <div class="grid grid--2">
         <article class="card card--link">
-          <div class="card__head"><h3>The back office</h3><span class="chip">as an engagement</span></div>
+          <div class="card__head"><h3>The back office</h3><span class="chip chip--open">as an engagement</span></div>
           <p class="for">for the work nobody went into education to do</p>
           <p>Accounting, contracts and the recurring administration around them, taken on with you and against the system you already run, whether that is CashCtrl, bexio or another. Scoped per organisation as a pilot. Decisions stay with your people; we do the work around them.</p>
           <a class="link" href={href("/service/")}>Back-office tooling</a>
@@ -89,61 +91,99 @@ import { href, ext } from "../lib/site";
     </div>
   </section>
 
-  <!-- The Hub + how data is handled -->
+  <!-- The Hub + how data is handled (live: one column, figure at full width) -->
   <section class="section" id="hub">
-    <div class="wrap split">
-      <div>
-        <p class="eyebrow">One ground. What stands on it.</p>
-        <h2 class="h2">The Hub, and what runs in it.</h2>
-        <p>The Hub is the ground: shared identity, one sealed record, one licence. Tools run the back office on it; modules run in the classroom on it. Both leave the same trail, so what happened can be shown rather than asserted.</p>
+    <div class="wrap">
+      <p class="eyebrow">One ground. What stands on it.</p>
+      <h2 class="h2">The Hub, and what runs in it.</h2>
+      <p class="intro">The Hub is the ground: shared identity, one sealed record, one licence. Tools run the back office on it; modules run in the classroom on it. Both leave the same trail, so what happened can be shown rather than asserted.</p>
+      <HubStack />
+      <div class="hub__text">
         <p>Students, parents and teachers work alongside outside contributors, in the open under AGPL-3.0. The Hub is being built at <a href={ext.hub}><b>entrosana.app</b></a>.</p>
         <div class="actions">
           <a class="btn btn--hub" href={ext.hub}>Access entrosana Hub →</a>
           <a class="link" href={href("/hub/")}>Learn about the Hub</a>
         </div>
       </div>
-      <div class="hub__fig">
-        <HubStack />
-        <div class="datanote">
-          <p class="tag">How data is handled</p>
-          <p><strong>Two model layers, by design.</strong> Delicate records are designed to stay on a model served on your hardware or ours; only data that is not sensitive may go to an online provider. In development alongside the engine.</p>
-          <a class="link" href={href("/service/#data")}>See the data boundary</a>
-        </div>
-      </div>
+      <article class="card datanote">
+        <p class="eyebrow">How data is handled</p>
+        <h3>Two model layers, by design.</h3>
+        <p>Anything touching delicate records is designed to run on a model served on your own or our hardware. Only data that is not sensitive goes to an online provider. That boundary is what keeps data management local rather than merely promised.</p>
+        <DataLayers />
+      </article>
     </div>
   </section>
 
-  <!-- Where we stand -->
+  <!-- Where we stand (live: a lopsided split that stacks) -->
   <section class="section band" id="status">
-    <div class="wrap split split--wide-left">
+    <div class="wrap split split--stack">
       <div>
         <p class="eyebrow">Where we stand</p>
         <h2 class="h2">In development. In the open.</h2>
-        <p>entrosana is in development, and we say so wherever it matters. The engine behind the back-office tools is public under AGPL-3.0 and is not production software today. No school runs on the engine yet, and modules are delivered by people rather than by software. Pilot access is opening to a small group of Swiss organisations.</p>
-        <p>The aim is systemic: an open service any school and any back office can inherit. To see current prototypes, open the Arboro showcase, developed for our first collaboration partner.</p>
-        <div class="actions">
-          <a class="btn" href={href("/request-access/")}>Request pilot access</a>
-          <a class="link" href={href("/roadmap/")}>Read the roadmap</a>
-          <a class="link" href={ext.arboro}>Arboro showcase</a>
-        </div>
       </div>
       <div>
+        <p>entrosana is in development, and we say so wherever it matters. The engine behind the back-office tools is public under AGPL-3.0 and is not production software today. No school runs on the engine yet, and modules are delivered by people rather than by software. Pilot access is opening to a small group of Swiss organisations. The aim is systemic: an open service any school and any back office can inherit.</p>
+        <p>Founded by Gianluca Kühne.</p>
         <ul class="status-list" aria-label="Status by part">
           <li><span class="what">Audit trail</span><span class="chip chip--built">built</span></li>
           <li><span class="what">Sign-in &amp; separation</span><span class="chip chip--built">built</span></li>
           <li><span class="what">Back-office workflows</span><span class="chip chip--dev">in development</span></li>
-          <li><span class="what">Modules</span><span class="chip chip--live">available · by people</span></li>
+          <li><span class="what">Modules</span><span class="chip chip--live">online &amp; on site</span></li>
         </ul>
-        <p class="small muted founder">Founded by Gianluca Kühne. Source: <a href={ext.source}>github.com/entrosana/hub</a></p>
+        <p>To see current prototypes, open the Arboro showcase, developed for our first collaboration partner.</p>
+        <div class="actions">
+          <a class="btn" href={href("/request-access/")}>Request pilot access</a>
+          <a class="link" href={href("/roadmap/")}>Read the roadmap</a>
+          <a class="link" href={ext.source}>View the source</a>
+          <a class="link" href={ext.arboro}>Arboro showcase</a>
+        </div>
       </div>
     </div>
   </section>
 </Layout>
 
 <style>
-  .hero { padding-top: clamp(2rem, 1rem + 4vw, 4.5rem); }
-  .hero__grid { display: grid; gap: clamp(2rem, 1rem + 4vw, 3.5rem); align-items: center; }
-  @media (min-width: 980px) { .hero__grid { grid-template-columns: 1.1fr 0.9fr; } }
+  /* ── hero (live design-polish.css, front page) ──
+     Headline across the full measure, then two columns with the tapering
+     accent rule on the seam; .hero__copy is layout-transparent so its
+     children share one grid with .hero__demo. */
+  .hero { padding-block: clamp(3rem, 6vw, 5.5rem); }
+  .hero__grid { display: grid; grid-template-columns: 1fr; column-gap: clamp(2rem, 4vw, 4.5rem); row-gap: clamp(2rem, 1rem + 5vw, 4rem); }
+  @media (max-width: 999.98px) { .hero__grid > * { max-width: 46rem; } }
+  .hero__demo { display: flex; flex-direction: column; gap: .9rem; }
+  @media (min-width: 861px) {
+    .hero__grid {
+      grid-template-columns: 1.15fr .85fr;
+      grid-template-rows: auto auto 1fr auto auto auto 1fr;
+      grid-template-areas: "eb eb" "title title" ". demo" "lede demo" "cta demo" "facts demo" ". demo";
+      row-gap: 0;
+    }
+    .hero__copy { display: contents; }
+    .hero__copy > .eyebrow { grid-area: eb; }
+    .hero__h { grid-area: title; }
+    .hero__copy > .lede { grid-area: lede; }
+    .hero__copy > .actions { grid-area: cta; align-self: start; }
+    .hero__facts { grid-area: facts; align-self: start; }
+    .hero__demo { grid-area: demo; position: relative; margin-top: 1.75rem; }
+    /* the accent divider between the columns: 1px, fading at both ends */
+    .hero__demo::before {
+      content: ""; position: absolute; top: 50%;
+      left: calc(-0.5 * clamp(2rem, 4vw, 4.5rem));
+      transform: translate(-50%, -50%);
+      width: 1px; height: clamp(5.5rem, 26vh, 9.5rem);
+      pointer-events: none;
+      background: linear-gradient(180deg, transparent,
+        color-mix(in srgb, var(--seal) 42%, transparent) 26%,
+        color-mix(in srgb, var(--seal) 42%, transparent) 74%, transparent);
+    }
+  }
+  @media (min-width: 1000px) {
+    .hero { display: flex; align-items: center; justify-content: center; }
+    .hero > .wrap { width: min(100% - 2 * var(--gutter), var(--wrap)); }
+    .hero__grid { align-items: center; }
+    .hero__demo { align-self: center; }
+  }
+
   /* hero headline as live: two lines, one ink, weight carries the hierarchy (600 → 350) */
   .hero__h {
     font-family: var(--font-sans);
@@ -152,25 +192,63 @@ import { href, ext } from "../lib/site";
     line-height: 1.02;
     letter-spacing: -.028em;
     color: var(--ink);
-    margin: .4rem 0 3rem;
+    margin: .4rem 0 1.4rem;
   }
   .hero__h span { display: block; }
   .hero__h2 { font-weight: 350; color: var(--ink); margin-top: 1.4rem; }
   @media (min-width: 1000px) {
-    .hero__h { font-size: clamp(2rem, .9rem + 2.6vw, 3.6rem); line-height: 1.08; margin: 0 0 1.6rem; }
+    .hero__h { font-size: clamp(2rem, .9rem + 2.6vw, 3.6rem); line-height: 1.08; margin: 0; }
     .hero__h2 { margin-top: 0; }
   }
-  .hero__facts { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 0.75rem; margin-top: 1.75rem; }
-  .hero__demonote { margin-top: 0.75rem; max-width: 52ch; }
 
-  .foundation { margin-top: clamp(1rem, 0.6rem + 1.5vw, 1.5rem); display: grid; gap: 0.5rem 2rem; border-style: dashed; border-color: color-mix(in srgb, var(--verify) 50%, var(--line)); }
-  @media (min-width: 820px) { .foundation { grid-template-columns: 0.8fr 1.2fr; } }
-  .foundation .link { margin-top: 0.5rem; }
+  .hero__copy > .lede { margin: 0 0 1rem; }
+  @media (min-width: 1000px) {
+    .hero__copy > .lede { margin: 0; font-size: clamp(.95rem, .9rem + .3vw, 1.06rem); }
+  }
+  .hero .actions { margin-top: 1.9rem; }
 
-  .hub__fig { display: grid; gap: 1.25rem; }
-  .datanote { padding: 1.1rem 1.25rem; border-left: 3px solid var(--seal); background: var(--surface); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+  /* facts under the hero = live .chips: plain mono facts separated by space alone */
+  .hero__facts {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem 2rem;
+  }
+  @media (min-width: 1000px) { .hero__facts { margin-top: clamp(.9rem, 2vh, 1.35rem); } }
+  .hero__facts > li { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 400; line-height: 1.9; color: var(--ink-2); }
+  /* = live .hero__demohint */
+  .hero__demonote { margin: 0; font-size: .72rem; max-width: 40ch; }
+
+  /* live entrance: a 10px rise, no fade, staggered */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__copy > *, .hero__demo { transform: translateY(10px); animation: pol-up .6s cubic-bezier(.2, .7, .2, 1) forwards; }
+    .hero__copy > :nth-child(2) { animation-delay: .06s; }
+    .hero__copy > :nth-child(3) { animation-delay: .1s; }
+    .hero__copy > :nth-child(4) { animation-delay: .14s; }
+    .hero__copy > :nth-child(5) { animation-delay: .18s; }
+    .hero__demo { animation-delay: .22s; }
+    @keyframes pol-up { to { transform: none; } }
+  }
+
+  /* ── foundation (shapes.css 2a): the ground under the two cards ── */
+  .foundation { margin-top: clamp(1rem, .5rem + 2vw, 1.5rem); }
+  @media (min-width: 820px) {
+    .foundation {
+      margin-top: calc(clamp(1rem, .5rem + 2vw, 1.5rem) + .4rem);
+      display: grid; grid-template-columns: 22rem minmax(0, 1fr); gap: 0 3.5rem; align-items: start;
+      background: none; border: 0; border-top: 2px solid var(--seal); border-radius: 0; box-shadow: none;
+      padding: 1.9rem 0 0;
+    }
+    .foundation h3 { font-size: var(--step-2); }
+  }
+  .foundation .for { margin-top: .4rem; }
+  .foundation p:not(.for) { margin: 0; }
+  .foundation .link { margin-top: .7rem; }
+
+  /* ── the Hub: text, figure at full width, then the data card ── */
+  #hub :global(.hs) { margin-top: .4rem; }
+  .hub__text { margin-top: 1.6rem; }
+  .hub__text .actions { margin-top: 1rem; }
+  .datanote { margin-top: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
+  .datanote .eyebrow { margin-bottom: .6rem; }
   .datanote p { color: var(--ink-2); }
-  .datanote .tag { margin-bottom: 0.4rem; }
-
-  .founder { margin-top: 1.25rem; }
+  .datanote :global(.dl) { margin-top: 1rem; }
 </style>

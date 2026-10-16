@@ -29,13 +29,13 @@ const tiers = [
   </PageHero>
 
   <!-- What we offer -->
-  <section class="section band">
+  <section class="section">
     <div class="wrap">
       <p class="eyebrow">What we offer</p>
       <h2 class="h2">Tools, and the thinking around them.</h2>
-      <div class="grid grid--2">
+      <div class="grid grid--2" data-shape="offer">
         <article class="card">
-          <div class="card__head"><h3>Tools</h3><span class="chip chip--live">first server public</span></div>
+          <div class="card__head"><h3>Tools</h3><span class="chip">first server public</span></div>
           <p class="for">for the systems a school already runs</p>
           <p>Model Context Protocol servers that let an assistant work against the systems already in use rather than replacing them. The scope is accounting, contracting and data gathering. Each server exposes a fixed vocabulary of permitted operations, so what it is able to do can be read before it does anything.</p>
           <a class="link" href={ext.lp21}>Lehrplan 21 MCP: read the source</a>
@@ -85,11 +85,12 @@ const tiers = [
       <h2 class="h2">You bring the demand. We provide the base.</h2>
       <p class="intro">Three ways to run it, all in development. For an organisation answerable to the Swiss Data Protection Act (revDSG) or to the GDPR, this choice is the data protection decision: where the data sits, who can reach it, and what record exists of every step.</p>
       <DeployTable />
-      <div class="grid grid--3 tiers">
+      <div class="grid grid--3 tiers" data-shape="spectrum">
         {tiers.map((t) => (
           <article class="card">
             <p class="tag">{t.tag}</p>
             <h3>{t.name}</h3>
+            <span class="chip chip--dev">in development</span>
             <p>{t.body}</p>
             <p class="for">→ {t.gist}</p>
           </article>
@@ -101,7 +102,7 @@ const tiers = [
 
   <!-- Pilot -->
   <section class="section band">
-    <div class="wrap split">
+    <div class="wrap split split--stack">
       <div>
         <p class="eyebrow">Get started</p>
         <h2 class="h2">Start with a pilot.</h2>
@@ -118,8 +119,8 @@ const tiers = [
   </section>
 </Layout>
 
-<style>
-  .tiers { margin-top: clamp(1rem, 0.6rem + 1.5vw, 1.5rem); }
-  .tiers .for { margin-top: auto; color: var(--seal); }
-  .xref { margin-top: 1.25rem; color: var(--muted); }
+<style is:global>
+.section .tiers { margin-top: 2.4rem; }                              /* live: below the figure */
+.xref { margin-top: 1.25rem; color: var(--muted); }
+
 </style>

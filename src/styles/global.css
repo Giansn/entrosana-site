@@ -147,23 +147,22 @@ a { color: inherit; text-decoration: none; }
 strong, b { font-weight: 700; }
 
 :focus-visible { outline: 2px solid var(--seal); outline-offset: 2px; }
-a:focus-visible, button:focus-visible { outline: 2px solid var(--seal); outline-offset: 3px; }
-:where(a, button):focus-visible { border-radius: 2px; }
 /* ::selection — none on live (UA highlight). Intentionally no rule. */
 
 /* ── section ground: band + seams ───────────────────────────────────────── */
 .section { padding-block: var(--section); }
+/* tinted band = live .section--ink. Dark subpages: live leaves it untinted,
+   only the hairlines (the fade lives in design-polish.css, front page only). */
 .band {
-  background: linear-gradient(to bottom,
-    transparent 0,
-    var(--bg-2) 140px,
-    var(--bg-2) calc(100% - 140px),
-    transparent 100%);
+  background: transparent;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
+[data-page="home"] .band {
+  background: linear-gradient(to bottom, transparent 0, var(--bg-2) 140px, var(--bg-2) calc(100% - 140px), transparent 100%);
+}
 .band + .band { border-top: 0; }
-:root[data-theme="light"] .band { background: linear-gradient(180deg,transparent 0,#E2F1F3 8%,#E2F1F3 92%,transparent 100%); }
+:root[data-theme="light"] .band { background: linear-gradient(180deg, transparent 0, #E2F1F3 8%, #E2F1F3 92%, transparent 100%); }
 
 .section + .section { position: relative; }
 .section:not(.band) + .section:not(.band)::before,
@@ -185,6 +184,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--seal); outline-
 /* text inside a band */
 .band :is(h1, h2, h3) { color: #F2F3F0; }
 .band p:not([class]) { color: var(--ink-2); }
+body:not([data-page="home"]) .band .eyebrow { color: #9aa0ad; }
+body:not([data-page="home"]) .band p:not([class]) { color: #c7cbd2; }
+:root[data-theme="light"] .band p:not([class]) { color: var(--ink-2); }
 :root[data-theme="light"] .band :is(h1, h2, h3) { color: var(--ink); }
 :root[data-theme="light"] .band .eyebrow { color: var(--ink-2); }
 
@@ -197,26 +199,27 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--seal); outline-
 }
 .hero > .wrap { position: relative; }
 
-/* links inside running text: live lets them inherit; here they take the accent
-   (like live's arrow links) so they stay findable, underline on hover */
-.prose a, p a:not([class]), li a:not([class]) { color: var(--seal); }
-.prose a:hover, p a:not([class]):hover { text-decoration: underline; text-underline-offset: .18em; }
-.foot a, .foot p a:not([class]) { color: inherit; }
+/* links inside running text: live lets them inherit the text colour; a faint
+   seal underline is kept as the one non-colour cue (WCAG 1.4.1) */
+.prose a, p a:not([class]), li a:not([class]), .form-status a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--seal) 55%, transparent);
+  text-underline-offset: .2em;
+}
+.prose a:hover, p a:not([class]):hover { text-decoration-color: currentColor; }
 
 /* ── layout ────────────────────────────────────────────────────────────── */
 .wrap { width: min(100% - 2 * var(--gutter), var(--wrap)); margin-inline: auto; }
 .section--tight { padding-block: calc(var(--section) * 0.6); }
-.split { display: grid; gap: clamp(1.75rem, 1rem + 3vw, 4rem); }
-@media (min-width: 880px) {
-  .split { grid-template-columns: 1fr 1fr; align-items: start; }
-  .split--wide-left { grid-template-columns: 1.2fr 0.8fr; }
-  .split--wide-right { grid-template-columns: 0.8fr 1.2fr; }
+.split { display: grid; gap: clamp(1.5rem, 1rem + 3vw, 3.5rem); }
+@media (min-width: 820px) { .split, .split--wide-left, .split--wide-right { grid-template-columns: 1fr 1fr; align-items: start; } }
+/* live lopsided splits stack: heading block above, text block below (shapes.css 6) */
+@media (min-width: 820px) {
+  .split--stack { display: block; }
+  .split--stack > :first-child { max-width: 46ch; margin-bottom: 1.6rem; }
+  .split--stack > :last-child { max-width: 72ch; }
 }
-.grid { display: grid; gap: clamp(1rem, 0.6rem + 1.5vw, 1.5rem); }
-@media (min-width: 720px) { .grid--2 { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 900px) { .grid--3 { grid-template-columns: repeat(3, 1fr); } }
-@media (min-width: 720px) and (max-width: 899px) { .grid--3 { grid-template-columns: repeat(2, 1fr); } }
-
 .stack > * + * { margin-top: 1rem; }
 
 /* ── type helpers ─────────────────────────────────────────────────────── */
@@ -274,13 +277,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--seal); outline-
 .band .human.small { color: #c7cbd2; }
 :root[data-theme="light"] .band .human.small { color: var(--ink-2); }
 
-/* long-form text (live .legal) */
-.prose { max-width: 70ch; }
-.prose h2 { font-size: var(--step-1); font-weight: 500; margin: 2rem 0 0; }
-.prose h2:first-child { margin-top: 0; }
-.prose p, .prose li { color: var(--ink-2); }
-.prose p { max-width: 62ch; }
-.prose strong { color: inherit; }
 
 .mono { font-family: var(--font-mono); }
 .muted { color: var(--muted); }
@@ -328,11 +324,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--seal); outline-
 .btn:active { transform: translateY(1px); }
 
 /* primary inside an action group (live .hero__cta .wp-block-button__link): soft cyan bloom, brightness on hover */
-.actions .btn:not(.btn--ghost) {
+.actions .btn:not(.btn--ghost):not(.btn--hub) {
   box-shadow: 0 6px 18px -8px color-mix(in srgb, var(--seal) 55%, transparent);
   transition: filter .18s, border-color .18s, background .18s;
 }
-.actions .btn:not(.btn--ghost):hover {
+.actions .btn:not(.btn--ghost):not(.btn--hub):hover {
   background: var(--seal-2);
   border-color: transparent;
   color: var(--seal-ink);
@@ -414,10 +410,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--seal); outline-
 .actions .link:hover { color: var(--seal); border-bottom-color: currentColor; filter: brightness(1.1); }
 
 /* ── home only (live loads design-polish.css on the front page alone) ── */
-[data-page="home"] .btn { transition: filter .18s ease; }
-[data-page="home"] .btn:hover { filter: brightness(1.1); }
+[data-page="home"] .btn:not(.btn--hub) { transition: filter .18s ease; }
+[data-page="home"] .btn:not(.btn--hub):hover { filter: brightness(1.1); }
 [data-page="home"] .actions .btn:not(.btn--ghost),
-[data-page="home"] .actions .btn:not(.btn--ghost):hover { box-shadow: 0 1px 2px rgba(0,0,0,.18); transition: filter .18s ease; }
+[data-page="home"] .actions .btn:not(.btn--ghost):not(.btn--hub):hover { box-shadow: 0 1px 2px rgba(0,0,0,.18); transition: filter .18s ease; }
 [data-page="home"] .btn--ghost { box-shadow: none; transition: border-color .18s ease; }
 [data-page="home"] .btn--ghost:hover { filter: none; border-color: var(--seal); color: var(--seal); box-shadow: 0 4px 10px rgba(22,24,29,.20); }
 [data-page="home"] .band .btn--ghost:hover { color: #FFFFFF; border-color: #8F95A1; }
@@ -425,140 +421,616 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--seal); outline-
 [data-page="home"] .actions .link { transition: border-color .18s ease; }
 [data-page="home"] :is(a, button):focus-visible { outline: 2px solid var(--seal); outline-offset: 3px; border-radius: 2px; }
 
-/* ── surfaces ──────────────────────────────────────────────────────────── */
+
+/* ══ surfaces — measured on entrosana.com ══ */
+/* ── card grids (live .tools) ── */
+.grid { display: grid; gap: clamp(1rem, .5rem + 2vw, 1.5rem); }        /* 24px at 1440 */
+.grid--2, .grid--3 { grid-template-columns: 1fr; }
+@media (min-width: 820px) {
+  .grid--2 { grid-template-columns: 1fr 1fr; }
+  .grid--3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ── cards (live .card + .tool, radius from shapes.css 2f) ── */
 .card {
   position: relative;
-  display: flex; flex-direction: column; gap: 0.6rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: clamp(1.25rem, 0.9rem + 1.5vw, 2rem);
-  box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: .5rem;
+  background: var(--surface);                 /* #232833 · OS-light dark #2C323E · light #FFFFFF */
+  border: 1px solid var(--line);              /* #454E60 · #505A6E · light #86A0A6 */
+  border-radius: 14px;
+  padding: clamp(1.25rem, .8rem + 2vw, 1.9rem);   /* 30.4px at 1440 */
+  box-shadow: var(--shadow);                  /* live --shadow-1 */
+  transition: box-shadow .18s ease, transform .12s ease, border-color .15s;
 }
+[data-page="home"] .card { transition: border-color .22s; }
+/* live cards do not react to hover (the rule re-asserts --line); no lift, no accent border */
+.card:hover,
+.card--link:hover { border-color: var(--line); transform: none; }
 .card p { color: var(--ink-2); }
-.card .for { font-family: var(--font-mono); font-size: var(--step--1); color: var(--muted); margin: 0; }
-.card > .link { margin-top: auto; align-self: flex-start; }
-/* whole card clickable through its one link (keeps a single tab stop) */
-.card--link { transition: border-color 0.15s, transform 0.12s; }
-.card--link:hover { border-color: var(--seal); transform: translateY(-2px); }
-.card--link .link::before { content: ""; position: absolute; inset: 0; border-radius: inherit; }
-.card__head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; }
+/* "for …" line = live .tool__who */
+.card .for { font-family: var(--font-mono); font-size: var(--step--1); color: var(--seal); margin: 0; }
 
-/* label in mono — what a card is */
-.tag {
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  letter-spacing: 0.06em;
-  color: var(--seal);
-  margin: 0;
-}
+/* card head = live .tool__head: inline on subpages (site.css), stacked on home (design-polish.css) */
+.card__head { display: flex; align-items: baseline; justify-content: space-between; gap: .5rem; }
+[data-page="home"] .card__head { flex-direction: column; align-items: flex-start; justify-content: flex-start; }
 
-/* ── status chips: text + shape + colour, never colour alone ───────────── */
+/* cards on a band (live .section--ink .card) */
+.band .card { background: rgba(255, 255, 255, .04); box-shadow: 0 8px 24px rgba(0, 0, 0, .30); }
+[data-page="home"] .band .card { background: var(--bg); }
+:root[data-theme="light"] .band .card { background: var(--surface); box-shadow: var(--shadow); }
+
+/* ── label (live .card .tag) ── */
+.tag { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: .04em; color: var(--seal); margin: 0; }
+
+/* ── state pill = live .tool__state (no dot: the word carries the state) ── */
 .chip {
-  display: inline-flex; align-items: center; gap: 0.45em;
-  padding: 0.18em 0.7em;
+  display: inline-block; width: fit-content;
+  padding: .15em .5em;                         /* 1.632px 5.44px */
+  border: 1px solid var(--line);
   border-radius: 999px;
-  border: 1px solid var(--control);
+  background: none;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
+  font-size: .68rem;                           /* 10.88px */
+  font-weight: 400;
+  line-height: 1.6;                            /* pill height 22.64px */
+  letter-spacing: .12em;
   text-transform: uppercase;
   white-space: nowrap;
-  color: var(--muted);
-  background: var(--surface);
+  color: var(--muted);                         /* #8F95A1 · #9AA0AC · light #6C7078 */
 }
-.chip::before { content: ""; width: 0.5em; height: 0.5em; border-radius: 50%; border: 1.5px solid currentColor; }
-.chip--built { color: var(--verify); border-color: color-mix(in srgb, var(--verify) 55%, transparent); }
-.chip--built::before { background: currentColor; }
-.chip--dev { color: var(--seal); border-color: color-mix(in srgb, var(--seal) 55%, transparent); }
-.chip--dev::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
-.chip--live { color: var(--seal); border-color: color-mix(in srgb, var(--seal) 55%, transparent); }
-.chip--live::before { background: currentColor; }
-.chip--planned { border-style: dashed; }
+.chip::before { content: none; }
+/* live .tool__state.open: "built", "online & on site", "as an engagement", "self-implementation" */
+.chip--built, .chip--live, .chip--open {
+  color: var(--seal);
+  border-color: color-mix(in srgb, var(--seal) 40%, var(--line));
+}
+/* "in development", "planned", "offline only", "on request": the plain pill */
+.chip--dev, .chip--planned { color: var(--muted); border: 1px solid var(--line); }
+.chip a { text-transform: none; letter-spacing: .06em; }
 
-/* ── facts: key / value rows ───────────────────────────────────────────── */
-.facts { border-top: 1px solid var(--line); }
-.fact { display: grid; gap: 0.35rem; padding-block: 1.15rem; border-bottom: 1px solid var(--line); }
-@media (min-width: 760px) { .fact { grid-template-columns: 15rem 1fr; gap: 2rem; align-items: baseline; } }
-.fact__k { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 600; letter-spacing: 0.06em; color: var(--seal); }
-.fact__v { margin: 0; color: var(--ink-2); }
+/* ── status rows = live .chips: a line of facts, not pills ── */
+.status-list {
+  list-style: none; margin: 0; padding: 0; border: 0;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem 2rem;
+}
+.status-list li {
+  display: block; padding: 0; border: 0;
+  font-family: var(--font-mono); font-size: var(--step--1); font-weight: 400; line-height: 1.9;
+  color: var(--ink-2);
+}
+.status-list .what { font-weight: 400; }
+.status-list .chip {
+  display: inline; padding: 0; border: 0; border-radius: 0; background: none;
+  font: inherit; letter-spacing: normal; text-transform: none; white-space: normal; color: inherit;
+}
+.status-list .chip::before {
+  content: " · "; white-space: pre;
+  display: inline; width: auto; height: auto; border: 0; border-radius: 0; background: none;
+}
+/* home "Where we stand": each live chip keeps a 1rem paragraph margin (rows 21.6px apart) */
+[data-page="home"] .status-list { row-gap: calc(.35rem + 1rem); margin-bottom: 1rem; }
 
-/* ── numbered steps ────────────────────────────────────────────────────── */
-.steps { list-style: none; display: grid; gap: clamp(1.25rem, 0.8rem + 2vw, 2rem); counter-reset: step; }
-@media (min-width: 880px) { .steps { grid-template-columns: repeat(3, 1fr); } }
-.steps > li { counter-increment: step; position: relative; padding-top: 3.25rem; }
+/* ── numbered steps = live "How we work" arrow timeline (shapes.css 2g) ── */
+.steps {
+  list-style: none; margin: 2.5rem 0 0; padding: 0;
+  position: relative; counter-reset: step;
+  display: grid; gap: clamp(1rem, .5rem + 2vw, 2rem);               /* 32px at 1440 */
+}
+@media (min-width: 760px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+.steps > li { counter-increment: step; position: relative; padding-top: 3rem; }
 .steps > li::before {
   content: counter(step, decimal-leading-zero);
   position: absolute; top: 0; left: 0;
-  width: 2.4rem; height: 2.4rem; display: grid; place-items: center;
+  width: 2.2rem; height: 2.2rem; display: grid; place-items: center;
   border: 1px solid var(--seal); border-radius: 50%;
-  font-family: var(--font-mono); font-size: 0.85rem; color: var(--seal);
-  background: var(--bg);
+  background: var(--bg);                       /* live var(--paper), also on a band */
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em; color: var(--seal);
 }
-.band .steps > li::before { background: var(--bg-2); }
-@media (min-width: 880px) {
+.band .steps > li::before { background: var(--bg); }
+.steps > li::after { content: none; }
+@media (min-width: 820px) {
+  .steps { padding-top: 4.2rem; }
+  /* the axis stops at the third node */
+  .steps::before {
+    content: ""; position: absolute; top: 1.45rem; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, var(--seal) 0, var(--line) 64%, transparent 69%);
+  }
+  .steps > li { padding-top: 0; }
+  .steps > li::before { top: -3.85rem; }
+  /* arrowhead in the gutter, pointing at the next step */
   .steps > li:not(:last-child)::after {
-    content: ""; position: absolute; top: 1.2rem; left: 3rem; right: -0.75rem; height: 1px;
-    background: linear-gradient(90deg, var(--seal), var(--line));
+    content: ""; position: absolute; top: -3.06rem; right: -1rem;
+    width: 0; height: 0;
+    border-left: 7px solid var(--seal);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    opacity: .8;
   }
 }
-.steps p { color: var(--ink-2); }
 
-/* ── status list ("what runs today") ───────────────────────────────────── */
-.status-list { list-style: none; display: grid; gap: 0; border-top: 1px solid var(--line); }
-.status-list li {
-  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.4rem 1rem;
-  padding-block: 0.85rem; border-bottom: 1px solid var(--line);
+
+/* ══ SUBPAGE COMPONENTS — measured on entrosana.com 2026-10-16 ═══════════════
+   Sources: live site.css (facts, .form, .legal), shapes.css §2–§4, §8 (rows,
+   figures, market form), page-hero.css, modules.css. Values in comments are
+   the computed sizes at a 1440px viewport. Dark = no attribute; light only
+   under :root[data-theme="light"].
+   Replaces the blocks "facts", "forms" and the .prose block in global.css. */
+
+/* ── facts: key / value rows (live site.css .facts/.fact) ─────────────────── */
+.facts { display: grid; gap: 0; list-style: none; border-top: 1px solid var(--line); }
+.fact {
+  display: grid;
+  gap: .5rem;
+  padding-block: 1.4rem;                         /* 22.4px */
+  border-bottom: 1px solid var(--line);
 }
-.status-list .what { font-weight: 700; }
+@media (min-width: 760px) {
+  .fact { grid-template-columns: 14rem 1fr; gap: 2rem; align-items: baseline; }   /* 224px | 1fr, gap 32px */
+}
+.fact__k {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);                     /* 13.76px */
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: .08em;                         /* 1.1px */
+  text-transform: uppercase;
+  color: var(--seal);
+}
+.fact__v { margin: 0; color: var(--ink-2); max-width: 56ch; }
+/* inside a split, live's paragraph rule (.section .split p) gives both cells
+   a 1rem bottom margin; that is what sets the row height there */
+.split .fact > .fact__k,
+.split .fact > .fact__v { margin: 0 0 1rem; }
+/* on a band (live .section--ink): the stronger hairline and the lighter value */
+.band .facts, .band .fact { border-color: var(--line-2); }
+.band .fact__v { color: #c7cbd2; }
+:root[data-theme="light"] .band .facts,
+:root[data-theme="light"] .band .fact { border-color: var(--line); }
+:root[data-theme="light"] .band .fact__v { color: var(--ink-2); }
 
-/* ── forms ─────────────────────────────────────────────────────────────── */
-.form { display: grid; gap: 1.1rem; }
-.form__row { display: grid; gap: 1.1rem; }
-@media (min-width: 600px) { .form__row { grid-template-columns: 1fr 1fr; } }
-.field { display: grid; gap: 0.4rem; }
+
+/* ── forms (live site.css .form + blocks-bridge #6: request-access) ──────── */
+.form { display: grid; gap: 1rem; max-width: 560px; }
+.form__row { display: contents; }                /* live: one column, no paired fields */
+.field {
+  display: grid;
+  gap: .35rem;                                   /* 5.6px */
+  font-family: var(--font-sans);
+  font-size: var(--step--1);                     /* 13.76px */
+  line-height: 1.6;
+  color: var(--ink-2);
+}
 .field > span, .field > legend {
-  font-family: var(--font-mono); font-size: var(--step--1); font-weight: 600; letter-spacing: 0.03em; color: var(--ink);
   padding: 0;
+  font: inherit;
+  letter-spacing: normal;
+  color: inherit;
 }
 .field .opt { color: var(--muted); font-weight: 400; }
 .field input, .field select, .field textarea {
   width: 100%;
-  min-height: 46px;
-  padding: 0.65rem 0.85rem;
-  border: 1px solid var(--control);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
+  min-height: 0;
+  margin: 0;
+  padding: .6em .7em;                            /* 8.256px 9.632px */
+  border: 1px solid var(--control);              /* live --line-ui: #5A6273 / light #7F979E */
+  border-radius: 4px;                            /* live --radius token (not the 14px panel radius) */
+  background: var(--surface-2);                  /* live --field-bg: #1F232B / light #FFFFFF */
   color: var(--ink);
-  font: inherit;
-  font-size: 1rem;
+  font: inherit;                                 /* 13.76px sans, as the label */
+  box-shadow: inset 0 1px 2px rgba(22, 24, 29, .05);
 }
-.field textarea { min-height: 8rem; resize: vertical; }
+.field textarea { height: 7rem; min-height: 7rem; resize: vertical; }   /* 112px whatever rows= says */
 .field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible {
-  outline: 2px solid var(--seal); outline-offset: 1px; border-color: var(--seal);
+  outline: 2px solid var(--seal);
+  outline-offset: 1px;
 }
+/* prototype-only (live has no invalid state): kept, in the warn token */
 .field input:user-invalid, .field select:user-invalid, .field textarea:user-invalid { border-color: var(--warn); }
 .field .hint { font-size: var(--step--1); color: var(--muted); margin: 0; }
 fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
 
-/* segmented choice built from radios */
-.choice { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.choice label {
-  position: relative;
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0.5rem 1rem;
-  border: 1px solid var(--control); border-radius: 999px; background: var(--surface);
-  font-family: var(--font-mono); font-size: var(--step--1); font-weight: 600; cursor: pointer;
+/* submit + status: live puts the button straight into the form grid, so it
+   spans the full 560px with its label at the left; the note follows in mono */
+.form__foot { display: grid; gap: 0; }
+.form-status {
+  margin: .6rem 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--muted);
 }
-.choice input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-.choice label:has(input:checked) { border-color: var(--seal); background: var(--seal-soft); color: var(--ink); }
-.choice label:has(input:focus-visible) { outline: 2px solid var(--seal); outline-offset: 2px; }
-
-.form__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; }
-.form-status { margin: 0; font-size: var(--step--1); min-height: 1.4em; }
+.form-status:empty { margin: 0; min-height: 0; }
 .form-status[data-state="ok"] { color: var(--verify); }
 .form-status[data-state="warn"] { color: var(--warn); }
 .form-status a { color: var(--seal); }
+.form > p.small {                                /* live: p.mono.muted after the button */
+  margin: 1.6rem 0 1rem;                         /* 25.6px, after the 1rem form gap */
+  max-width: 62ch;                               /* in mono: 426px */
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* the market form (live shapes.css §8 .market__form): mono labels, 8px
+   fields on the faint hairline, button at its own width beside the status */
+.market__form .form { gap: .85rem; max-width: none; }                          /* 13.6px */
+.market__form .field { gap: .3rem; font-family: var(--font-mono); }            /* label 13.76px mono */
+.market__form .field input,
+.market__form .field select,
+.market__form .field textarea {
+  padding: .6em .75em;                           /* 8.256px 10.32px */
+  border-color: var(--line);                     /* live: --line here, not --line-ui */
+  border-radius: 8px;
+  font-family: var(--font-sans);
+}
+.market__form .field textarea { height: 6.66rem; min-height: 5.5rem; }        /* live rows=4: 106.5px; min 88px */
+.market__form .form__foot { display: flex; flex-wrap: wrap; align-items: center; gap: .9rem; margin-top: .3rem; }
+.market__form .form-status { margin: 0; max-width: 34ch; }
+.market__form .form > p.small { margin: .2rem 0 0; max-width: 40ch; }
+
+/* prototype-only: the request/propose switch, drawn in the live selection
+   language of modules.css (.tabs): seal fill plus a 2px bar, on a fading rule */
+.choice { position: relative; display: flex; flex-wrap: wrap; gap: .3rem; }
+.choice::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--seal) 26%, transparent), transparent 82%);
+}
+:root[data-theme="light"] .choice::after {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--seal) 60%, transparent), transparent 82%);
+}
+.choice label {
+  position: relative; z-index: 1;
+  display: inline-flex; align-items: center;
+  min-height: 2.75rem;
+  padding: .4rem .95rem;
+  border: 0;
+  border-radius: 8px 8px 0 0;
+  background: none;
+  color: var(--ink-2);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color .12s, color .12s;
+}
+.choice label:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
+.choice label:has(input:checked) { color: var(--ink); background: color-mix(in srgb, var(--seal) 12%, transparent); }
+.choice label:has(input:checked)::after {
+  content: ""; position: absolute; left: .6rem; right: .6rem; bottom: 0; height: 2px;
+  border-radius: 999px; background: var(--seal);
+}
+.choice label:has(input:focus-visible) { outline: 2px solid var(--seal); outline-offset: 2px; }
+.choice input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+
+
+/* ── row registers (live shapes.css §2b ladder, §2k offer, §2e, §3, §3a) ────
+   markup: data-shape="offer" | "ladder" on the .grid that holds the cards.
+   card → row:  .card__head = .tool__head · .for = .tool__who ·
+                p = prose · .link = .tool__more · .chip = .tool__state */
+.section [data-shape="offer"],
+.section [data-shape="ladder"] { display: grid; grid-template-columns: 1fr; gap: 0; }
+.section [data-shape="offer"] { border-top: 1px solid var(--line); }
+/* §2e: the ladder is one panel with the rows nested in it */
+.section [data-shape="ladder"] {
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: .4rem clamp(1.2rem, .6rem + 2vw, 2.6rem);          /* 6.4px 38.4px */
+}
+.section [data-shape="offer"] > .card,
+.section [data-shape="ladder"] > .card {
+  display: flex; flex-direction: column; gap: .5rem;            /* live .tool below the breakpoint */
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 1.7rem 0;                                            /* 27.2px */
+}
+.section [data-shape="offer"] > .card:last-child,
+.section [data-shape="ladder"] > .card:last-child { border-bottom: 0; }
+/* the name: these rows are .tool, not .card, on live → sans h3 at the UA 1.17em */
+.section [data-shape="offer"] > .card h3,
+.section [data-shape="ladder"] > .card h3 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1.17em;                                            /* 19.66px */
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -.01em;
+}
+
+/* row internals shared by every register shape */
+.section [data-shape] > .card > .card__head {
+  display: flex; flex-wrap: nowrap; align-items: baseline; justify-content: space-between; gap: .5rem;
+}
+.section [data-shape="offer"] > .card > .card__head { flex-wrap: wrap; gap: .8rem; }
+.section [data-shape] > .card > .for {
+  margin: 0;
+  max-width: none;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  letter-spacing: normal;
+  color: var(--seal);
+}
+.section [data-shape] > .card > p:not(.for):not(.tag) { margin: 0 0 1rem; color: var(--ink-2); }
+.section [data-shape] > .card > .link { margin: auto 0 0; align-self: flex-start; }
+
+/* the state as a word in a pill (live .tool__state); "built" is .open */
+.section [data-shape] .chip {
+  display: block;
+  gap: 0;
+  padding: .15em .5em;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: .68rem;                                            /* 10.88px */
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.section [data-shape] .chip::before { content: none; }
+.section [data-shape] .chip--built {
+  color: var(--seal);
+  border-color: color-mix(in srgb, var(--seal) 40%, var(--line));
+}
+
+@media (min-width: 820px) {
+  .section [data-shape="ladder"] > .card {
+    display: grid;
+    grid-template-columns: 17rem minmax(0, 1fr);                /* 272px | 1fr */
+    gap: .35rem 3rem;                                           /* 5.6px 48px */
+    align-items: start;
+  }
+  .section [data-shape="ladder"] > .card > .card__head { grid-column: 1; grid-row: 1; }
+  .section [data-shape="ladder"] > .card > .for { grid-column: 1; grid-row: 2; }
+  .section [data-shape="ladder"] > .card > :not(.card__head):not(.for) { grid-column: 2; margin: 0 0 .5rem; }
+}
+@media (min-width: 860px) {
+  .section [data-shape="offer"] > .card {
+    display: grid;
+    grid-template-columns: 17rem minmax(0, 1fr);
+    gap: .35rem 3rem;
+    align-items: start;
+  }
+  .section [data-shape="offer"] > .card > .card__head { grid-column: 1; grid-row: 1; }
+  .section [data-shape="offer"] > .card > .for { grid-column: 1; grid-row: 2; }
+  .section [data-shape="offer"] > .card > :not(.card__head):not(.for) { grid-column: 2; margin: 0 0 .6rem; }
+
+  /* §3: the name sizes row 1 alone; the label sits right under it and the
+     prose spans both tracks beside them */
+  .section [data-shape="offer"] > .card,
+  .section [data-shape="ladder"] > .card { grid-template-rows: min-content auto min-content; position: relative; }
+  .section [data-shape="offer"] > .card > .card__head,
+  .section [data-shape="ladder"] > .card > .card__head { grid-row: 1; align-self: start; }
+  .section [data-shape="offer"] > .card > .for,
+  .section [data-shape="ladder"] > .card > .for { grid-row: 2; align-self: start; margin-top: .1rem; }
+  .section [data-shape="offer"] > .card > p:not(.for):not(.tag),
+  .section [data-shape="ladder"] > .card > p:not(.for):not(.tag) { grid-row: 1 / span 2; margin: 0; }
+  .section [data-shape="offer"] > .card > .link,
+  .section [data-shape="ladder"] > .card > .link { grid-row: 3; }
+
+  /* §3a: the seal-tinted rule between the naming column and the prose */
+  .section [data-shape="offer"] > .card::before,
+  .section [data-shape="ladder"] > .card::before {
+    content: "";
+    position: absolute;
+    left: calc(17rem + 1.5rem);                                 /* 296px */
+    top: 1.7rem;
+    bottom: 1.7rem;
+    width: 1px;
+    background: color-mix(in srgb, var(--seal) 30%, transparent);
+  }
+  :root[data-theme="light"] .section [data-shape="offer"] > .card::before,
+  :root[data-theme="light"] .section [data-shape="ladder"] > .card::before {
+    background: color-mix(in srgb, var(--seal) 60%, transparent);
+  }
+}
+
+
+/* ── strata (live §2i, roadmap "The foundation is built") ───────────────────
+   markup: data-shape="strata" on #today .grid. DOM order bottom-up. */
+.section [data-shape="strata"] { display: flex; flex-direction: column-reverse; gap: .4rem; }
+.section [data-shape="strata"] > .card {
+  display: flex; flex-direction: column; gap: .5rem;
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--verify);
+  border-radius: 6px;
+  box-shadow: none;
+  padding: 1.3rem 1.5rem;                                       /* 20.8px 24px */
+}
+@media (min-width: 860px) {
+  .section [data-shape="strata"] > .card:nth-child(2) { margin-right: 3rem; }
+  .section [data-shape="strata"] > .card:nth-child(3) { margin-right: 6rem; }
+  .section [data-shape="strata"] > .card {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);                /* 240px | 1fr */
+    grid-template-rows: min-content auto min-content;
+    gap: .3rem 2.5rem;                                          /* 4.8px 40px */
+    align-items: start;
+  }
+  .section [data-shape="strata"] > .card > .card__head { grid-column: 1; grid-row: 1; align-self: start; }
+  .section [data-shape="strata"] > .card > .for { grid-column: 1; grid-row: 2; align-self: start; margin-top: .1rem; }
+  .section [data-shape="strata"] > .card > :not(.card__head):not(.for) { grid-column: 2; margin: 0 0 .4rem; }
+  .section [data-shape="strata"] > .card > p:not(.for):not(.tag) { grid-row: 1 / span 2; margin: 0; }
+}
+/* LIVE QUIRK (light only): the ink-section card rule outranks the strata
+   rule, so the slabs turn solid white with the card shadow, and "built"
+   falls back to ink-2. Drop these two rules to keep the translucent slab. */
+:root[data-theme="light"] .band [data-shape="strata"] > .card { background: var(--surface); box-shadow: var(--shadow); }
+:root[data-theme="light"] .band .chip { color: var(--ink-2); }
+
+
+/* ── principles (live §2j, roadmap "Three decisions") ───────────────────────
+   markup: data-shape="principles" on #decisions .grid */
+.section [data-shape="principles"] { display: grid; grid-template-columns: 1fr; gap: 2.6rem; }   /* 41.6px */
+.section [data-shape="principles"] > .card {
+  display: flex; flex-direction: column; gap: .5rem;
+  max-width: 62ch;                                              /* 527px */
+  padding: 0;
+  background: none; border: 0; border-radius: 0; box-shadow: none;
+}
+.section [data-shape="principles"] > .card h3 {
+  font-size: var(--step-2);                                     /* 33.6px mono */
+  line-height: 1.15;
+  margin-bottom: .5rem;
+}
+
+
+/* ── spectrum (live §2c + §7/7a, the tier columns) ──────────────────────────
+   markup: data-shape="spectrum" on service .tiers and on roadmap #tiers .grid */
+.section [data-shape="spectrum"] {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, .5rem + 2vw, 2rem);                          /* live .grid gap */
+  padding-inline: clamp(1.2rem, .6rem + 2vw, 2.6rem);           /* 38.4px */
+}
+@media (min-width: 760px) { .section [data-shape="spectrum"] { grid-template-columns: repeat(3, 1fr); } }
+.section [data-shape="spectrum"] > .card { display: flex; flex-direction: column; gap: .5rem; border-radius: 14px; }
+.section [data-shape="spectrum"] > .card > .tag { max-width: none; letter-spacing: .04em; color: var(--seal); }   /* .card p would win over .tag */
+.section [data-shape="spectrum"] > .card > .card__head { display: flex; flex-direction: column; align-items: stretch; gap: .5rem; }
+.section [data-shape="spectrum"] > .card > p:not(.tag):not(.for) { flex: 1; margin: 0 0 1rem; }
+/* LIVE QUIRK: on subpages the state pill is a block, so it runs the full
+   column width (the inline-block fix lives in the home-only stylesheet).
+   For a word-sized pill: width: fit-content. */
+.section [data-shape="spectrum"] .chip { width: auto; }
+@media (min-width: 820px) {
+  .section [data-shape="spectrum"] {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    position: relative;
+    padding-top: 2.6rem;                                        /* 41.6px */
+  }
+  /* the axis, seal fading to the hairline in the direction of travel */
+  .section [data-shape="spectrum"]::before {
+    content: ""; position: absolute; top: .8rem; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, var(--seal), var(--line));
+  }
+  .section [data-shape="spectrum"] > .card {
+    position: relative;
+    background: none; border: 0; box-shadow: none;
+    padding: 0 2.2rem 0 0;                                      /* 35.2px */
+  }
+  .section [data-shape="spectrum"] > .card + .card { border-left: 1px solid var(--line); padding-left: 2.2rem; }
+  /* the node on the axis above each tier */
+  .section [data-shape="spectrum"] > .card::after {
+    content: ""; position: absolute; top: -1.95rem; left: 0;
+    width: 9px; height: 9px; border-radius: 50%; background: var(--seal);
+  }
+  .section [data-shape="spectrum"] > .card + .card::after { left: 2.2rem; }
+}
+/* roadmap tiers: the "still needs" line is live .deploy__fact (mono, ink-2) */
+#tiers [data-shape="spectrum"] > .card > p:not(.tag) {
+  flex: 0 0 auto;
+  margin: .5rem 0 1rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+#tiers [data-shape="spectrum"] > .card > p:not(.tag) strong { font-weight: 400; }
+/* LIVE QUIRK (light only, ink section): the tier columns turn into white
+   cards with the card shadow, padding unchanged. Drop to keep them open. */
+@media (min-width: 820px) {
+  :root[data-theme="light"] .band [data-shape="spectrum"] > .card { background: var(--surface); box-shadow: var(--shadow); }
+}
+
+/* /service/ (live §7, 7a): the figure already names the tiers, so the column
+   heading is kept for screen readers only; the closing line leads in seal and
+   sits on one baseline across the three columns */
+.section .tiers[data-shape="spectrum"] { padding-top: 0; }
+.section .tiers[data-shape="spectrum"]::before,
+.section .tiers[data-shape="spectrum"] > .card::after { display: none; }
+.section .tiers[data-shape="spectrum"] > .card > h3 {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip-path: inset(50%);
+}
+.section .tiers[data-shape="spectrum"] > .card > .for {
+  margin: 0 0 .5rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--seal);
+}
+@media (min-width: 820px) {
+  .section .tiers[data-shape="spectrum"] > .card { padding-bottom: 3.4rem; }        /* 54.4px */
+  .section .tiers[data-shape="spectrum"] > .card > .for { position: absolute; bottom: 0; left: 0; margin: 0; }
+  .section .tiers[data-shape="spectrum"] > .card + .card > .for { left: 2.2rem; }
+}
+
+
+/* ── figures (live shapes.css §4): only needed if a live SVG figure is
+   pasted in (scope rings, adapters). The HTML figures style themselves. ── */
+.diagram {
+  margin-top: 2.4rem;                                           /* 38.4px */
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  padding: clamp(.9rem, .5rem + 1.5vw, 1.6rem);                 /* 25.6px */
+  overflow: hidden;
+}
+.diagram svg { display: block; width: 100%; height: auto; }
+.diagram text { font-family: var(--font-mono); fill: var(--ink); font-size: 12px; }
+.diagram .small { font-size: 10px; fill: var(--muted); }
+.diagram .accent { fill: var(--seal); }
+.diagram .trail { stroke: var(--verify); }
+.diagram-mobile { display: none; }
+@media (max-width: 719px) {
+  .diagram svg { display: none; }
+  .diagram-mobile { display: grid; gap: .35rem; font-family: var(--font-mono); font-size: var(--step--1); }
+  .diagram-mobile strong { font-weight: 500; color: var(--seal); }
+  .diagram-mobile .muted { color: var(--muted); }
+  .diagram-mobile .accent { color: var(--seal); }
+}
+.diagram--scope .ring { font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em; fill: var(--ink-2); }
+.diagram--scope .ring--in { font-size: 15px; fill: var(--seal); }
+
+
+/* ── long-form text (live .legal) ─────────────────────────────────────────── */
+.prose { max-width: 70ch; }                                     /* 595px */
+.prose h2 {
+  margin: 2rem 0 0;                                             /* 32px above, none below: live */
+  font-size: var(--step-1);                                     /* 22.4px */
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -.01em;
+}
+.prose p, .prose li { color: var(--ink-2); }
+.prose p { max-width: 62ch; margin: 0 0 1rem; }                 /* 527px */
+.prose strong { color: inherit; font-weight: 700; }
+/* the legal column is one centred 70ch measure, hero included (live .wrap.legal) */
+.legal-wrap > .wrap { max-width: 70ch; }
+.section.legal-wrap { padding-top: 0; padding-bottom: clamp(2rem, 1rem + 3vw, 3rem); }   /* live: the .ph bottom */
+.section.ph + .section.legal-wrap:not(.band)::before { content: none; }                  /* one section on live: no seam */
+/* imprint opens on an h2: live collapses h1 (1.2rem) into h2 (2rem) = 32px */
+.legal-wrap .prose > h2:first-child { margin-top: .8rem; }
+
+
+/* live ladder rows keep the card radius (shapes.css 2f): the separators curl up at the ends */
+.section [data-shape="ladder"] > .card { border-radius: 14px; }
+
+/* ── fixes from the cross-check against live ── */
+/* whole card clickable through its one link (single tab stop, as live's stretched link) */
+.card--link .link::before { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.btn--hub:active { transform: none; }
+/* a lone ghost pill sits 16px under its paragraph, not in a CTA group (live p.x-inl) */
+.actions:has(> .btn--ghost:only-child) { margin-top: 0; }
+.actions > .btn--ghost:only-child { margin: 0; }
+/* card labels stay seal (.card p would otherwise win) */
+.tag.tag { color: var(--seal); }
+/* text-link hover: only register rows, CTA groups and jump links underline on live */
+.card .link:hover { border-bottom-color: transparent; }
+.section [data-shape="offer"] > .card .link:hover, .actions .link:hover, .toc a:hover { border-bottom-color: currentColor; }
+/* heading measures */
+.h2:has(+ .human) { max-width: 24ch; margin-bottom: 2.5rem; }
+#hub .h2 { max-width: 20ch; margin-bottom: 2.5rem; }
 
 /* ── skip link ─────────────────────────────────────────────────────────── */
 .skip {

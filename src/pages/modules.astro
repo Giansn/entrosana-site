@@ -25,7 +25,7 @@ const areas = [
   </PageHero>
 
   <!-- Available now: the most useful thing on the page, so it comes first -->
-  <section class="section section--tight" id="available">
+  <section class="section band" id="available">
     <div class="wrap">
       <article class="card avail">
         <div class="avail__main">
@@ -44,7 +44,7 @@ const areas = [
   </section>
 
   <!-- Areas: all three visible at once (no tabs to click through) -->
-  <section class="section band">
+  <section class="section">
     <div class="wrap">
       <p class="eyebrow">Module areas</p>
       <h2 class="h2">Three areas, scoped on request.</h2>
@@ -91,15 +91,30 @@ const areas = [
   </section>
 </Layout>
 
-<style>
-  .avail { display: grid; gap: 1.5rem 2.5rem; border-color: color-mix(in srgb, var(--seal) 45%, var(--line)); }
-  @media (min-width: 880px) { .avail { grid-template-columns: 1.5fr 1fr; align-items: end; } }
-  .avail .h2 { font-size: var(--step-2); margin-bottom: 1.25rem; }
-  .avail__cta { display: grid; gap: 0.9rem; justify-items: start; }
-  .market__paths { display: grid; gap: 1.25rem; margin-bottom: 1.5rem; }
-  .market__paths h3 { margin-bottom: 0.35rem; }
-  .market__paths p { color: var(--ink-2); }
-  .market__facts { list-style: none; margin-bottom: 1rem; }
-  @media (min-width: 760px) { .market__facts .fact { grid-template-columns: 9rem 1fr; } }
-  @media (min-width: 880px) { .market__form { position: sticky; top: 6rem; } }
+<style is:global>
+/* live modules.css: the first section after the hero starts at half spacing */
+.section.ph + .section { padding-top: clamp(1.75rem, 1rem + 2.5vw, 3.25rem); }   /* 52px */
+
+.avail { display: grid; gap: 1.5rem 2.5rem; }
+@media (min-width: 880px) { .avail { grid-template-columns: 1.5fr 1fr; align-items: end; } }
+.avail .h2 { font-size: var(--step-2); margin-bottom: 1.25rem; }
+.avail__cta { display: grid; gap: 0.9rem; justify-items: start; }
+.market__paths { display: grid; gap: 1.25rem; margin-bottom: 1.5rem; }
+.market__paths h3 { margin-bottom: 0.35rem; }
+.market__paths p { color: var(--ink-2); }
+
+/* facts: live 14rem key column (the 9rem override goes) */
+.market__facts { list-style: none; margin-bottom: 1rem; }
+
+/* the form surface = live .market__modal (card-bg, 1px line, 14px, 2rem) */
+.card.market__form {
+  display: block;
+  padding: clamp(1.3rem, 1rem + 1.5vw, 2rem);                       /* 32px */
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);       /* live dialog: 0 18px 60px rgba(0,0,0,.55) over a backdrop; inline it takes the card shadow */
+}
+@media (min-width: 880px) { .card.market__form { position: sticky; top: 6rem; } }
+
 </style>

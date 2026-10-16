@@ -1,11 +1,17 @@
 /* Record illustration island (RecordChain.tsx). */
 .rc {
-  margin: 0;
+  margin: 0; max-width: 460px; overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: clamp(1.1rem, 0.8rem + 1vw, 1.6rem);
+  border-radius: 10px;
+  box-shadow: var(--shadow-2);
+  padding: 1.25rem 1.4rem 1.3rem;
+}
+/* live .receipt__perf */
+.rc::before {
+  content: ""; display: block; height: 10px;
+  margin: -1.25rem -1.4rem 1.25rem;
+  background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px);
 }
 .rc__cap { margin-bottom: 0.9rem; }
 .rc__log { list-style: none; display: grid; border-top: 1px dashed var(--line); }

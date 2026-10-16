@@ -15,7 +15,11 @@ import { href } from "../../lib/site";
   </section>
 </Layout>
 
-<style>
-  .legal-wrap { padding-top: 0; }
-  .langswitch { margin-top: 0.5rem; }
+<style is:global>
+.langswitch {                         /* live: the link sits at the end of the lede */
+  font-size: var(--step-1);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
 </style>

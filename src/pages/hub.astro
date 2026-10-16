@@ -40,7 +40,7 @@ const people = [
   </PageHero>
 
   <!-- Who it's for -->
-  <section class="section band">
+  <section class="section">
     <div class="wrap">
       <p class="eyebrow">Who it’s for</p>
       <h2 class="h2">Learners, parents, teachers and schools.</h2>
@@ -62,9 +62,9 @@ const people = [
       <p class="eyebrow">What the Hub does</p>
       <h2 class="h2">Where the work is agreed, and where it runs.</h2>
       <p class="intro">Someone needs a module or a connector, someone else can build it: the Hub is where they meet. And it is where the work then runs, with the record sitting beside it rather than buried in settings.</p>
-      <div class="grid grid--2">
+      <div class="grid grid--2" data-shape="ladder">
         <article class="card">
-          <div class="card__head"><h3>The market</h3><span class="chip chip--live">open to requests</span></div>
+          <div class="card__head"><h3>The market</h3><span class="chip">open to requests</span></div>
           <p class="for">for the people who need work and the people who can do it</p>
           <p>Request a module built for your context, or propose one you would build yourself. Contributors and the organisations that need the work meet here rather than through an inbox, and what is agreed is scoped in the open under AGPL-3.0.</p>
           <a class="link" href={href("/modules/#request")}>Request or propose a module</a>
@@ -98,7 +98,7 @@ const people = [
 
   <!-- Partnerships -->
   <section class="section">
-    <div class="wrap split">
+    <div class="wrap split split--stack">
       <div>
         <p class="eyebrow">Partnerships</p>
         <h2 class="h2">Responsible tech, with evidence.</h2>
@@ -114,7 +114,7 @@ const people = [
 
   <!-- Take part -->
   <section class="section band">
-    <div class="wrap split">
+    <div class="wrap split split--stack">
       <div>
         <p class="eyebrow">Take part</p>
         <h2 class="h2">Bring a class, a question, or a commit.</h2>
@@ -131,10 +131,28 @@ const people = [
   </section>
 </Layout>
 
-<style>
-  .plan { gap: 0.4rem; }
-  .plan__list { list-style: none; display: grid; gap: 0; margin-top: 0.5rem; border-top: 1px solid var(--line); }
-  .plan__list li { display: grid; gap: 0.05rem; padding: 0.55rem 0; border-bottom: 1px solid var(--line); }
-  .plan__list b { font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; color: var(--ink); }
-  .plan__list span { font-size: 0.9rem; color: var(--muted); }
+<style is:global>
+.ph .plan {
+  display: flex; flex-direction: column; gap: 1rem;                 /* live .ph__col--b */
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.ph .plan > .tag { order: 3; margin-top: .8rem; letter-spacing: normal; color: var(--seal); }   /* live .tool__who: mono 13.76px seal */
+.ph .plan > p.small { font-size: var(--step-0); color: var(--ink); }    /* live col-B paragraph: 16.8px ink */
+.plan__list {
+  list-style: disc;
+  margin: 0;
+  padding-left: 40px;
+  border: 0;
+}
+.plan__list li { display: list-item; padding: 0; border: 0; color: var(--ink); }
+.plan__list b { font-family: var(--font-sans); font-size: inherit; font-weight: 700; color: var(--ink); }
+.plan__list b::after { content: " "; }
+.plan__list span { font-size: inherit; color: var(--ink); }
+
+/* live /hub/ also loads modules.css: half spacing after the page hero */
+.section.ph + .section { padding-top: clamp(1.75rem, 1rem + 2.5vw, 3.25rem); }
 </style>

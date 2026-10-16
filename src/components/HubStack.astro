@@ -24,20 +24,113 @@ import { href } from "../lib/site";
   </div>
 </figure>
 
-<style>
-  .hs { margin: 0; display: grid; gap: 0.6rem; }
-  .hs__top { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; padding-inline: 8%; }
-  .hs__block, .hs__slab {
-    display: grid; gap: 0.1rem; justify-items: center; text-align: center;
-    padding: 0.95rem 1rem; border-radius: var(--radius-sm);
-    border: 1.5px solid var(--control); background: var(--surface);
-    color: var(--ink); text-decoration: none;
+<style is:global>
+/* HubStack — drawn as the live home figure "The Hub, and what runs in it"
+   (SVG viewBox 900×310 in a .diagram box), at SVG coordinates in --u. */
+
+.hs {
+  container: hs / inline-size;
+  --u: calc(100cqi / 900);
+  --pad: clamp(.9rem, .5rem + 1.5vw, 1.6rem);                       /* 25.6px */
+  position: relative;
+  display: flex;                      /* the ladder's line stack; on the drawing only the spacer is in flow */
+  flex-direction: column;
+  gap: .35rem;
+  margin: 0;
+  padding: var(--pad);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  overflow: hidden;
+}
+.hs a { text-decoration: none; }
+
+@container hs (min-width: 619px) {
+  .hs__top { display: block; height: calc(310 * var(--u)); }       /* the drawing's height */
+  .hs__block, .hs__slab { position: absolute; display: block; margin: 0; }
+  .hs__k, .hs__v { display: block; font-family: var(--font-mono); line-height: 1; white-space: nowrap; letter-spacing: normal; }
+  .hs__k { font-size: calc(12 * var(--u)); font-weight: 400; text-transform: uppercase; color: var(--ink); }     /* 14.5px */
+  .hs__v { margin-top: calc(11.66 * var(--u)); font-size: calc(10 * var(--u)); color: var(--muted); }           /* 12.1px */
+
+  /* THE HUB: rect 40,48 820×205 rx 8, stroke 2 --line, no fill; label in accent */
+  .hs__slab--hub {
+    z-index: 1;
+    left: calc(var(--pad) + 39 * var(--u));
+    top: calc(var(--pad) + 47 * var(--u));
+    width: calc(822 * var(--u));
+    height: calc(207 * var(--u));
+    padding: calc(23 * var(--u)) 0 0 calc(24 * var(--u));
+    border: calc(2 * var(--u)) solid var(--line);
+    border-radius: calc(9 * var(--u));
+    background: none;
+    transition: border-color .15s;
   }
-  a.hs__block, a.hs__slab { transition: border-color 0.15s, transform 0.12s; }
-  a.hs__block:hover, a.hs__slab:hover { border-color: var(--seal); transform: translateY(-2px); }
-  .hs__slab--hub { margin-inline: 4%; border-color: var(--seal); background: var(--seal-soft); }
-  .hs__slab--record { border-style: dashed; border-color: var(--verify); color: var(--ink); }
-  .hs__k { font-size: 0.92rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
-  .hs__slab--record .hs__k { color: var(--verify); }
-  .hs__v { font-size: 0.88rem; color: var(--muted); }
+  .hs__slab--hub .hs__k { color: var(--seal); }
+  .hs__slab--hub:hover { border-color: var(--seal); }
+
+  /* TOOLS / MODULES: rect 290×75 rx 5, stroke 2 --seal, fill --paper-2 */
+  .hs__block {
+    z-index: 2;
+    top: calc(var(--pad) + 131 * var(--u));
+    width: calc(292 * var(--u));
+    height: calc(77 * var(--u));
+    padding: calc(20 * var(--u)) 0 0 calc(24 * var(--u));
+    border: calc(2 * var(--u)) solid var(--seal);
+    border-radius: calc(6 * var(--u));
+    background: var(--bg-2);
+    transition: background-color .15s;
+  }
+  .hs__block:nth-child(1) { left: calc(var(--pad) + 99 * var(--u)); }
+  .hs__block:nth-child(2) { left: calc(var(--pad) + 509 * var(--u)); }
+  .hs__block:hover { background: color-mix(in srgb, var(--seal) 12%, var(--bg-2)); }
+
+  /* the trail: two drops from the boxes into one line, --verify, dots r 5 */
+  .hs::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    left: calc(var(--pad) + 244 * var(--u));
+    top: calc(var(--pad) + 207 * var(--u));
+    width: calc(412 * var(--u));
+    height: calc(29 * var(--u));
+    border: calc(2 * var(--u)) solid var(--verify);
+    border-top: 0;
+  }
+  .hs::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    left: calc(var(--pad) + 240 * var(--u));
+    top: calc(var(--pad) + 230 * var(--u));
+    width: calc(10 * var(--u));
+    height: calc(10 * var(--u));
+    border-radius: 50%;
+    background: var(--verify);
+    box-shadow: calc(410 * var(--u)) 0 0 0 var(--verify);
+  }
+
+  /* SEALED RECORD: text.accent at x 360, baseline y 275, under the frame */
+  .hs__slab--record {
+    left: calc(var(--pad) + 360 * var(--u));
+    top: calc(var(--pad) + 265 * var(--u));
+    padding: 0; border: 0; background: none;
+  }
+  .hs__slab--record .hs__k { display: inline; color: var(--seal); }
+  /* prototype-only descriptor beside it, as a small label */
+  .hs__slab--record .hs__v { display: inline; margin: 0 0 0 1ch; }
+}
+
+/* text ladder (live .diagram-mobile): THE HUB / ↓ TOOLS / ↓ MODULES / ↓ SEALED RECORD */
+@container hs (max-width: 618.98px) {
+  .hs__top { display: contents; }
+  .hs > *, .hs__top > * { font-family: var(--font-mono); font-size: var(--step--1); line-height: 1.6; }
+  .hs__slab--hub { order: -1; display: grid; gap: .35rem; }
+  .hs__slab--hub .hs__k { font-weight: 500; text-transform: uppercase; color: var(--seal); }
+  .hs__slab--hub .hs__v { color: var(--muted); }
+  .hs__block, .hs__slab--record { display: block; font-weight: 500; color: var(--seal); }
+  .hs__block::before, .hs__slab--record::before { content: "\2193  "; }
+  .hs__block .hs__k, .hs__slab--record .hs__k { text-transform: uppercase; }
+  .hs__block .hs__v::before, .hs__slab--record .hs__v::before { content: " · "; }
+}
+
 </style>
