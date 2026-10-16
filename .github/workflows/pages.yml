@@ -1,5 +1,5 @@
-# Build Astro and publish to GitHub Pages (public origin for entrosana.com).
-# e14 Funnel/systemd stay independent — this does not touch them.
+# Build Astro and publish to GitHub Pages (backup/preview origin).
+# entrosana.com itself is served elsewhere — this does not touch it.
 name: pages
 
 on:
@@ -29,7 +29,14 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # The project page lives under /entrosana-site/ (no custom domain), so
+      # the build needs that base path or every asset and link 404s.
+      # configure-pages reports it ("" once a custom domain is set).
+      - id: pages
+        uses: actions/configure-pages@v5
       - run: pnpm build
+        env:
+          ASTRO_BASE: ${{ steps.pages.outputs.base_path }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
