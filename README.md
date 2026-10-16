@@ -1,21 +1,35 @@
 # entrosana-site
 
-Marketing site for [entrosana](https://entrosana.com) — Deterministic Language Models for back-office work. Swiss-hosted, audit-grade, built on CashCtrl.
+Marketing site for [entrosana](https://entrosana.com) — adaptive learning modules and open back-office tooling for educational organisations, with a sealed record underneath both. Swiss/EU data residency by design.
 
-Rebuilt 2026-06-27 as a proper Astro project after the previous deploy turned out to be an orphaned single-file bundle with no source under version control.
+> **Status (2026-10-16): prototype.** entrosana.com is currently served by WordPress. This repo carries the same content with a reworked UX (see [`docs/UX-AUDIT.md`](docs/UX-AUDIT.md)). Nothing here goes live until the owner approves.
 
 ## Stack
-- **Astro** (static MPA) — real routes/subpages, minimal JS
+- **Astro 5** (static MPA) — real routes, static HTML by default
+- **Preact islands** for the interactive parts only: header/menu/theme (`client:load`), record illustration (`client:visible`), forms (`client:idle` / `client:visible`). Everything else ships no JS.
 - Hand-authored CSS design system (`src/styles/global.css`), no Tailwind
-- Self-hosted fonts via `@fontsource` (no third-party font calls — fits Swiss data-residency posture)
+- Self-hosted fonts via `@fontsource`: **Carlito** (metric twin of Calibri) for text, **Inconsolata** for labels and the wordmark — no third-party font calls
 
 ## Design
-"The signed record." Monospace (Geist Mono) as the display voice — determinism = exactness; Hanken Grotesk body; Newsreader serif italic reserved for the human-review moments. Cool paper `#F4F5F3`, ink `#16181D`, one ink-blue "seal" accent `#2742E0` tied to the signed audit trail. Signature element: the interactive **determinism receipt** in the hero (`src/components/Receipt.astro`) — same input → identical SHA-256 every run; the stochastic toggle drifts.
+Brand as on entrosana.com: graphite `#1b1e24` and cyan `#2bd4e8` (dark), cyan-tinted paper `#eef7f8` and teal `#077183` (light), the spiral mark. The theme follows the OS; the header toggle overrides it (`localStorage["entrosana-theme"]`). All text pairs ≥ 4.5:1 in both themes.
+Signature element: the **record illustration** on the home page (`src/components/RecordChain.astro` + `islands/RecordChain.tsx`) — three log entries sealed with real SHA-256; rewriting one makes the re-computed chain fail from that entry on.
 
 ## Routes
-- `/` — home (hero receipt, audit thesis, deployment summary, hub teaser)
-- `/hub` — the foundation: review tiers, propose-a-track, shared runway
-- `/hosted`, `/hybrid`, `/on-premises` — the three deployment models
+- `/` — home: two services, the record, how we work, the Hub, where we stand
+- `/service/` — back office: tools, consulting, data boundary, connectors, where it runs (`#deploy`), pilot
+- `/modules/` — learning modules: first module, three areas, request/propose form
+- `/hub/` — the Learning Hub (entrosana.app)
+- `/roadmap/` — what is built, what is not, in what order
+- `/request-access/` — contact form (`?interest=<id>` preselects, ids in `src/lib/site.ts`)
+- `/imprint/`, `/privacy/`, `/privacy/de/` — legal texts, verbatim from the live site (`src/content/legal/`)
+- `/tools`, `/learn`, `/hosted`, `/hybrid`, `/on-premises` — redirects from the June 2026 version
+
+## Build-time settings
+| Variable | Effect |
+|---|---|
+| `ASTRO_BASE` | Serve from a sub-path (the Pages workflow sets it from `actions/configure-pages`) |
+| `PUBLIC_CONTACT_ENDPOINT` | Forms POST JSON (`name, org, email, interest, msg`) here. Unset: forms open the visitor's mail app with the message filled in |
+| `ASTRO_NOINDEX=1` | Adds `noindex` (sub-path builds get it automatically) |
 
 ## Develop
 ```sh
@@ -29,7 +43,8 @@ pnpm preview    # serve dist/
 
 | Surface | How | When laptop is off |
 |---------|-----|--------------------|
-| **`https://entrosana.com`** | **GitHub Pages** (this repo → Actions → Pages) | **stays up** |
+| **`https://entrosana.com`** | WordPress behind Cloudflare — **not served from this repo** (as of 2026-10-16) | stays up |
+| **`https://giansn.github.io/entrosana-site/`** | GitHub Pages (this repo → Actions → Pages, on push to `master`) | stays up |
 | **`https://e14-1.tailff64b5.ts.net/`** | Tailscale Funnel → e14 `:4321` | down with e14 |
 | **e14 LAN / preview** | `entrosana-site.service` → `node server.mjs` on `:4321` | local only |
 
@@ -40,15 +55,15 @@ pnpm preview    # serve dist/
 - Funnel root path `/` → `127.0.0.1:4321` (Arboro paths on the same host are untouched).
 
 ### GitHub Pages (optional backup only — no custom domain)
-- Workflow: [`.github/workflows/pages.yml`](.github/workflows/pages.yml)
-- Live at https://giansn.github.io/entrosana-site/ (HTTPS works here)
+- Workflow: [`.github/workflows/pages.yml`](.github/workflows/pages.yml) — runs on push to `master` only
+- Live at https://giansn.github.io/entrosana-site/ (HTTPS works here); built with the `/entrosana-site` base path, so assets and links resolve
 - **Do not** set Pages custom domain to `entrosana.com` unless DNS A records point at GitHub Pages IPs — otherwise GH shows “domain not properly configured for HTTPS”
 - **Canonical production on e14:** see `deploy/edge/` (Caddy on LAN :443 → :4321)
 
 ### Deploy
 ```sh
 pnpm deploy        # rebuild on e14 + restart systemd (Funnel/preview)
-git push origin master   # publishes Pages (entrosana.com) via Actions
+git push origin master   # publishes the GitHub Pages copy via Actions (not entrosana.com)
 # logs (e14):  ~/.sygnif/logs/entrosana-site.log
 ```
 
