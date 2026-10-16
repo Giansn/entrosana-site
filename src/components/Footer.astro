@@ -1,51 +1,75 @@
 ---
-const year = 2026;
+import Mark from "./Mark.astro";
+import { href, ext, MAIL } from "../lib/site";
+const year = new Date().getFullYear();
 ---
 <footer class="foot">
   <div class="wrap foot__inner">
     <div class="foot__brand">
-      <span class="foot__word mono">entrosana</span>
-      <p class="muted">Deterministic Language Models for back-office work. Swiss/EU residency by design, audit-grade, built on CashCtrl.</p>
+      <a href={href("/")} class="foot__logo" aria-label="entrosana — home">
+        <Mark size={30} />
+        <span>entrosana</span>
+      </a>
+      <p>Adaptive solutions for educational organisations, from the ground up. Swiss/EU data residency by design.</p>
+      <p><a href={`mailto:${MAIL}`}>{MAIL}</a></p>
     </div>
     <nav class="foot__cols" aria-label="Footer">
       <div>
-        <span class="foot__h mono">Platform</span>
-        <a href="/tools">Tools</a>
-        <a href="/learn">Learn</a>
-        <a href="/hub">Hub</a>
-        <a href="/#audit">Why deterministic</a>
+        <h2 class="foot__h">Offer</h2>
+        <ul>
+          <li><a href={href("/service/")}>Back office</a></li>
+          <li><a href={href("/modules/")}>Modules</a></li>
+          <li><a href={href("/hub/")}>Hub</a></li>
+          <li><a href={href("/service/#deploy")}>Where it runs</a></li>
+        </ul>
       </div>
       <div>
-        <span class="foot__h mono">Deployment</span>
-        <a href="/hosted">Hosted</a>
-        <a href="/hybrid">Hybrid</a>
-        <a href="/on-premises">On-premises</a>
+        <h2 class="foot__h">Company</h2>
+        <ul>
+          <li><a href={href("/roadmap/")}>Roadmap</a></li>
+          <li><a href={href("/request-access/")}>Request access</a></li>
+          <li><a href={href("/imprint/")}>Imprint</a></li>
+          <li><a href={href("/privacy/")}>Privacy</a></li>
+          <li><a href={ext.source}>Source (AGPL-3.0)</a></li>
+        </ul>
       </div>
       <div>
-        <span class="foot__h mono">Residency</span>
-        <span class="muted">Switzerland / EU</span>
-        <span class="muted">EN · DE · ES</span>
+        <h2 class="foot__h">Residency &amp; language</h2>
+        <ul class="foot__plain">
+          <li>Switzerland / EU</li>
+          <li>English · German · Spanish</li>
+        </ul>
       </div>
     </nav>
   </div>
   <div class="wrap foot__base">
-    <span class="mono muted">© {year} entrosana</span>
-    <span class="mono foot__stamp">signed · sha256:<b>e1a7…b40f</b></span>
+    <span>© {year} entrosana</span>
+    <span>Open source · AGPL-3.0</span>
   </div>
 </footer>
 
 <style>
-  .foot { background: var(--ink); color: var(--paper); padding-block: clamp(2.5rem, 1.5rem + 4vw, 4rem) 1.5rem; }
+  .foot {
+    margin-top: auto;
+    border-top: 1px solid var(--line);
+    background: var(--bg-2);
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 4rem) 1.5rem;
+    font-size: var(--step--1);
+  }
   .foot__inner { display: grid; gap: 2.5rem; }
-  @media (min-width: 760px) { .foot__inner { grid-template-columns: 1.3fr 2fr; } }
-  .foot__word { font-size: var(--step-1); }
-  .foot p { color: #aeb3bc; max-width: 38ch; margin-top: 0.6rem; }
-  .foot__cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-  .foot__h { display: block; font-size: var(--step--1); letter-spacing: 0.12em; text-transform: uppercase; color: #7d828c; margin-bottom: 0.8rem; }
-  .foot__cols a, .foot__cols span.muted { display: block; color: #C7CBD2; font-size: var(--step--1); margin-bottom: 0.45rem; }
-  .foot__cols a:hover { color: #fff; }
-  .foot__base { display: flex; justify-content: space-between; align-items: center; margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line-2); font-size: var(--step--1); }
-  .foot__stamp { color: #7d828c; }
-  .foot__stamp b { color: var(--seal); font-weight: 500; }
-  .foot .muted { color: #7d828c; }
+  @media (min-width: 820px) { .foot__inner { grid-template-columns: 1.1fr 2fr; } }
+  .foot__logo { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--seal); text-decoration: none; font-family: var(--font-mono); font-size: 1.2rem; min-height: 44px; }
+  .foot__brand p { color: var(--ink-2); max-width: 36ch; margin-top: 0.75rem; }
+  .foot__cols { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.75rem 1.5rem; }
+  @media (min-width: 560px) { .foot__cols { grid-template-columns: repeat(3, 1fr); } }
+  .foot__h { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+  .foot ul { list-style: none; }
+  .foot li a { display: inline-flex; align-items: center; min-height: 36px; color: var(--ink); text-decoration: none; }
+  .foot li a:hover { color: var(--seal); text-decoration: underline; text-underline-offset: 0.2em; }
+  .foot__plain li { min-height: 36px; display: flex; align-items: center; color: var(--ink-2); }
+  .foot__base {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1rem;
+    margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line);
+    font-family: var(--font-mono); color: var(--muted);
+  }
 </style>

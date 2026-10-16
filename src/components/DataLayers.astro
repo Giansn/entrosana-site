@@ -1,0 +1,85 @@
+---
+// "Two model layers, by design": which data may leave controlled hardware.
+// Labels as in the live figure; drawn in HTML so it reflows on phones
+// (DOM order is the reading order on a phone; the grid places it wide).
+---
+<figure class="dl">
+  <div class="dl__grid">
+    <p class="dl__zone dl__zl mono">Controlled hardware · yours or ours</p>
+    <div class="dl__box dl__box--seal dl__a"><b>Delicate records</b><span>invoices · contracts · people</span></div>
+    <span class="dl__arrow dl__arrow--seal dl__a2" aria-hidden="true"></span>
+    <div class="dl__box dl__box--seal dl__b"><b>Local model</b><span>your hardware or ours</span></div>
+    <p class="dl__stop mono"><span class="dl__x" aria-hidden="true">✕</span> never sent on to an online provider</p>
+    <div class="dl__box dl__d"><b>Data that is not sensitive</b><span>general questions · drafting · lookup</span></div>
+    <span class="dl__arrow dl__d2" aria-hidden="true"></span>
+    <p class="dl__zone dl__zo mono">Online provider</p>
+    <div class="dl__box dl__e"><b>Online provider</b><span>optional</span></div>
+    <span class="dl__line" aria-hidden="true"></span>
+  </div>
+  <figcaption class="small muted">Anything touching delicate records is designed to stay on a model served on your hardware or ours. Only data that is not sensitive may go to an online provider. In development alongside the engine.</figcaption>
+</figure>
+
+<style>
+  .dl { margin: 0; }
+  .dl__grid {
+    position: relative;
+    display: grid; gap: 0.6rem;
+    padding: clamp(1rem, 0.6rem + 1.5vw, 1.75rem);
+    border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .dl__zone { margin: 0; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .dl__zo { margin-top: 0.9rem; }
+  .dl__box {
+    display: grid; gap: 0.15rem;
+    padding: 0.75rem 1rem; border-radius: var(--radius-sm);
+    border: 1.5px solid var(--control); background: var(--surface-2);
+  }
+  .dl__box b { font-family: var(--font-mono); font-size: 0.92rem; font-weight: 600; letter-spacing: 0.04em; }
+  .dl__box span { font-size: 0.86rem; color: var(--muted); }
+  .dl__box--seal { border-color: var(--seal); }
+  .dl__stop { margin: 0; font-size: 0.86rem; color: var(--warn); }
+  .dl__x { font-weight: 700; }
+  .dl__line { display: none; }
+
+  /* arrows: vertical on phones */
+  .dl__arrow { position: relative; justify-self: center; width: 2px; height: 1.1rem; background: var(--control); }
+  .dl__arrow::after {
+    content: ""; position: absolute; left: 50%; bottom: -3px; translate: -50% 0;
+    border: 5px solid transparent; border-top: 7px solid var(--control); border-bottom: 0;
+  }
+  .dl__arrow--seal { background: var(--seal); }
+  .dl__arrow--seal::after { border-top-color: var(--seal); }
+
+  .dl figcaption { margin-top: 0.75rem; max-width: 72ch; }
+
+  @media (min-width: 760px) {
+    .dl__grid {
+      grid-template-columns: minmax(0, 1fr) 2.5rem minmax(0, 1fr) 3rem minmax(0, 1fr);
+      grid-template-areas:
+        "zl zl zl ln zo"
+        "a  a2 b  st st"
+        "d  d  d  d2 e";
+      align-items: center;
+      gap: 1.1rem 0.5rem;
+    }
+    .dl__zl { grid-area: zl; }
+    .dl__zo { grid-area: zo; margin: 0; }
+    .dl__a { grid-area: a; } .dl__a2 { grid-area: a2; } .dl__b { grid-area: b; }
+    .dl__d { grid-area: d; } .dl__d2 { grid-area: d2; } .dl__e { grid-area: e; }
+    .dl__stop { grid-area: st; position: relative; z-index: 1; padding-left: calc(1.5rem - 0.4em); }
+    .dl__x { display: inline-block; width: 0.8em; text-align: center; background: var(--surface); }
+    /* the boundary: one dashed rule down the middle of the gap column */
+    .dl__line {
+      display: block; grid-column: 4; grid-row: 1 / span 3; align-self: stretch; justify-self: center;
+      width: 0; border-left: 2px dashed var(--control);
+    }
+    .dl__arrow { justify-self: stretch; width: auto; height: 2px; }
+    .dl__arrow::after {
+      left: auto; right: -3px; bottom: auto; top: 50%; translate: 0 -50%;
+      border: 5px solid transparent; border-left: 7px solid var(--control); border-right: 0;
+    }
+    .dl__arrow--seal::after { border-left-color: var(--seal); }
+    .dl__d2 { z-index: 1; }
+  }
+</style>

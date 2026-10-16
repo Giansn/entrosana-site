@@ -1,0 +1,231 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import { ext, href } from "../lib/site";
+
+type State = "built" | "dev" | "planned" | "live";
+const chip = (s: State) => `chip chip--${s}${s === "planned" ? "" : ""}`;
+
+const glance: { what: string; state: State; label: string; to: string }[] = [
+  { what: "Signed record", state: "built", label: "built", to: "#today" },
+  { what: "Sign-in & separation", state: "built", label: "built", to: "#today" },
+  { what: "Provider-neutral connectors", state: "dev", label: "offline only", to: "#today" },
+  { what: "Onboarding", state: "dev", label: "in development · next", to: "#engine" },
+  { what: "Trust & operation", state: "planned", label: "planned", to: "#engine" },
+  { what: "The domain", state: "planned", label: "planned", to: "#engine" },
+  { what: "The assistant", state: "planned", label: "planned · last", to: "#engine" },
+  { what: "Hosted · Hybrid · On-premises", state: "dev", label: "in development", to: "#tiers" },
+  { what: "Modules", state: "live", label: "online & on site", to: "#modules" },
+  { what: "Hub platform", state: "planned", label: "concept", to: "#modules" },
+];
+
+const today = [
+  { name: "Signed record", state: "built" as State, label: "built",
+    body: "Every change is written to a sealed, chained log. Editing, reordering or removing an entry is detectable, keys can be rotated, and a third party can re-derive and check any entry independently." },
+  { name: "Sign-in & separation", state: "built" as State, label: "built",
+    body: "Identity comes from a verified token, never from a client-supplied header, and every query is scoped to the organisation it belongs to. One organisation cannot reach another’s data." },
+  { name: "Provider-neutral connectors", state: "dev" as State, label: "offline only",
+    body: "Accounting backends are described as data rather than written as code, so adding one is a specification, not a fork. Verified offline against a sample domain; not yet run against a live provider account." },
+];
+
+const engine = [
+  { name: "Onboarding", state: "dev" as State, label: "in development · next", why: "no organisation can be taken on without these",
+    body: "An organisation register, so a school exists as a record rather than only as a claim in a token. Status changes, so an invoice can be marked paid and a contract signed. Roles, so a class teacher and the bookkeeper do not see the same thing. Full account handling: password reset, invitation, second factor, sign-out." },
+  { name: "Trust & operation", state: "planned" as State, label: "planned · after onboarding", why: "what an auditor and an operator both need",
+    body: "Automated checks running on every change. A written operating procedure covering deployment, secrets, backup and key rotation. Rotation made routine rather than indistinguishable from an attack. An anchor for the log outside the installation, which is what the Swiss sense of <i lang=\"de\">revisionssicher</i> requires." },
+  { name: "The domain", state: "planned" as State, label: "planned", why: "the first thing worth showing a school",
+    body: "One workflow end to end: enrolment, person, contract, invoice, payment, with every status change along the way. Then connectors verified against a real provider account, double-entry bookkeeping, Swiss tax rules, and document intake so a secretary can actually put a document in." },
+  { name: "The assistant", state: "planned" as State, label: "planned · last", why: "deliberately last",
+    body: "Today a fixed pattern matcher handles a small set of instructions, and no language model runs in the application. The intended replacement is the two-layer split: anything touching your records served on your own hardware, everything else optionally online. A model routing instructions over a system that cannot yet complete a workflow would help nobody, so it comes after the domain." },
+];
+
+const tiers = [
+  { name: "Hosted", tag: "managed · Swiss/EU data residency", needs: "a built delivery image, a deploy target, backups and an operating procedure" },
+  { name: "Hybrid", tag: "on-site data · structured results sync", needs: "the on-site device, document intake, and the extract-and-sync path" },
+  { name: "On-premises", tag: "your hardware · your control", needs: "infrastructure configuration and a reversible deploy (today: the source, a container definition and a development stack)" },
+];
+
+const decisions = [
+  { name: "The record is the primitive",
+    body: "Every module writes through one sealed chain rather than keeping its own history. That is why the question of who changed something, and when, has one answer instead of eleven. A system that logs per feature cannot be made to do this afterwards without rebuilding every feature." },
+  { name: "Adapters are data, not code",
+    body: "Swiss organisations are split across CashCtrl, bexio, Abacus, Banana and others. Each backend is a specification file read by one executor, so supporting another is a description rather than a fork. A domain with nothing to do with accounting runs through that same executor unchanged, which is what shows the kernel carries no vendor knowledge." },
+  { name: "The model is caged, not trusted",
+    body: "Instructions resolve to a fixed vocabulary of permitted operations, and anything outside it is refused before a provider is contacted. Model version, prompt version and retrieval order are pinned and recorded, so a decision can be re-derived later and checked against what it claimed to do." },
+];
+---
+<Layout title="Roadmap: what runs today and what comes next" description="entrosana is in development. This page names which parts run today, which do not, and the order they are being built. Stages rather than dates.">
+  <PageHero
+    eyebrow="Roadmap"
+    title="What is built, what is not, and in what order."
+    lede="entrosana is in development. This page says which parts run today, which do not, and the order we intend to build them. It carries stages rather than dates: an order we can hold is worth more than a date we cannot.">
+    <div slot="aside" class="card glance">
+      <p class="tag">At a glance</p>
+      <ul class="glance__list">
+        {glance.map((g) => (
+          <li><a href={g.to}>{g.what}</a><span class={chip(g.state)}>{g.label}</span></li>
+        ))}
+      </ul>
+    </div>
+  </PageHero>
+
+  <nav class="wrap toc" aria-label="On this page">
+    <a href="#today">Runs today</a>
+    <a href="#engine">The engine</a>
+    <a href="#tiers">Where it runs</a>
+    <a href="#modules">Modules &amp; the Hub</a>
+    <a href="#decisions">Decisions</a>
+    <a href="#evidence">Evidence</a>
+  </nav>
+
+  <section class="section band" id="today">
+    <div class="wrap">
+      <p class="eyebrow">Runs today</p>
+      <h2 class="h2">The foundation is built.</h2>
+      <p class="intro">These are the parts that cannot be retrofitted later without rebuilding everything, which is why they came first.</p>
+      <div class="grid grid--3">
+        {today.map((t) => (
+          <article class="card">
+            <div class="card__head"><h3>{t.name}</h3><span class={chip(t.state)}>{t.label}</span></div>
+            <p>{t.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="engine">
+    <div class="wrap">
+      <p class="eyebrow">The engine</p>
+      <h2 class="h2">In this order, for this reason.</h2>
+      <p class="intro">The order is chosen by what blocks a real deployment, not by what is quickest. Each stage names why it comes where it does.</p>
+      <ol class="stages">
+        {engine.map((s, i) => (
+          <li class="stage">
+            <span class="stage__n mono" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+            <div class="stage__head">
+              <h3>{s.name}</h3>
+              <span class={chip(s.state)}>{s.label}</span>
+            </div>
+            <p class="for">{s.why}</p>
+            <p class="stage__body" set:html={s.body} />
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section band" id="tiers">
+    <div class="wrap">
+      <p class="eyebrow">Where it runs</p>
+      <h2 class="h2">Three tiers, all in development.</h2>
+      <p class="intro">The engine runs today as a single service against a database. Nothing is deployed to a customer target yet. Each tier names what it still needs. <a href={href("/service/#deploy")}>How the tiers differ</a>.</p>
+      <div class="grid grid--3">
+        {tiers.map((t) => (
+          <article class="card">
+            <p class="tag">{t.tag}</p>
+            <div class="card__head"><h3>{t.name}</h3><span class="chip chip--dev">in development</span></div>
+            <p><strong>Still needs:</strong> {t.needs}.</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="modules">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow">Modules &amp; the Hub</p>
+        <h2 class="h2">Available now, because people deliver them.</h2>
+      </div>
+      <div>
+        <p>Modules do not wait on the engine. They are scoped and delivered by educators, social workers and engineers, and they run online and on site today. The Hub as a platform, meaning one sign-in, shared projects and the record visible to parents and teachers, is at concept stage and follows the engine.</p>
+        <ul class="status-list">
+          <li><span class="what">Modules</span><span class="chip chip--live">online &amp; on site</span></li>
+          <li><span class="what">Hub platform</span><span class="chip chip--planned">concept</span></li>
+        </ul>
+        <div class="actions">
+          <a class="btn" href={href("/request-access/")}>Request access</a>
+          <a class="link" href={href("/modules/")}>See the modules</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band" id="decisions">
+    <div class="wrap">
+      <p class="eyebrow">Where the difficulty sits</p>
+      <h2 class="h2">Three decisions that are expensive to change later.</h2>
+      <p class="intro">The domain work above is ordinary engineering: known, estimable and reversible. These three are not. They were built first because retrofitting any of them means starting again.</p>
+      <div class="grid grid--3">
+        {decisions.map((d) => (
+          <article class="card">
+            <div class="card__head"><h3>{d.name}</h3><span class="chip chip--built">built</span></div>
+            <p>{d.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="evidence">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow">Evidence</p>
+        <h2 class="h2">How we know, rather than believe.</h2>
+        <ul class="evidence">
+          <li>independent chain verifier</li>
+          <li>replay from inputs</li>
+          <li>external adversarial audit</li>
+          <li>findings published in the repository</li>
+        </ul>
+      </div>
+      <div>
+        <p>Claims about correctness are worth what the checking behind them is worth. Ours is public, and so are the findings against us.</p>
+        <p>Anyone holding the log can re-compute the chain themselves without our cooperation. A stored decision can be re-derived from its inputs and compared against what was recorded. In July an outside reviewer was asked to break the connector layer and reported nine findings; all nine were fixed, and both the brief and the report are in the repository. The gaps that remain are on this page rather than in a drawer.</p>
+        <div class="actions"><a class="btn btn--ghost" href={ext.source}>Read the source and the audits ↗</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band section--tight">
+    <div class="wrap">
+      <p class="eyebrow">How to read this page</p>
+      <h2 class="h2">We publish what is not built.</h2>
+      <p class="intro">A roadmap that only lists strengths tells you nothing. This one names the gaps, because the same discipline that makes the record worth trusting applies to what we say about ourselves. If something here turns out to be wrong, we would rather you found it on this page than in a demonstration.</p>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .glance__list { list-style: none; display: grid; margin-top: 0.4rem; border-top: 1px solid var(--line); }
+  .glance__list li { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.3rem 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--line); }
+  .glance__list a { color: var(--ink); text-decoration: none; font-weight: 700; font-size: 0.98rem; }
+  .glance__list a:hover { color: var(--seal); text-decoration: underline; }
+
+  .toc { display: flex; flex-wrap: wrap; gap: 0.5rem; padding-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
+  .toc a {
+    display: inline-flex; align-items: center; min-height: 40px; padding: 0 0.9rem;
+    border: 1px solid var(--control); border-radius: 999px;
+    font-family: var(--font-mono); font-size: var(--step--1); color: var(--ink); text-decoration: none;
+  }
+  .toc a:hover { border-color: var(--seal); background: var(--seal-soft); }
+
+  .stages { list-style: none; display: grid; gap: 0; border-top: 1px solid var(--line); }
+  .stage { display: grid; gap: 0.35rem 1.5rem; padding-block: 1.5rem; border-bottom: 1px solid var(--line); }
+  @media (min-width: 820px) {
+    .stage { grid-template-columns: 3.5rem 17rem 1fr; align-items: start; }
+    .stage__n { grid-row: 1 / span 2; }
+    .stage__head, .stage .for { grid-column: 2; }
+    .stage__body { grid-column: 3; grid-row: 1 / span 2; }
+  }
+  .stage__n { font-size: var(--step-2); color: var(--seal); line-height: 1; }
+  .stage__head { display: grid; gap: 0.5rem; justify-items: start; }
+  .stage__head h3 { font-size: var(--step-1); }
+  .stage .for { font-family: var(--font-mono); font-size: var(--step--1); color: var(--muted); margin: 0; }
+  .stage__body { color: var(--ink-2); margin: 0; }
+
+  .evidence { list-style: none; display: grid; gap: 0.5rem; margin-top: 1rem; }
+  .evidence li { font-family: var(--font-mono); font-size: var(--step--1); color: var(--ink-2); padding-left: 1.4rem; position: relative; }
+  .evidence li::before { content: "✓"; position: absolute; left: 0; color: var(--verify); font-weight: 700; }
+</style>

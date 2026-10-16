@@ -1,0 +1,125 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import DataLayers from "../components/DataLayers.astro";
+import DeployTable from "../components/DeployTable.astro";
+import { href, ext } from "../lib/site";
+
+const tiers = [
+  { name: "Hosted", tag: "managed · Swiss/EU data residency",
+    body: "Your data rests on Swiss/EU infrastructure; that is the residency promise. The service around it runs with providers in Switzerland and the USA, named on our privacy page. Nothing to maintain on your side: connect your system of record and go.",
+    gist: "nothing to maintain on your side" },
+  { name: "Hybrid", tag: "on-site data · structured results sync",
+    body: "Raw documents and delicate data never leave your premises: a small on-site device runs the host and storage. Extracted, structured results sync to Swiss/EU infrastructure.",
+    gist: "raw documents stay on your premises" },
+  { name: "On-premises", tag: "your hardware · your control",
+    body: "The full stack on infrastructure you control, for organisations or schools that require complete data and compute sovereignty. The source is yours under AGPL-3.0.",
+    gist: "complete data and compute sovereignty" },
+];
+---
+<Layout title="Back-office tooling for accounting and HR" description="Back-office tooling for accounting, HR and consulting in Swiss organisations. Every step leaves a sealed audit record. CashCtrl first, more via the open API.">
+  <PageHero
+    eyebrow="Back office"
+    title="Accounting, contracts and the recurring tasks around them."
+    lede="Purpose-built tools that call the APIs of the platforms you already use. Responsibility stays with the human operator. In development alongside the engine.">
+    <div class="actions">
+      <a class="btn" href={href("/request-access/?interest=accounting")}>Start with a pilot</a>
+      <a class="link" href="#deploy">Where it runs</a>
+    </div>
+  </PageHero>
+
+  <!-- What we offer -->
+  <section class="section band">
+    <div class="wrap">
+      <p class="eyebrow">What we offer</p>
+      <h2 class="h2">Tools, and the thinking around them.</h2>
+      <div class="grid grid--2">
+        <article class="card">
+          <div class="card__head"><h3>Tools</h3><span class="chip chip--live">first server public</span></div>
+          <p class="for">for the systems a school already runs</p>
+          <p>Model Context Protocol servers that let an assistant work against the systems already in use rather than replacing them. The scope is accounting, contracting and data gathering. Each server exposes a fixed vocabulary of permitted operations, so what it is able to do can be read before it does anything.</p>
+          <a class="link" href={ext.lp21}>Lehrplan 21 MCP: read the source</a>
+        </article>
+        <article class="card">
+          <div class="card__head"><h3>Consulting</h3><span class="chip">on request</span></div>
+          <p class="for">for the whole working perspective, not one tool</p>
+          <p>entrosana’s way of working applied to your situation: what is worth automating, what stays with your people, and what the record has to capture for either to be checkable. Delivered with the decision path, so a recommendation can be traced rather than taken on trust.</p>
+          <a class="link" href={href("/request-access/?interest=consulting")}>Ask for consulting</a>
+        </article>
+      </div>
+      <p class="xref small">Looking for learning modules for a class? <a href={href("/modules/")}>They have their own page</a>.</p>
+    </div>
+  </section>
+
+  <!-- Data boundary -->
+  <section class="section" id="data">
+    <div class="wrap">
+      <p class="eyebrow">How data is handled</p>
+      <h2 class="h2">Two model layers, by design.</h2>
+      <p class="intro">Calls that touch sensitive records are designed to run on a locally served model; the rest may go to an online one. That division is what keeps data management local rather than merely promised.</p>
+      <DataLayers />
+    </div>
+  </section>
+
+  <!-- Connectors -->
+  <section class="section band">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow">Connectors</p>
+        <h2 class="h2">The choice of provider stays yours.</h2>
+      </div>
+      <div>
+        <p>The code is adaptive: the design includes a neutral API connector that can be adjusted to your environment, whether you run CashCtrl, bexio or another platform. Connectors are verified offline so far, not yet against a live provider account; the <a href={href("/roadmap/")}>roadmap</a> says what that still needs.</p>
+        <p>Open to contributors: connectors and workflow adapters built by API engineers with an educative approach are welcome.</p>
+        <div class="actions">
+          <a class="btn btn--ghost" href={ext.source}>Contribute a connector ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Where it runs -->
+  <section class="section" id="deploy">
+    <div class="wrap">
+      <p class="eyebrow">Where it runs</p>
+      <h2 class="h2">You bring the demand. We provide the base.</h2>
+      <p class="intro">Three ways to run it, all in development. For an organisation answerable to the Swiss Data Protection Act (revDSG) or to the GDPR, this choice is the data protection decision: where the data sits, who can reach it, and what record exists of every step.</p>
+      <DeployTable />
+      <div class="grid grid--3 tiers">
+        {tiers.map((t) => (
+          <article class="card">
+            <p class="tag">{t.tag}</p>
+            <h3>{t.name}</h3>
+            <p>{t.body}</p>
+            <p class="for">→ {t.gist}</p>
+          </article>
+        ))}
+      </div>
+      <p class="xref small">What each tier still needs is on the <a href={href("/roadmap/#tiers")}>roadmap</a>. What this site itself processes is on the <a href={href("/privacy/")}>privacy page</a>.</p>
+    </div>
+  </section>
+
+  <!-- Pilot -->
+  <section class="section band">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow">Get started</p>
+        <h2 class="h2">Start with a pilot.</h2>
+      </div>
+      <div>
+        <p>Pilots are temporary projects and can become permanent if they prove useful. Pilot pricing is reduced, and we are glad to work alongside foundations interested in innovative education and technology.</p>
+        <p class="small muted">On our legal form: entrosana intends to become a non-profit organisation once its financial base is established.</p>
+        <div class="actions">
+          <a class="btn" href={href("/request-access/?interest=accounting")}>Request pilot access</a>
+          <a class="link" href={ext.source}>View the source</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .tiers { margin-top: clamp(1rem, 0.6rem + 1.5vw, 1.5rem); }
+  .tiers .for { margin-top: auto; color: var(--seal); }
+  .xref { margin-top: 1.25rem; color: var(--muted); }
+</style>

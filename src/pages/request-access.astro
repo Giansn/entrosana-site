@@ -1,0 +1,38 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import ContactForm from "../components/islands/ContactForm";
+import { href, interests, MAIL } from "../lib/site";
+---
+<Layout title="Request pilot access for Swiss schools" description="Pilot access to entrosana is opening to a small group of Swiss schools and organisations. Tell us who you are and whether the back office, the Hub or the modules are the fit.">
+  <PageHero
+    eyebrow="Get in touch"
+    title="Request access."
+    lede="Pilot access is opening to a small group of Swiss organisations. Tell us who you are and whether the back office, the Hub or the modules are the fit. We reply personally." />
+
+  <section class="section access">
+    <div class="wrap split split--wide-left">
+      <div class="card access__form">
+        <h2 class="vh">Access request form</h2>
+        <ContactForm client:idle interests={interests} mail={MAIL} />
+      </div>
+      <aside class="access__aside" aria-labelledby="expect-h">
+        <p class="eyebrow" id="expect-h">What to expect from a pilot</p>
+        <ul class="facts">
+          <li class="fact fact--stack"><span class="fact__k">Scoped small</span><p class="fact__v">One workflow, real documents, a fixed price, and a defined end date.</p></li>
+          <li class="fact fact--stack"><span class="fact__k">Measured</span><p class="fact__v">Evaluated against your current process, not against a demo.</p></li>
+          <li class="fact fact--stack"><span class="fact__k">Honest</span><p class="fact__v">The platform is in development, and we say so. What you see in the record is what happened. <a href={href("/roadmap/")}>What is built today</a>.</p></li>
+        </ul>
+        <p class="small muted access__mail">Prefer plain email? Write to <a href={`mailto:${MAIL}`}>{MAIL}</a>. How we handle what you send is on the <a href={href("/privacy/")}>privacy page</a>.</p>
+      </aside>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .access { padding-top: 0; }
+  .access__aside { display: grid; gap: 0.5rem; align-content: start; }
+  .access__aside .facts { list-style: none; }
+  .fact--stack { grid-template-columns: 1fr !important; gap: 0.25rem !important; }
+  .access__mail { margin-top: 1rem; }
+</style>

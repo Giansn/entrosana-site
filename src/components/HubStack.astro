@@ -1,0 +1,43 @@
+---
+// "One ground. What stands on it." Tools and modules stand on the Hub; the
+// sealed record runs underneath all of it. Strata, read bottom-up.
+import { href } from "../lib/site";
+---
+<figure class="hs" aria-label="The Hub carries Tools and Modules; the sealed record runs underneath both">
+  <div class="hs__top">
+    <a class="hs__block" href={href("/service/")}>
+      <span class="hs__k mono">Tools</span>
+      <span class="hs__v">back office</span>
+    </a>
+    <a class="hs__block" href={href("/modules/")}>
+      <span class="hs__k mono">Modules</span>
+      <span class="hs__v">classroom</span>
+    </a>
+  </div>
+  <a class="hs__slab hs__slab--hub" href={href("/hub/")}>
+    <span class="hs__k mono">The Hub</span>
+    <span class="hs__v">shared identity · one licence · open under AGPL-3.0</span>
+  </a>
+  <div class="hs__slab hs__slab--record">
+    <span class="hs__k mono">Sealed record</span>
+    <span class="hs__v">the audit trail beneath everything</span>
+  </div>
+</figure>
+
+<style>
+  .hs { margin: 0; display: grid; gap: 0.6rem; }
+  .hs__top { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; padding-inline: 8%; }
+  .hs__block, .hs__slab {
+    display: grid; gap: 0.1rem; justify-items: center; text-align: center;
+    padding: 0.95rem 1rem; border-radius: var(--radius-sm);
+    border: 1.5px solid var(--control); background: var(--surface);
+    color: var(--ink); text-decoration: none;
+  }
+  a.hs__block, a.hs__slab { transition: border-color 0.15s, transform 0.12s; }
+  a.hs__block:hover, a.hs__slab:hover { border-color: var(--seal); transform: translateY(-2px); }
+  .hs__slab--hub { margin-inline: 4%; border-color: var(--seal); background: var(--seal-soft); }
+  .hs__slab--record { border-style: dashed; border-color: var(--verify); color: var(--ink); }
+  .hs__k { font-size: 0.92rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .hs__slab--record .hs__k { color: var(--verify); }
+  .hs__v { font-size: 0.88rem; color: var(--muted); }
+</style>

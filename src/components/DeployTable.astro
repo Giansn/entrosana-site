@@ -1,0 +1,57 @@
+---
+// Where it runs: one axis — how much of the stack you hold. A real table, so
+// it reads in order with a screen reader and compares at a glance; on phones
+// each tier becomes a labelled block.
+const tiers = [
+  { name: "Hosted", docs: "Swiss/EU", model: "CH/EU or USA", storage: "Swiss/EU" },
+  { name: "Hybrid", docs: "on site", model: "on site", storage: "Swiss/EU" },
+  { name: "On-premises", docs: "your hardware", model: "your hardware", storage: "your hardware" },
+];
+---
+<div class="dt">
+  <table>
+    <caption class="vh">Where documents, the model and storage sit in each tier</caption>
+    <thead>
+      <tr>
+        <th scope="col">Tier</th>
+        <th scope="col">Documents</th>
+        <th scope="col">Model</th>
+        <th scope="col">Storage</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {tiers.map((t) => (
+        <tr>
+          <th scope="row">{t.name}</th>
+          <td data-label="Documents">{t.docs}</td>
+          <td data-label="Model">{t.model}</td>
+          <td data-label="Storage">{t.storage}</td>
+          <td data-label="Status"><span class="chip chip--dev">in development</span></td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .dt { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 0.9rem 1.1rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  tbody tr:last-child > * { border-bottom: 0; }
+  thead th { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); }
+  tbody th { font-family: var(--font-mono); font-weight: 600; color: var(--seal); letter-spacing: 0.04em; }
+  td { color: var(--ink-2); }
+
+  @media (max-width: 679px) {
+    thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    table, tbody, tr, th, td { display: block; }
+    tbody tr { padding: 0.9rem 1rem; border-bottom: 1px solid var(--line); }
+    tbody tr:last-child { border-bottom: 0; }
+    th, td { border: 0; padding: 0.2rem 0; }
+    tbody th { font-size: 1.05rem; margin-bottom: 0.3rem; }
+    td { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.75rem; align-items: center; }
+    td::before { content: attr(data-label); font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.06em; color: var(--muted); }
+    td > .chip { justify-self: start; }
+  }
+</style>

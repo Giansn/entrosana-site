@@ -1,0 +1,90 @@
+/* Header island (SiteNav.tsx + ThemeToggle.tsx). Plain global CSS: Astro's
+   scoped styles do not reach markup rendered by framework components. */
+
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  padding-top: 0.75rem;
+}
+.nav__bar {
+  display: flex; align-items: center; gap: 1rem;
+  min-height: 60px;
+  padding: 0.4rem 0.5rem 0.4rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
+}
+.brand { display: inline-flex; align-items: center; gap: 0.6rem; margin-right: auto; min-height: 44px; text-decoration: none; }
+.brand__mark { color: var(--seal); }
+.brand__word { font-family: var(--font-mono); font-size: 1.15rem; font-weight: 500; letter-spacing: 0.01em; color: var(--seal); }
+
+.nav__menu { display: flex; align-items: center; gap: 1.5rem; }
+.nav__links { list-style: none; display: flex; gap: 0.25rem; }
+.nav__link {
+  position: relative;
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 0.75rem;
+  border-radius: 999px;
+  font-family: var(--font-mono); font-size: var(--step--1); font-weight: 500; letter-spacing: 0.02em;
+  color: var(--ink-2); text-decoration: none;
+}
+.nav__link:hover { color: var(--ink); background: var(--seal-soft); }
+.nav__link[aria-current="page"] { color: var(--ink); }
+.nav__link[aria-current="page"]::after {
+  content: ""; position: absolute; left: 0.75rem; right: 0.75rem; bottom: 6px; height: 2px; border-radius: 2px;
+  background: var(--seal);
+}
+.nav__cta { min-height: 42px; padding-inline: 1.1em; }
+
+.nav__tools { display: flex; align-items: center; gap: 0.35rem; }
+.nav__burger {
+  display: none; place-items: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--control); background: transparent; color: var(--ink);
+  cursor: pointer;
+}
+.nav__burger-lines, .nav__burger-lines::before, .nav__burger-lines::after {
+  display: block; width: 18px; height: 2px; border-radius: 2px; background: currentColor;
+  transition: transform 0.2s, background-color 0.2s;
+}
+.nav__burger-lines { position: relative; }
+.nav__burger-lines::before, .nav__burger-lines::after { content: ""; position: absolute; left: 0; }
+.nav__burger-lines::before { top: -6px; }
+.nav__burger-lines::after { top: 6px; }
+.nav[data-open="true"] .nav__burger-lines { background: transparent; }
+.nav[data-open="true"] .nav__burger-lines::before { transform: translateY(6px) rotate(45deg); }
+.nav[data-open="true"] .nav__burger-lines::after { transform: translateY(-6px) rotate(-45deg); }
+
+/* narrow screens: the menu folds behind the button — only when JS runs
+   (html.js is set before first paint); without JS the links stay visible */
+@media (max-width: 879px) {
+  .nav__bar { flex-wrap: wrap; border-radius: 22px; }
+  .nav__menu { order: 3; width: 100%; flex-direction: column; align-items: stretch; gap: 0.5rem; padding: 0.25rem 0.5rem 0.75rem; }
+  .nav__links { flex-direction: column; }
+  .nav__link { min-height: 48px; font-size: 1rem; }
+  .nav__link[aria-current="page"]::after { right: auto; width: 1.5rem; bottom: 8px; }
+  .nav__cta { min-height: 48px; }
+  html.js .nav__burger { display: grid; }
+  html.js .nav__menu { display: none; }
+  html.js .nav[data-open="true"] .nav__menu { display: flex; }
+}
+
+/* theme switch: the icon names the theme you would switch TO, chosen by CSS
+   from the root so it is right before the island hydrates */
+.theme {
+  display: grid; place-items: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--control); background: transparent; color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.theme:hover { border-color: var(--seal); background: var(--seal-soft); }
+.theme__moon { display: block; }
+.theme__sun { display: none; }
+:root[data-theme="dark"] .theme__moon { display: none; }
+:root[data-theme="dark"] .theme__sun { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme__moon { display: none; }
+  :root:not([data-theme="light"]) .theme__sun { display: block; }
+}
