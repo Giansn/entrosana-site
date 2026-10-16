@@ -1,0 +1,175 @@
+---
+// "Two model layers, by design": which data may leave controlled hardware.
+// Labels as in the live figure; drawn in HTML so it reflows on phones
+// (DOM order is the reading order on a phone; the grid places it wide).
+---
+<figure class="dl">
+  <div class="dl__grid">
+    <p class="dl__zone dl__zl mono">Controlled hardware · yours or ours</p>
+    <div class="dl__box dl__box--seal dl__a"><b>Delicate records</b><span>invoices · contracts · people</span></div>
+    <span class="dl__arrow dl__arrow--seal dl__a2" aria-hidden="true"></span>
+    <div class="dl__box dl__box--seal dl__b"><b>Local model</b><span>your hardware or ours</span></div>
+    <p class="dl__stop mono"><span class="dl__x" aria-hidden="true">✕</span> never sent on to an online provider</p>
+    <div class="dl__box dl__d"><b>Data that is not sensitive</b><span>general questions · drafting · lookup</span></div>
+    <span class="dl__arrow dl__d2" aria-hidden="true"></span>
+    <p class="dl__zone dl__zo mono">Online provider</p>
+    <div class="dl__box dl__e"><b>Online provider</b><span>optional</span></div>
+    <span class="dl__line" aria-hidden="true"></span>
+  </div>
+  <figcaption class="small muted">Anything touching delicate records is designed to stay on a model served on your hardware or ours. Only data that is not sensitive may go to an online provider. In development alongside the engine.</figcaption>
+</figure>
+
+<style is:global>
+/* DataLayers — drawn as the live home figure "how data is handled" (SVG
+   viewBox 900×330 in a .diagram box), at SVG coordinates in --u. */
+
+.dl { margin: 2.4rem 0 0; }                                         /* 38.4px */
+.dl__grid {
+  container: dl / inline-size;
+  --u: calc(100cqi / 900);
+  --pad: clamp(.9rem, .5rem + 1.5vw, 1.6rem);                       /* 25.6px */
+  position: relative;
+  display: grid;                      /* the ladder's line stack; on the drawing only the spacer is in flow */
+  gap: .35rem;
+  padding: var(--pad);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  overflow: hidden;
+}
+.dl__grid > * { margin: 0; }
+/* prototype-only caption, kept in the quiet small text */
+.dl figcaption { margin-top: .75rem; max-width: 72ch; font-size: var(--step--1); color: var(--muted); }
+
+@container dl (min-width: 619px) {
+  .dl__grid::before { content: ""; display: block; height: calc(330 * var(--u)); }
+  .dl__grid > * { position: absolute; }
+
+  /* zone labels: text.small, baseline y 26 */
+  .dl__zone {
+    top: calc(var(--pad) + 17.65 * var(--u));
+    font-family: var(--font-mono);
+    font-size: calc(10 * var(--u));
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .dl .dl__zone { color: var(--muted); }            /* beats .card p on home */
+  .dl__zl { left: calc(var(--pad) + 330 * var(--u)); }
+  .dl__zo { left: calc(var(--pad) + 576 * var(--u)); }
+
+  /* the boundary: x 560, y 34–300, 2u dashed 6/6 in --line */
+  .dl__line {
+    display: block;
+    left: calc(var(--pad) + 559 * var(--u));
+    top: calc(var(--pad) + 34 * var(--u));
+    width: calc(2 * var(--u));
+    height: calc(266 * var(--u));
+    border: 0;
+    background: repeating-linear-gradient(to bottom, var(--line) 0 calc(6 * var(--u)), transparent calc(6 * var(--u)) calc(12 * var(--u)));
+  }
+
+  /* boxes: rect rx 5, stroke 2 (outer edge = rect ± 1u) */
+  .dl__box {
+    display: block;
+    padding: calc(21 * var(--u)) 0 0 calc(21 * var(--u));
+    border: calc(2 * var(--u)) solid var(--line);
+    border-radius: calc(6 * var(--u));
+    background: var(--bg-2);
+  }
+  .dl__box--seal { border-color: var(--seal); }
+  .dl__box b {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: calc(12 * var(--u));                                 /* 14.5px */
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink);
+  }
+  .dl__box span {
+    display: block;
+    margin-top: calc(11.66 * var(--u));
+    font-family: var(--font-mono);
+    font-size: calc(10 * var(--u));                                 /* 12.1px */
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--muted);
+  }
+  .dl__a { left: calc(var(--pad) + 39 * var(--u));  top: calc(var(--pad) + 69 * var(--u));  width: calc(202 * var(--u)); height: calc(78 * var(--u)); }
+  .dl__b { left: calc(var(--pad) + 309 * var(--u)); top: calc(var(--pad) + 69 * var(--u));  width: calc(212 * var(--u)); height: calc(78 * var(--u)); }
+  .dl__d { left: calc(var(--pad) + 39 * var(--u));  top: calc(var(--pad) + 195 * var(--u)); width: calc(482 * var(--u)); height: calc(72 * var(--u)); padding-top: calc(19 * var(--u)); background: none; }
+  .dl__e { left: calc(var(--pad) + 667 * var(--u)); top: calc(var(--pad) + 195 * var(--u)); width: calc(194 * var(--u)); height: calc(72 * var(--u)); padding-top: calc(19 * var(--u)); }
+
+  /* arrows: 2u line + 10×10u head */
+  .dl__arrow {
+    display: block;
+    height: calc(2 * var(--u));
+    background: var(--line);
+  }
+  .dl__arrow::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: calc(-4 * var(--u));
+    width: 0; height: 0;
+    border-left: calc(10 * var(--u)) solid var(--line);
+    border-top: calc(5 * var(--u)) solid transparent;
+    border-bottom: calc(5 * var(--u)) solid transparent;
+    translate: none;
+  }
+  .dl__arrow--seal { background: var(--seal); }
+  .dl__arrow--seal::after { border-left-color: var(--seal); }
+  .dl__a2 { left: calc(var(--pad) + 240 * var(--u)); top: calc(var(--pad) + 107 * var(--u)); width: calc(62 * var(--u)); }
+  .dl__d2 { left: calc(var(--pad) + 520 * var(--u)); top: calc(var(--pad) + 230 * var(--u)); width: calc(140 * var(--u)); }
+
+  /* the stop: warn line 520–548, a 16u cross (stroke 2.5), label at x 588 */
+  .dl__stop {
+    left: calc(var(--pad) + 520 * var(--u));
+    top: calc(var(--pad) + 103.65 * var(--u));
+    padding-left: calc(68 * var(--u));
+    font-family: var(--font-mono);
+    font-size: calc(10 * var(--u));
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .dl .dl__stop { color: var(--warn); }
+  .dl__stop::before {
+    content: ""; position: absolute; left: 0; top: calc(3.35 * var(--u));
+    width: calc(28 * var(--u)); height: calc(2 * var(--u)); background: var(--warn);
+  }
+  .dl__x {
+    position: absolute;
+    left: calc(33 * var(--u));
+    top: calc(-3.65 * var(--u));
+    width: calc(16 * var(--u));
+    height: calc(16 * var(--u));
+    font-size: 0;
+    color: transparent;
+    background:
+      linear-gradient(45deg, transparent calc(50% - 1.25 * var(--u)), var(--warn) 0 calc(50% + 1.25 * var(--u)), transparent 0),
+      linear-gradient(-45deg, transparent calc(50% - 1.25 * var(--u)), var(--warn) 0 calc(50% + 1.25 * var(--u)), transparent 0);
+  }
+}
+
+/* text ladder (live .diagram-mobile) */
+@container dl (max-width: 618.98px) {
+  .dl__grid > * { font-family: var(--font-mono); font-size: var(--step--1); line-height: 1.6; }
+  .dl__zone { text-transform: uppercase; letter-spacing: normal; }
+  .dl .dl__zone, .dl .dl__stop { color: var(--muted); }
+  .dl__zo, .dl__line { display: none; }
+  .dl__box { display: block; padding: 0; border: 0; background: none; font-weight: 500; color: var(--seal); }
+  .dl__box b { font-weight: 500; text-transform: uppercase; }
+  .dl__box span { font-weight: 400; text-transform: none; color: var(--muted); }
+  .dl__box span::before { content: " · "; }
+  .dl__arrow, .dl__arrow--seal { display: block; width: auto; height: auto; background: none; }
+  .dl .dl__arrow { color: var(--muted); }
+  .dl__arrow::after { content: "\2193"; }
+  .dl__a2::after { content: "\2193  stays on controlled hardware"; white-space: pre; }
+  .dl__d2::after { content: "\2193  may go outside"; white-space: pre; }
+}
+
+</style>

@@ -1,0 +1,123 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import ModuleForm from "../components/islands/ModuleForm";
+import { ext, href, MAIL } from "../lib/site";
+
+const areas = [
+  { name: "Social", keys: "social work driven · social skills · community building · self-care",
+    body: "How we create values, talk, decide, and live together or alone, including how to read the influences around us. And the other way around: how do we influence our surroundings? We help move learning towards a process that puts relations into perspective." },
+  { name: "Nature-based", keys: "nature driven · ecology · outdoor learning · elements",
+    body: "Out of the classroom and into the forest, with experiences that revitalise mind and body. Learning where the physical boundaries of nature and of ourselves can be found in a healthy way. Adventures, science and gardening are examples of nature-driven learning." },
+  { name: "Technical", keys: "code · computing · data features · ethics",
+    body: "How software, data and machines actually work, and how they can be used productively. Taught in different depths and from different approaches, always with one question in mind: how can I learn with the technology, instead of replacing learning with technology?" },
+];
+---
+<Layout title="Learning modules for schools and homeschooling" description="Learning modules for private schools and homeschooling in Switzerland: social, nature-based, and technical. Scoped on request, documented for parents.">
+  <PageHero
+    eyebrow="Learning modules"
+    title="Experience adapted to you."
+    lede="Individually built learning modules for organisations, schools and homeschooling: social, nature-based or technical, always hands-on. Scoped on request and delivered online, at your site, or both.">
+    <div class="actions">
+      <a class="btn" href="#request">Request a module</a>
+      <a class="link" href="#available">Try the first module</a>
+    </div>
+  </PageHero>
+
+  <!-- Available now: the most useful thing on the page, so it comes first -->
+  <section class="section band" id="available">
+    <div class="wrap">
+      <article class="card avail">
+        <div class="avail__main">
+          <p class="eyebrow">Available now · no account needed</p>
+          <h2 class="h2">The first module you can run yourself.</h2>
+          <div class="card__head"><h3>Value Systems</h3><span class="chip chip--live">self-implementation</span></div>
+          <p class="for">social · 9 slides + 2-page worksheet · English and German</p>
+          <p>A session on the value system we hold and how it relates to the different roles we take through the day. Run it with your class or at your kitchen table, adapt it, develop it, and give feedback if you feel like it. Slides, worksheet and the full description are in the Hub.</p>
+        </div>
+        <div class="avail__cta">
+          <a class="btn" href={ext.firstModule}>Open the module</a>
+          <p class="small muted">Modules are the part of entrosana that does not wait on software. This one is usable, and it is yours.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Areas: all three visible at once (no tabs to click through) -->
+  <section class="section">
+    <div class="wrap">
+      <p class="eyebrow">Module areas</p>
+      <h2 class="h2">Three areas, scoped on request.</h2>
+      <p class="intro">Sometimes social-work driven, nature-oriented or tech-inspired, but always hands-on: self-directed learning as a pillar of self-development. The Learning Hub stays in the background, keeping plans, materials and the record transparent for learners, parents and teachers.</p>
+      <div class="grid grid--3">
+        {areas.map((a) => (
+          <article class="card">
+            <h3>{a.name}</h3>
+            <p class="for">{a.keys}</p>
+            <p>{a.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Request or propose: one market, one form -->
+  <section class="section" id="request">
+    <div class="wrap split">
+      <div class="market">
+        <p class="eyebrow">Request or propose</p>
+        <h2 class="h2">The Hub works as a market.</h2>
+        <div class="market__paths">
+          <div>
+            <h3 class="h3">Request a module</h3>
+            <p>A private school or a homeschooling family makes a request; we answer with a proposal. The module is developed in cooperation and delivered as agreed. There is no licence or subscription cost: the module is yours and, if you allow it, ours to share and distribute.</p>
+          </div>
+          <div id="propose">
+            <h3 class="h3">Propose a module</h3>
+            <p>Educators, practitioners and parents propose a module, an idea wanting to be shared. The Hub reviews it and grows its library of openly available modules. We pair the proposal with concrete needs where there are any, and help with the development.</p>
+          </div>
+        </div>
+        <ul class="facts market__facts">
+          <li class="fact"><span class="fact__k">Curriculum</span><p class="fact__v">References are checked, not trusted. The Swiss education plan (Lehrplan 21) is the common ground, and a Lehrplan 21 citation and navigation tool is part of the development.</p></li>
+          <li class="fact"><span class="fact__k">Contributors</span><p class="fact__v">Social workers, nature pedagogues and engineers who teach or feel the drive to share. Every module is composed in open-source collaboration.</p></li>
+          <li class="fact"><span class="fact__k">Transparency</span><p class="fact__v">The plan, the materials and the process stay visible to parents and teachers.</p></li>
+        </ul>
+        <p class="small"><a class="link" href={ext.hub}>Visit the Hub</a></p>
+      </div>
+      <div class="card market__form">
+        <ModuleForm client:visible mail={MAIL} />
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+/* live modules.css: the first section after the hero starts at half spacing */
+.section.ph + .section { padding-top: clamp(1.75rem, 1rem + 2.5vw, 3.25rem); }   /* 52px */
+
+.avail { display: grid; gap: 1.5rem 2.5rem; }
+@media (min-width: 880px) { .avail { grid-template-columns: 1.5fr 1fr; align-items: end; } }
+.avail .h2 { margin-bottom: 1.25rem; }
+.avail .card__head { max-width: 62ch; margin-bottom: 1.1rem; }   /* chip ends with the text measure */
+.avail__main > .for { margin: 0 0 1.5rem; }                      /* live: 16px + the 8px card gap */
+/* live modules.css: eyebrows are block flex, no line-box strut above them */
+main .eyebrow { display: flex; width: fit-content; max-width: none; }
+.avail__cta { display: grid; gap: 0.9rem; justify-items: start; }
+.market__paths { display: grid; gap: 1.25rem; margin-bottom: 1.5rem; }
+.market__paths h3 { margin-bottom: 0.35rem; }
+
+/* facts: live 14rem key column (the 9rem override goes) */
+.market__facts { list-style: none; margin-bottom: 1rem; }
+
+/* the form surface = live .market__modal (card-bg, 1px line, 14px, 2rem) */
+.card.market__form {
+  display: block;
+  padding: clamp(1.3rem, 1rem + 1.5vw, 2rem);                       /* 32px */
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);       /* live dialog: 0 18px 60px rgba(0,0,0,.55) over a backdrop; inline it takes the card shadow */
+}
+@media (min-width: 880px) { .card.market__form { position: sticky; top: 6rem; } }
+
+</style>

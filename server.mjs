@@ -3,6 +3,7 @@
 // URLs (extensionless via build.format='file'). No Host allowlist — safe to
 // sit behind the Tailscale Funnel. Bound to 0.0.0.0 for tailnet + funnel.
 import { createServer } from "node:http";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import sirv from "sirv";
@@ -24,11 +25,15 @@ const serve = sirv(root, {
   },
 });
 
+// The built 404 page points lost visitors at the main sections.
+let notFound = "404 — not found\n";
+try { notFound = readFileSync(join(root, "404.html"), "utf8"); } catch {}
+
 createServer((req, res) => {
   serve(req, res, () => {
     res.statusCode = 404;
-    res.setHeader("Content-Type", "text/plain; charset=utf-8");
-    res.end("404 — not found\n");
+    res.setHeader("Content-Type", `${notFound.startsWith("<") ? "text/html" : "text/plain"}; charset=utf-8`);
+    res.end(notFound);
   });
 }).listen(PORT, HOST, () => {
   console.log(`entrosana-site serving dist/ on http://${HOST}:${PORT}`);

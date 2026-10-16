@@ -1,0 +1,24 @@
+---
+// Build-time half of the record illustration: computes the real SHA-256
+// chain here (node:crypto never reaches the browser) and hands the seals to
+// the island, which hydrates once it scrolls into view.
+// Illustration only — the entries are examples, not data from the Hub.
+import { createHash } from "node:crypto";
+import RecordChainIsland, { type Entry } from "./islands/RecordChain";
+
+const entries: Entry[] = [
+  { n: "0141", t: "2026-10-14 09:12", who: "acct 0418", what: "proposal “Forest day, grade 4” · received" },
+  { n: "0142", t: "2026-10-14 14:03", who: "acct 0002", what: "proposal “Forest day, grade 4” · decided: accepted", alt: "proposal “Forest day, grade 4” · decided: rejected" },
+  { n: "0143", t: "2026-10-14 14:05", who: "acct 0002", what: "module “Forest day, grade 4” · published" },
+];
+
+const sha = (s: string) => createHash("sha256").update(s).digest("hex");
+const line = (prev: string, e: Entry, what: string) => `${prev}\n${e.n}|${e.t}|${e.who}|${what}`;
+const genesis = sha("0140");
+
+const chain = (rewrite: boolean) => {
+  let prev = genesis;
+  return entries.map((e) => (prev = sha(line(prev, e, rewrite && e.alt ? e.alt : e.what))));
+};
+---
+<RecordChainIsland client:visible entries={entries} genesis={genesis} sealed={chain(false)} rewrittenChain={chain(true)} />

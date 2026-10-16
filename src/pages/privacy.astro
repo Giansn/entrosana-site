@@ -1,0 +1,16 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import body from "../legal/privacy.en.html?raw";
+import { href } from "../lib/site";
+---
+<Layout title="Privacy and data residency" description="How entrosana.com handles data: Swiss/EU residency by design, what the site processes, and what it deliberately does not collect." alternate={{ lang: "de", path: "/privacy/de/" }}>
+  <PageHero eyebrow="Privacy" title="Privacy">
+    <p class="lede">What this site and the Hub know about you, where it rests, and where it is processed. <a href={href("/privacy/de/")} hreflang="de" lang="de">Deutsche Fassung</a>.</p>
+  </PageHero>
+  <section class="section legal-wrap">
+    <div class="wrap">
+      <div class="prose legal" set:html={body} />
+    </div>
+  </section>
+</Layout>

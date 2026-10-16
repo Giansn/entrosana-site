@@ -1,112 +1,141 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Receipt from "../components/Receipt.astro";
-import SealRule from "../components/SealRule.astro";
-
-const deployments = [
-  { href: "/hosted", name: "Hosted", tag: "serverless · no idle cost",
-    body: "Fastest to start. We run the agent, storage, and integrations. Swiss/EU data residency by design." },
-  { href: "/hybrid", name: "Hybrid", tag: "edge-first · data stays put",
-    body: "Sensitive documents never leave your premises. A small on-site device handles AI. Structured results sync to the cloud." },
-  { href: "/on-premises", name: "On-premises", tag: "your hardware · full stack",
-    body: "Same engine, your hardware. For organisations or federations that want the full stack on their own infrastructure." },
-];
+import RecordChain from "../components/RecordChain.astro";
+import HubStack from "../components/HubStack.astro";
+import DataLayers from "../components/DataLayers.astro";
+import { href, ext } from "../lib/site";
 ---
 <Layout>
-  <!-- Hero: the thesis, proven by a live signed receipt -->
+  <!-- Hero: who it is for, the two promises, one primary action -->
   <section class="section hero">
     <div class="wrap hero__grid">
       <div class="hero__copy">
-        <span class="eyebrow">Deterministic Language Models</span>
-        <h1 class="display hero__h">Same input.<br />Same output.<br />Every&nbsp;time.</h1>
-        <p class="lede">A deterministic, replayable decision path for back-office work — every decision pinned, retrievable, and signed. Built on CashCtrl as the system of record, with Swiss/EU data residency by design.</p>
-        <div class="hero__cta">
-          <a href="/hub" class="btn">Request access</a>
-          <a href="#audit" class="btn btn--ghost">Why deterministic</a>
+        <p class="eyebrow">For schools &amp; educational organisations</p>
+        <h1 class="hero__h">
+          <span>Reduce administrative load.</span>
+          <span class="hero__h2">Enhance and extend learning.</span>
+        </h1>
+        <p class="lede">We take on the administrative work — accounting, contracts and the recurring tasks around them — alongside the system you already use. And we bring learning modules into the classroom, online or on site. Both leave a sealed record.</p>
+        <div class="actions">
+          <a class="btn" href={href("/request-access/")}>Request pilot access</a>
+          <a class="link" href={href("/modules/#available")}>Try the first module</a>
         </div>
+        <ul class="hero__facts" aria-label="Facts">
+          <li>Sealed audit record</li>
+          <li>Swiss/EU residency</li>
+          <li>Open source · AGPL&#8209;3.0</li>
+          <li>Engine in development</li>
+        </ul>
       </div>
       <div class="hero__demo">
-        <Receipt />
-        <p class="hero__demohint mono muted">Run it. The signature never changes — until you switch to a stochastic model.</p>
+        <RecordChain />
+        <p class="small muted hero__demonote">In the Hub, every finished step writes one line like these, sealed against the one before it. Anyone holding the log can re-compute the chain without our help.</p>
       </div>
     </div>
   </section>
 
-  <SealRule sig="a3f1c0…9c2e" />
-
-  <!-- Audit thesis -->
-  <section class="section section--ink" id="audit">
+  <!-- What we do: two services on one foundation -->
+  <section class="section" id="what">
     <div class="wrap">
-      <span class="eyebrow">The difference</span>
-      <p class="human">Stochastic AI agents can't be audited.<br />A DLM is auditable by construction.</p>
-      <div class="grid grid--3 pillars">
-        <div class="pillar"><span class="pillar__n mono">pinned model version</span><p>The exact model and weights behind every decision are recorded, never silently upgraded.</p></div>
-        <div class="pillar"><span class="pillar__n mono">deterministic retrieval order</span><p>The same sources are read in the same order, so the same input resolves the same way.</p></div>
-        <div class="pillar"><span class="pillar__n mono">signed audit trail per interaction</span><p>Every answer is anchored to its model version, prompt version, retrieved sources, and reasoning.</p></div>
+      <p class="eyebrow">What we do</p>
+      <h2 class="h2">Two services: the back office and the classroom.</h2>
+      <p class="intro">Both come in formats adapted to your needs. You can implement and self-host the tools and modules yourself; otherwise we guide, implement, host and maintain them for you.</p>
+      <div class="grid grid--2">
+        <article class="card card--link">
+          <div class="card__head"><h3>The back office</h3><span class="chip chip--open">as an engagement</span></div>
+          <p class="for">for the work nobody went into education to do</p>
+          <p>Accounting, contracts and the recurring administration around them, taken on with you and against the system you already run, whether that is CashCtrl, bexio or another. Scoped per organisation as a pilot. Decisions stay with your people; we do the work around them.</p>
+          <a class="link" href={href("/service/")}>Back-office tooling</a>
+        </article>
+        <article class="card card--link">
+          <div class="card__head"><h3>Learning modules</h3><span class="chip chip--live">online &amp; on site</span></div>
+          <p class="for">for a class, a family, or a single student</p>
+          <p>Scoped and built on request by contributors in social work, nature-based and technical fields, matched to the age and size of the class. Delivered online, at your site, or both, with materials, transport and evaluation included where desired.</p>
+          <a class="link" href={href("/modules/")}>See the modules</a>
+        </article>
       </div>
+      <article class="card foundation">
+        <div class="foundation__k">
+          <div class="card__head"><h3>A record underneath both</h3><span class="chip chip--built">built</span></div>
+          <p class="for">for the question “who changed this, and when?”</p>
+        </div>
+        <div>
+          <p>Whatever we touch leaves an entry in a sealed log: what happened, who did it, in what order. You can show it to a parent, a board or an auditor, and they can check it without taking our word for it.</p>
+          <a class="link" href={href("/roadmap/")}>What is built, and what is not</a>
+        </div>
+      </article>
     </div>
   </section>
 
-  <!-- Three pillars: what's built on the engine -->
-  <section class="section">
+  <!-- How we work -->
+  <section class="section band" id="how">
     <div class="wrap">
-      <span class="eyebrow">Built on the engine</span>
-      <h2 class="display h2 pillars3__h">One deterministic engine. Three ways it shows up.</h2>
-      <div class="grid grid--3 pillars3">
-        <a href="/tools" class="card pillar3">
-          <span class="tag">Tools</span>
-          <h3>Back-office work</h3>
-          <p>Bookkeeping, payroll, contracts, reconciliation — built to run deterministically on CashCtrl, with the judgement kept with the accountant you already have.</p>
-          <span class="pillar3__more mono">View tools →</span>
-        </a>
-        <a href="/learn" class="card pillar3">
-          <span class="tag">Learn</span>
-          <h3>A tutor that doesn't drift</h3>
-          <p>For learners young and old, academic study, and schools where parents and teachers can audit every answer the AI gave.</p>
-          <span class="pillar3__more mono">See learning →</span>
-        </a>
-        <a href="/hub" class="card pillar3">
-          <span class="tag">Hub</span>
-          <h3>An open foundation</h3>
-          <p>Contribute a dedicated track and inherit the engine, the signed audit trail and Swiss/EU residency by design — open-source, on a shared runway.</p>
-          <span class="pillar3__more mono">Explore the hub →</span>
-        </a>
-      </div>
+      <p class="eyebrow">How we work</p>
+      <h2 class="h2">Built from the ground up,<br />not configured.</h2>
+      <p class="human">Most solutions for educational organisations can only be configured.</p>
+      <p class="human small">entrosana opens the room to decide what you need from the ground up: no tools full of functions nobody uses, and no learning tasks designed for repetitive mass learning.</p>
+      <ol class="steps">
+        <li>
+          <h3>Tell us what you envision</h3>
+          <p>Map out your specific needs, intended solutions and known obstacles. We take your instructions into account while we build your solution.</p>
+        </li>
+        <li>
+          <h3>Review our suggestions</h3>
+          <p>This is the time to make room for process optimisations, potential automations and mapping out the implementation.</p>
+        </li>
+        <li>
+          <h3>Progressive adaptation</h3>
+          <p>For us an implementation is never finished: the use case may stay while the options change, or the other way around. Want to maintain a solution yourself? Get in touch.</p>
+        </li>
+      </ol>
     </div>
   </section>
 
-  <SealRule sig="7c44ab…0e19" />
-
-  <!-- Deployment -->
-  <section class="section" id="deploy">
+  <!-- The Hub + how data is handled (live: one column, figure at full width) -->
+  <section class="section" id="hub">
     <div class="wrap">
-      <span class="eyebrow">Three ways to run it</span>
-      <h2 class="display h2 deploy__h">Same engine. Same audit trail. Same Swiss/EU residency by design. You choose where it runs.</h2>
-      <div class="grid grid--3 deploy">
-        {deployments.map((d) => (
-          <a href={d.href} class="card deploy__card">
-            <span class="tag">{d.tag}</span>
-            <h3>{d.name}</h3>
-            <p>{d.body}</p>
-            <span class="deploy__more mono">Read more →</span>
-          </a>
-        ))}
+      <p class="eyebrow">One ground. What stands on it.</p>
+      <h2 class="h2">The Hub, and what runs in it.</h2>
+      <p class="intro">The Hub is the ground: shared identity, one sealed record, one licence. Tools run the back office on it; modules run in the classroom on it. Both leave the same trail, so what happened can be shown rather than asserted.</p>
+      <HubStack />
+      <div class="hub__text">
+        <p>Students, parents and teachers work alongside outside contributors, in the open under AGPL-3.0. The Hub is being built at <a href={ext.hub}><b>entrosana.app</b></a>.</p>
+        <div class="actions">
+          <a class="btn btn--hub" href={ext.hub}>Access entrosana Hub →</a>
+          <a class="link" href={href("/hub/")}>Learn about the Hub</a>
+        </div>
       </div>
+      <article class="card datanote">
+        <p class="eyebrow">How data is handled</p>
+        <h3>Two model layers, by design.</h3>
+        <p>Anything touching delicate records is designed to run on a model served on your own or our hardware. Only data that is not sensitive goes to an online provider. That boundary is what keeps data management local rather than merely promised.</p>
+        <DataLayers />
+      </article>
     </div>
   </section>
 
-  <!-- Closing CTA -->
-  <section class="section section--ink">
-    <div class="wrap split">
+  <!-- Where we stand (live: a lopsided split that stacks) -->
+  <section class="section band" id="status">
+    <div class="wrap split split--stack">
       <div>
-        <span class="eyebrow">Get started</span>
-        <h2 class="display h2">Audit-grade AI, on your terms.</h2>
+        <p class="eyebrow">Where we stand</p>
+        <h2 class="h2">In development.<br />In the open.</h2>
       </div>
       <div>
-        <p>Run it hosted in the EU, keep sensitive documents on-premises, or run the full stack yourself. Same engine, same signed audit trail, every way.</p>
-        <div class="hero__cta">
-          <a href="/hub" class="btn">Request access</a>
-          <a href="/#deploy" class="btn btn--ghost">Compare deployment</a>
+        <p>entrosana is in development, and we say so wherever it matters. The engine behind the back-office tools is public under AGPL-3.0 and is not production software today. No school runs on the engine yet, and modules are delivered by people rather than by software. Pilot access is opening to a small group of Swiss organisations. The aim is systemic: an open service any school and any back office can inherit.</p>
+        <p>Founded by Gianluca Kühne.</p>
+        <ul class="status-list" aria-label="Status by part">
+          <li><span class="what">Audit trail</span><span class="chip chip--built">built</span></li>
+          <li><span class="what">Sign-in &amp; separation</span><span class="chip chip--built">built</span></li>
+          <li><span class="what">Back-office workflows</span><span class="chip chip--dev">in development</span></li>
+          <li><span class="what">Modules</span><span class="chip chip--live">online &amp; on site</span></li>
+        </ul>
+        <p>To see current prototypes, open the Arboro showcase, developed for our first collaboration partner.</p>
+        <div class="actions">
+          <a class="btn" href={href("/request-access/")}>Request pilot access</a>
+          <a class="link" href={href("/roadmap/")}>Read the roadmap</a>
+          <a class="link" href={ext.source}>View the source</a>
+          <a class="link" href={ext.arboro}>Arboro showcase</a>
         </div>
       </div>
     </div>
@@ -114,34 +143,113 @@ const deployments = [
 </Layout>
 
 <style>
-  .hero { padding-top: clamp(2.5rem, 1.5rem + 4vw, 5rem); }
-  .hero__grid { display: grid; gap: clamp(2rem, 1rem + 5vw, 4rem); align-items: center; }
-  @media (min-width: 900px) { .hero__grid { grid-template-columns: 1.05fr 0.95fr; } }
-  .hero__h { font-size: var(--step-4); margin: 0.4rem 0 1.4rem; }
-  .hero__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.8rem; }
-  .hero__demo { display: flex; flex-direction: column; gap: 0.9rem; }
-  .hero__demohint { font-size: 0.72rem; max-width: 40ch; }
+  /* ── hero (live design-polish.css, front page) ──
+     Headline across the full measure, then two columns with the tapering
+     accent rule on the seam; .hero__copy is layout-transparent so its
+     children share one grid with .hero__demo. */
+  .hero { padding-block: clamp(3rem, 6vw, 5.5rem); }
+  .hero__grid { display: grid; grid-template-columns: 1fr; column-gap: clamp(2rem, 4vw, 4.5rem); row-gap: clamp(2rem, 1rem + 5vw, 4rem); }
+  @media (max-width: 999.98px) { .hero__grid > * { max-width: 46rem; } }
+  .hero__demo { display: flex; flex-direction: column; gap: .9rem; }
+  @media (min-width: 861px) {
+    .hero__grid {
+      grid-template-columns: 1.15fr .85fr;
+      grid-template-rows: auto auto auto auto auto 1fr;
+      grid-template-areas: "eb eb" "title title" "lede demo" "cta demo" "facts demo" ". demo";
+      row-gap: 0;
+    }
+    .hero__copy { display: contents; }
+    .hero__copy > .eyebrow { grid-area: eb; }
+    .hero__h { grid-area: title; }
+    .hero__copy > .lede { grid-area: lede; margin-top: 1.75rem; }
+    .hero__copy > .actions { grid-area: cta; align-self: start; }
+    .hero__facts { grid-area: facts; align-self: start; }
+    .hero__demo { grid-area: demo; position: relative; margin-top: 1.75rem; }
+    /* the accent divider between the columns: 1px, fading at both ends */
+    .hero__demo::before {
+      content: ""; position: absolute; top: 2.75rem;
+      left: calc(-0.5 * clamp(2rem, 4vw, 4.5rem));
+      transform: translateX(-50%);
+      width: 1px; height: clamp(5.5rem, 26vh, 9.5rem);
+      pointer-events: none;
+      background: linear-gradient(180deg, transparent,
+        color-mix(in srgb, var(--seal) 42%, transparent) 26%,
+        color-mix(in srgb, var(--seal) 42%, transparent) 74%, transparent);
+    }
+  }
+  @media (min-width: 1000px) {
+    .hero { display: flex; align-items: center; justify-content: center; }
+    .hero > .wrap { width: min(100% - 2 * var(--gutter), var(--wrap)); }
+    .hero__grid { align-items: center; }
+    .hero__demo { align-self: center; }
+  }
 
-  .h2 { font-size: var(--step-3); max-width: 18ch; }
-  .pillars { margin-top: 2.5rem; }
-  .pillar__n { display: block; color: #fff; font-size: var(--step-0); margin-bottom: 0.5rem; }
-  .pillar__n::before { content: "› "; color: var(--seal); }
+  /* hero headline as live: two lines, one ink, weight carries the hierarchy (600 → 350) */
+  .hero__h {
+    font-family: var(--font-sans);
+    font-size: clamp(2.2rem, 1.8rem + 2.4vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -.028em;
+    color: var(--ink);
+    margin: .4rem 0 1.4rem;
+  }
+  .hero__h span { display: block; }
+  .hero__h2 { font-weight: 350; color: var(--ink); margin-top: 1.4rem; }
+  @media (min-width: 1000px) {
+    .hero__h { font-size: clamp(2rem, .9rem + 2.6vw, 3.6rem); line-height: 1.08; margin: 0; }
+    .hero__h2 { margin-top: 0; }
+  }
 
-  .split { display: grid; gap: clamp(1.5rem, 1rem + 3vw, 3.5rem); }
-  @media (min-width: 820px) { .split { grid-template-columns: 1fr 1fr; align-items: start; } }
-  .human.small { font-size: var(--step-1); margin-top: 1.2rem; color: var(--ink-2); }
-  .section--ink .human.small { color: #C7CBD2; }
+  .hero__copy > .lede { margin: 0 0 1rem; }
+  @media (min-width: 1000px) {
+    .hero__copy > .lede { margin: 2rem 0 0; font-size: clamp(.95rem, .9rem + .3vw, 1.06rem); }
+  }
+  .hero .actions { margin-top: 1.9rem; }
 
-  .deploy__h { max-width: 24ch; margin-bottom: 2.5rem; }
-  .deploy__card { display: flex; flex-direction: column; gap: 0.5rem; transition: border-color .15s, transform .1s; }
-  .deploy__card:hover { border-color: var(--seal); transform: translateY(-2px); }
-  .deploy__card p { color: var(--ink-2); flex: 1; }
-  .deploy__more { color: var(--seal); font-size: var(--step--1); margin-top: 0.5rem; }
+  /* facts under the hero = live .chips: plain mono facts separated by space alone */
+  .hero__facts {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem 2rem;
+  }
+  @media (min-width: 1000px) { .hero__facts { margin-top: clamp(.9rem, 2vh, 1.35rem); max-width: 28rem; } }
+  .hero__facts > li { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 400; line-height: 1.9; color: var(--ink-2); }
+  /* = live .hero__demohint */
+  .hero__demonote { margin: 0; font-size: .72rem; max-width: 40ch; }
 
-  .pillars3__h { max-width: 20ch; margin-bottom: 2.5rem; }
-  .pillars3 { align-items: stretch; }
-  .pillar3 { display: flex; flex-direction: column; gap: 0.5rem; transition: border-color .15s, transform .1s; }
-  .pillar3:hover { border-color: var(--seal); transform: translateY(-2px); }
-  .pillar3 p { color: var(--ink-2); flex: 1; }
-  .pillar3__more { color: var(--seal); font-size: var(--step--1); margin-top: 0.5rem; }
+  /* live entrance: a 10px rise, no fade, staggered */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__copy > *, .hero__demo { transform: translateY(10px); animation: pol-up .6s cubic-bezier(.2, .7, .2, 1) forwards; }
+    .hero__copy > :nth-child(2) { animation-delay: .06s; }
+    .hero__copy > :nth-child(3) { animation-delay: .1s; }
+    .hero__copy > :nth-child(4) { animation-delay: .14s; }
+    .hero__copy > :nth-child(5) { animation-delay: .18s; }
+    .hero__demo { animation-delay: .22s; }
+    @keyframes pol-up { to { transform: none; } }
+  }
+
+  /* ── foundation (shapes.css 2a): the ground under the two cards ── */
+  .foundation { margin-top: clamp(1rem, .5rem + 2vw, 1.5rem); }
+  @media (min-width: 820px) {
+    .foundation {
+      margin-top: calc(clamp(1rem, .5rem + 2vw, 1.5rem) + .4rem);
+      display: grid; grid-template-columns: 22rem minmax(0, 1fr); gap: 0 3.5rem; align-items: start;
+      background: none; border: 0; border-top: 2px solid var(--seal); border-radius: 0; box-shadow: none;
+      padding: 1.9rem 0 0;
+    }
+    .foundation h3 { font-size: var(--step-2); }
+  }
+  .foundation .for { margin-top: .4rem; }
+  .foundation p:not(.for) { margin: 0; }
+  .foundation .link { margin-top: .7rem; }
+
+  /* ── the Hub: text, figure at full width, then the data card ── */
+  #hub :global(.hs) { margin-top: 2.4rem; }
+  .hub__text { margin-top: 1.6rem; }
+  .hub__text .actions { margin-top: 1rem; }
+  .hub__text .actions .link { font-weight: 400; letter-spacing: normal; }
+  .datanote { margin-top: clamp(1.5rem, 1rem + 2vw, 2.5rem); gap: 0; }
+  .datanote .eyebrow { color: var(--seal); margin-bottom: 1.25rem; }
+  .datanote > p:not(.eyebrow) { color: var(--ink); }
+  .datanote :global(.dl) { margin-top: 1.4rem; }
 </style>

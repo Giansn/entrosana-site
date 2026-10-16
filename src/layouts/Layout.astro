@@ -1,36 +1,78 @@
 ---
-import "@fontsource/geist-mono/400.css";
-import "@fontsource/geist-mono/500.css";
-import "@fontsource/hanken-grotesk/400.css";
-import "@fontsource/hanken-grotesk/500.css";
-import "@fontsource/hanken-grotesk/600.css";
-import "@fontsource/newsreader/400-italic.css";
+import "@fontsource/carlito/latin-400.css";
+import "@fontsource/carlito/latin-700.css";
+import "@fontsource/carlito/latin-ext-400.css";
+import "@fontsource/carlito/latin-ext-700.css";
+import "@fontsource/carlito/latin-400-italic.css";
+import "@fontsource/carlito/latin-ext-400-italic.css";
 import "../styles/global.css";
+import incLatin from "../fonts/inconsolata-latin.woff2?url";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import { href, pagePath } from "../lib/site";
 
-interface Props { title?: string; description?: string; }
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: string;
+  /** Alternate-language version of this page (privacy EN ⇄ DE). */
+  alternate?: { lang: string; path: string };
+}
 const {
-  title = "entrosana — deterministic AI for back-office work",
-  description = "Same input. Same output. Every time. A deterministic, signed decision path for back-office work. Swiss/EU residency by design, built on CashCtrl.",
+  title,
+  description = "Adaptive learning modules and open tooling for educational organisations, with a sealed, verifiable record of every step. Swiss/EU data residency by design.",
+  lang = "en",
+  alternate,
 } = Astro.props;
+
+const fullTitle = title ? `${title} | entrosana` : "entrosana: adaptive learning and tooling for schools";
+const canonical = new URL(Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ""), "") || "/", Astro.site);
+const ogImage = new URL("/og.png", Astro.site);
+// Project-page previews (GitHub Pages under /entrosana-site/) stay out of
+// search results; the canonical origin is indexable.
+// live marks the front page on <body> (home-only button and focus details)
+const page = pagePath(Astro.url) === "/" ? "home" : "sub";
+const noindex = import.meta.env.BASE_URL !== "/" || process.env.ASTRO_NOINDEX === "1";
 ---
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex, nofollow" />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    {alternate && <link rel="alternate" hreflang={alternate.lang} href={new URL(alternate.path, Astro.site)} />}
+    <link rel="preload" href={incLatin} as="font" type="font/woff2" crossorigin />
     <meta property="og:type" content="website" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:site_name" content="entrosana" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href={href("/favicon.svg")} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={href("/apple-touch-icon.png")} />
+    <!-- Theme before first paint. As on the live site: dark is the state
+         without an attribute; light only when the toggle stored it. The OS
+         preference is deliberately not consulted (owner's decision). -->
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add("js");
+        try {
+          if (localStorage.getItem("entrosana-theme") === "light") d.setAttribute("data-theme", "light");
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body>
+  <body data-page={page}>
+    <a class="skip" href="#main">Skip to content</a>
     <Nav />
-    <main>
+    <main id="main" tabindex="-1">
       <slot />
     </main>
     <Footer />

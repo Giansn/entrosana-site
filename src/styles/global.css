@@ -1,49 +1,108 @@
-/* entrosana — "the signed record" design system
-   Mono as the display voice (determinism = exactness); grotesk body; serif
-   italic reserved for the human-review moments. Cool paper, ink, one ink-blue
-   "seal" accent tied to the signed audit trail. */
+/* entrosana — design system, matched to entrosana.com (live theme CSS,
+   measured 2026-10-16). Dark is the state without an attribute; light only via
+   the toggle ([data-theme="light"]). The OS preference never switches theme;
+   on light-OS machines the dark tones sit one step lighter, as on live. */
 
+/* ── fonts ────────────────────────────────────────────────────────────────
+   Inconsolata exactly as live: same two latin / latin-ext woff2 files
+   (byte-identical to @fontsource-variable/inconsolata/files/
+   inconsolata-latin(-ext)-wght-normal.woff2, copied to src/fonts/),
+   family name "Inconsolata", variable 200–900, font-display:block. */
+@font-face{font-family:"Inconsolata";font-style:normal;font-weight:200 900;font-display:block;src:url(../fonts/inconsolata-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Inconsolata";font-style:normal;font-weight:200 900;font-display:block;src:url(../fonts/inconsolata-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+
+/* ── tokens: dark = bare :root (no attribute), as on live ───────────────── */
 :root {
-  /* palette */
-  --paper:   #F4F5F3;   /* page background — cool paper, deliberately not cream */
-  --paper-2: #ECEEEA;   /* raised panels */
-  --ink:     #16181D;   /* primary ink / dark sections */
-  --ink-2:   #3A3F49;   /* secondary text on paper */
-  --muted:   #74787F;   /* captions, metadata */
-  --line:    #DCDDD6;   /* hairlines on paper */
-  --line-2:  #2C313B;   /* hairlines on ink */
-  --seal:    #2742E0;   /* THE accent — signature / fountain-pen ink */
-  --seal-2:  #1B2FA8;   /* seal pressed/hover */
-  --verify:  #0E7C6B;   /* used ONLY on "matched / identical" states */
-  --warn:    #B23A2E;   /* used ONLY on "drifted" states */
+  --bg:        #1b1e24;   /* live --paper */
+  --bg-2:      #22262E;   /* live --paper-2 */
+  --surface:   #232833;   /* live --card-bg */
+  --surface-2: #1F232B;   /* live --field-bg */
+  --ink:       #e9ebe7;
+  --ink-2:     #C6CAD1;
+  --muted:     #8F95A1;
+  --line:      #454E60;
+  --line-2:    #525C70;   /* new: live --line-2 */
+  --control:   #5A6273;   /* live --line-ui */
+  --seal:      #2bd4e8;
+  --seal-2:    #7FE7F3;   /* new: live --seal-2 */
+  --seal-ink:  #071316;   /* live --btn-fg */
+  --seal-soft: color-mix(in srgb, var(--seal) 10%, transparent); /* prototype-only, no live token */
+  --verify:    #2FB89E;
+  --warn:      #D2685C;
+  --shadow:    0 1px 2px rgba(0,0,0,.35),0 4px 12px rgba(0,0,0,.30);            /* live --shadow-1 */
+  --shadow-1:  var(--shadow);
+  --shadow-2:  0 4px 8px rgba(0,0,0,.42),0 14px 32px rgba(0,0,0,.45);           /* live --shadow-2 */
+  --glow:      color-mix(in srgb, var(--seal) 7%, transparent);                  /* live .hero:before */
 
-  --font-mono:  "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  --font-sans:  "Hanken Grotesk", system-ui, -apple-system, sans-serif;
-  --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-sans: Calibri, "Carlito", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "Inconsolata", "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  /* fluid type scale */
-  --step--1: clamp(0.78rem, 0.74rem + 0.2vw, 0.86rem);
-  --step-0:  clamp(0.95rem, 0.90rem + 0.25vw, 1.05rem);
-  --step-1:  clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+  --step--1: clamp(.78rem, .74rem + .2vw, .86rem);
+  --step-0:  clamp(.95rem, .9rem + .25vw, 1.05rem);
+  --step-1:  clamp(1.15rem, 1.05rem + .5vw, 1.4rem);
   --step-2:  clamp(1.5rem, 1.3rem + 1vw, 2.1rem);
   --step-3:  clamp(2.1rem, 1.7rem + 2vw, 3.4rem);
-  --step-4:  clamp(2.8rem, 2.0rem + 4vw, 5.2rem);
+  --step-4:  clamp(2.8rem, 2rem + 4vw, 5.2rem);
 
   --wrap: 1140px;
-  --gutter: clamp(1.25rem, 0.8rem + 2.5vw, 3rem);
-  --radius: 4px;   /* near-square: instrument, not bubbly */
+  --gutter: clamp(1.25rem, .8rem + 2.5vw, 3.0rem);
+  --radius: 14px;     /* live card/panel radius (shapes.css 2f); live's own --radius token is 4px */
+  --radius-sm: 8px;
+  --section: clamp(3.5rem, 2rem + 7vw, 7rem);
+  font-size: 100%;
+}
+/* Live "Heller Arbeitsplatz" (owner 2026-09-11): still the DARK theme, never a
+   switch to light. On machines whose OS is set to light, the dark ground,
+   surfaces, lines and quiet text sit one step lighter. Accents unchanged. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="light"]) {
+    --bg:        #242830;
+    --bg-2:      #2B303A;
+    --ink-2:     #CDD1D8;
+    --muted:     #9AA0AC;
+    --line:      #505A6E;
+    --line-2:    #5E6980;
+    --surface:   #2C323E;
+    --surface-2: #282D36;
+  }
+}
+/* ── tokens: light, only via the toggle ─────────────────────────────────── */
+:root[data-theme="light"] {
+  --bg:        #f5fffe;
+  --bg-2:      #ECEEEA;
+  --surface:   #FFFFFF;
+  --surface-2: #FFFFFF;
+  --ink:       #16181d;
+  --ink-2:     #3A3F49;
+  --muted:     #6C7078;
+  --line:      #86A0A6;
+  --line-2:    #2C313B;
+  --control:   #7F979E;
+  --seal:      #077183;
+  --seal-2:    #09606F;
+  --seal-ink:  #FFFFFF;
+  --verify:    #0E7C6B;
+  --warn:      #B23A2E;
+  --shadow:    0 1px 2px rgba(22,24,29,.06),0 4px 10px rgba(22,24,29,.07);
+  --shadow-2:  0 3px 6px rgba(22,24,29,.08),0 12px 28px rgba(22,24,29,.11),0 28px 56px rgba(22,24,29,.07);
 }
 
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+/* ── resets ───────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 6rem; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
+ul, ol { margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
 
+/* ── base ─────────────────────────────────────────────────────────────── */
 body {
   margin: 0;
-  background: var(--paper);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: var(--step-0);
@@ -51,104 +110,957 @@ body {
   font-feature-settings: "ss01";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* live ground, verbatim: noise dither + ambient glow (html must stay without a background) */
+  background:
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27160%27%20height%3D%27160%27%3E%3Cfilter%20id%3D%27n%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.82%27%20numOctaves%3D%272%27%20seed%3D%2711%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20type%3D%27saturate%27%20values%3D%270%27%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20filter%3D%27url%28%23n%29%27%2F%3E%3C%2Fsvg%3E"),
+    radial-gradient(120% 92% at 18% -8%,color-mix(in srgb,var(--seal) 15%,transparent),transparent 72%),
+    radial-gradient(92% 82% at 90% -5%,color-mix(in srgb,var(--verify) 10%,transparent),transparent 74%),
+    radial-gradient(150% 130% at 50% 122%,color-mix(in srgb,var(--seal) 9%,transparent),transparent 74%),
+    linear-gradient(180deg,color-mix(in srgb,var(--seal) 3%,var(--bg)) 0,var(--bg) 62%),
+    var(--bg);
+  background-repeat: repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat;
+  background-size: 160px 160px,auto,auto,auto,100% 900px,auto;
+  background-position: 0 0,top,top,top,top center,0 0;
+  background-attachment: fixed,fixed,fixed,fixed,scroll,scroll;
+  background-blend-mode: soft-light,normal,normal,normal,normal,normal;
 }
+/* light ground: bright cyan #CDEEF4, grain kept via overlay */
+:root[data-theme="light"] body {
+  background-color: #CDEEF4;
+  background-blend-mode: overlay, normal, normal, normal, normal;
+  background-image:
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27160%27%20height%3D%27160%27%3E%3Cfilter%20id%3D%27n%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.82%27%20numOctaves%3D%272%27%20seed%3D%2711%27%20stitchTiles%3D%27stitch%27%2F%3E%3CfeColorMatrix%20type%3D%27saturate%27%20values%3D%270%27%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20filter%3D%27url%28%23n%29%27%2F%3E%3C%2Fsvg%3E"),
+    radial-gradient(120% 92% at 18% -8%, color-mix(in srgb, var(--seal) 26%, transparent), transparent 72%),
+    radial-gradient(92% 82% at 90% -5%, color-mix(in srgb, var(--verify) 16%, transparent), transparent 74%),
+    radial-gradient(150% 130% at 50% 122%, color-mix(in srgb, var(--seal) 18%, transparent), transparent 74%),
+    linear-gradient(180deg, color-mix(in srgb, var(--seal) 10%, #CDEEF4) 0, #CDEEF4 62%);
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-size: 160px 160px, auto, auto, auto, 100% 900px;
+  background-position: 0 0, top, top, top, top center;
+  background-attachment: fixed, fixed, fixed, fixed, scroll;
+}
+main { flex: 1; }
 
-h1, h2, h3 { font-weight: 500; line-height: 1.04; letter-spacing: -0.01em; margin: 0; }
-.display {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  line-height: 1.0;
-}
+h1, h2, h3, h4 { font-weight: 500; line-height: 1.04; letter-spacing: -.01em; margin: 0; }
 p { margin: 0 0 1rem; max-width: 62ch; }
 a { color: inherit; text-decoration: none; }
-
-/* layout */
-.wrap { width: min(100% - 2*var(--gutter), var(--wrap)); margin-inline: auto; }
-.section { padding-block: clamp(3.5rem, 2rem + 7vw, 7rem); }
-.section--ink { background: var(--ink); color: var(--paper); }
-.section--ink .eyebrow { color: #9aa0ad; }
-.section--ink p { color: #C7CBD2; }
-
-/* eyebrow / structural labels — mono, encode "machine truth" not decoration */
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6em;
-  margin: 0 0 1.25rem;
-}
-.eyebrow::before {
-  content: "";
-  width: 1.6em; height: 1px; background: currentColor; opacity: 0.5;
-}
-
-.lede { font-size: var(--step-1); color: var(--ink-2); max-width: 56ch; }
-.section--ink .lede { color: #D6D9DF; }
-
-/* human-review serif moment */
-.human {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: var(--step-2);
-  line-height: 1.25;
-  letter-spacing: 0;
-  color: var(--ink);
-}
-
-/* seal rule — divider that asserts "every section is signed" */
-.sealrule { display: flex; align-items: center; gap: 1rem; color: var(--muted); }
-.sealrule::before, .sealrule::after { content: ""; height: 1px; background: var(--line); flex: 1; }
-.section--ink .sealrule::before, .section--ink .sealrule::after { background: var(--line-2); }
-.sealrule .sig { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.04em; white-space: nowrap; }
-.sealrule .sig b { color: var(--seal); font-weight: 500; }
-
-/* buttons */
-.btn {
-  display: inline-flex; align-items: center; gap: 0.55em;
-  font-family: var(--font-mono); font-size: var(--step--1);
-  letter-spacing: 0.04em;
-  padding: 0.7em 1.1em; border-radius: var(--radius);
-  border: 1px solid var(--ink);
-  background: var(--ink); color: var(--paper);
-  cursor: pointer; transition: background .15s, border-color .15s, color .15s, transform .05s;
-}
-.btn:hover { background: var(--seal); border-color: var(--seal); }
-.btn:active { transform: translateY(1px); }
-.btn--ghost { background: transparent; color: var(--ink); }
-.btn--ghost:hover { background: transparent; border-color: var(--seal); color: var(--seal); }
-.section--ink .btn--ghost { color: var(--paper); border-color: #4a505c; }
+strong, b { font-weight: 700; }
 
 :focus-visible { outline: 2px solid var(--seal); outline-offset: 2px; }
+/* ::selection — none on live (UA highlight). Intentionally no rule. */
 
-/* generic grid */
-.grid { display: grid; gap: clamp(1rem, 0.5rem + 2vw, 2rem); }
-@media (min-width: 760px) { .grid--3 { grid-template-columns: repeat(3, 1fr); } .grid--2 { grid-template-columns: 1fr 1fr; } }
-
-/* card — square ledger panel */
-.card {
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: clamp(1.25rem, 0.8rem + 2vw, 1.9rem);
+/* ── section ground: band + seams ───────────────────────────────────────── */
+.section { padding-block: var(--section); }
+/* tinted band = live .section--ink. Dark subpages: live leaves it untinted,
+   only the hairlines (the fade lives in design-polish.css, front page only). */
+.band {
+  background: transparent;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
-.card h3 { font-family: var(--font-mono); font-size: var(--step-1); margin-bottom: 0.6rem; }
-.card .tag { font-family: var(--font-mono); font-size: var(--step--1); color: var(--seal); letter-spacing: 0.04em; }
+[data-page="home"] .band {
+  background: linear-gradient(to bottom, transparent 0, var(--bg-2) 140px, var(--bg-2) calc(100% - 140px), transparent 100%);
+}
+.band + .band { border-top: 0; }
+:root[data-theme="light"] .band { background: linear-gradient(180deg, transparent 0, #E2F1F3 8%, #E2F1F3 92%, transparent 100%); }
+
+.section + .section { position: relative; }
+.section:not(.band) + .section:not(.band)::before,
+.band + .band::before {
+  content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: min(var(--wrap, 1140px), calc(100% - 3rem)); height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent,
+    color-mix(in srgb, var(--seal) 26%, transparent) 18%,
+    color-mix(in srgb, var(--seal) 26%, transparent) 82%, transparent);
+}
+:root[data-theme="light"] .section:not(.band) + .section:not(.band)::before,
+:root[data-theme="light"] .band + .band::before {
+  background: linear-gradient(90deg, transparent,
+    color-mix(in srgb, var(--seal) 60%, transparent) 18%,
+    color-mix(in srgb, var(--seal) 60%, transparent) 82%, transparent);
+}
+
+/* text inside a band */
+.band :is(h1, h2, h3) { color: #F2F3F0; }
+.band p:not([class]) { color: var(--ink-2); }
+body:not([data-page="home"]) .band .eyebrow { color: #9aa0ad; }
+body:not([data-page="home"]) .band p:not([class]),
+body:not([data-page="home"]) .band :is(.intro, .evidence li) { color: #c7cbd2; }
+:root[data-theme="light"] .band p:not([class]),
+:root[data-theme="light"] .band :is(.intro, .evidence li) { color: var(--ink-2); }
+:root[data-theme="light"] .band :is(h1, h2, h3) { color: var(--ink); }
+:root[data-theme="light"] .band .eyebrow { color: var(--ink-2); }
+
+/* hero ambient glow (live site.css .hero:before) */
+.hero { position: relative; overflow: hidden; }
+.hero::before {
+  content: ""; position: absolute; inset: -30% -18% auto -18%; height: 150%;
+  background: radial-gradient(60% 60% at 32% 26%, var(--glow), transparent 80%);
+  pointer-events: none;
+}
+.hero > .wrap { position: relative; }
+
+/* links inside running text: live lets them inherit the text colour; a faint
+   seal underline is kept as the one non-colour cue (WCAG 1.4.1) */
+.prose a, p a:not([class]), li a:not([class]), .form-status a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--seal) 55%, transparent);
+  text-underline-offset: .2em;
+}
+.prose a:hover, p a:not([class]):hover { text-decoration-color: currentColor; }
+
+/* ── layout ────────────────────────────────────────────────────────────── */
+.wrap { width: min(100% - 2 * var(--gutter), var(--wrap)); margin-inline: auto; }
+.section--tight { padding-block: calc(var(--section) * 0.6); }
+.split { display: grid; gap: clamp(1.5rem, 1rem + 3vw, 3.5rem); }
+@media (min-width: 820px) { .split, .split--wide-left, .split--wide-right { grid-template-columns: 1fr 1fr; align-items: start; } }
+/* live lopsided splits stack: heading block above, text block below (shapes.css 6) */
+@media (min-width: 820px) {
+  .split--stack { display: block; }
+  .split--stack > :first-child { max-width: 46ch; margin-bottom: 1.6rem; }
+  .split--stack > :last-child { max-width: 72ch; }
+}
+/* grid cells do not collapse margins: below 820 only the split gap separates
+   heading and text, as live (its .display.h2 has no margin there) */
+.split--stack > :first-child > :last-child { margin-bottom: 0; }
+.split > div > .h2:last-child { margin-bottom: 0; }
+.stack > * + * { margin-top: 1rem; }
+
+/* ── type helpers ─────────────────────────────────────────────────────── */
+.eyebrow {
+  display: inline-flex; align-items: flex-start; gap: .6em;
+  margin: 0 0 1.25rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 400;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--seal);
+}
+/* rule level with the first line, also when the eyebrow wraps (.8em = half the 1.6 line) */
+.eyebrow::before { content: ""; flex: none; width: 1.6em; height: 1px; margin-top: calc(.8em - .5px); background: var(--seal); opacity: .5; }
+
+/* section heading = live .display.h2 */
+.h2 {
+  font-family: var(--font-sans);
+  font-size: clamp(1.5rem, 1.3rem + 1.1vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.015em;
+  max-width: 18ch;
+  margin: 0 0 1.6rem;
+}
+/* heading followed by its lede paragraph = live .h2.deploy__h + .surfaces__lede */
+.h2:has(+ .intro) { max-width: 24ch; margin-bottom: 2.5rem; }
+.intro { color: var(--ink-2); max-width: 60ch; margin-bottom: 1.6rem; }
+
+/* card headings: mono, as on live (.card h3) */
+.card h3, .h3 {
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -.01em;
+  margin-bottom: .6rem;
+}
+/* numbered step titles = live .pillar__n */
+.steps h3 {
+  font-family: var(--font-mono);
+  font-size: var(--step-0);
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: normal;
+  color: var(--ink);
+  margin-bottom: .5rem;
+}
+
+.lede { font-size: var(--step-1); line-height: 1.6; color: var(--ink-2); max-width: 56ch; }
+
+/* statement paragraphs (live .human / .human.small) */
+.human { font-family: var(--font-sans); font-style: italic; font-size: var(--step-2); line-height: 1.25; letter-spacing: 0; color: var(--ink); margin: 0 0 1rem; }
+.human.small { font-size: var(--step-1); color: var(--ink-2); }
+.band .human.small { color: #c7cbd2; }
+:root[data-theme="light"] .band .human.small { color: var(--ink-2); }
+
 
 .mono { font-family: var(--font-mono); }
 .muted { color: var(--muted); }
-hr.rule { border: 0; height: 1px; background: var(--line); margin: 0; }
+.small { font-size: var(--step--1); }
+.vh {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
 
-/* definition rows ("facts") used across subpages */
-.facts { display: grid; gap: 0; border-top: 1px solid var(--line); }
-.fact { display: grid; gap: 0.5rem; padding-block: 1.4rem; border-bottom: 1px solid var(--line); }
-@media (min-width: 760px) { .fact { grid-template-columns: 14rem 1fr; gap: 2rem; align-items: baseline; } }
-.fact__k { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.08em; text-transform: uppercase; color: var(--seal); }
+/* live site.css: ring without radius change (the prototype's border-radius:4px squared the pills on focus) */
+:focus-visible { outline: 2px solid var(--seal); outline-offset: 2px; }
+
+/* ── actions ───────────────────────────────────────────────────────────── */
+/* group = live .hero__cta: a line of text, items flow and wrap like words */
+.actions { display: block; margin-top: 1.8rem; }
+.actions > * { vertical-align: middle; margin: .5rem 1.5rem .5rem 0; white-space: nowrap; }
+.actions > :last-child { margin-right: 0; }
+.hero .actions { margin-top: 1.9rem; }            /* home hero on live */
+
+/* primary pill */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .55em;
+  padding: .72em 1.5em;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--seal);
+  color: var(--seal-ink);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(22,24,29,.14);
+  transition: background .15s, border-color .15s, color .15s, transform .05s;
+}
+.btn:hover {
+  background: var(--seal-2);
+  border-color: var(--seal);
+  color: var(--seal-ink);
+  box-shadow: 0 4px 10px rgba(22,24,29,.20);
+}
+.btn:active { transform: translateY(1px); }
+
+/* primary inside an action group (live .hero__cta .wp-block-button__link): soft cyan bloom, brightness on hover */
+.actions .btn:not(.btn--ghost):not(.btn--hub) {
+  box-shadow: 0 6px 18px -8px color-mix(in srgb, var(--seal) 55%, transparent);
+  transition: filter .18s, border-color .18s, background .18s;
+}
+.actions .btn:not(.btn--ghost):not(.btn--hub):hover {
+  background: var(--seal-2);
+  border-color: transparent;
+  color: var(--seal-ink);
+  filter: brightness(1.1);
+  box-shadow: 0 6px 18px -8px color-mix(in srgb, var(--seal) 55%, transparent);
+}
+
+/* ghost pill (header CTA, standalone secondary) */
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--control);
+  font-weight: 500;
+  box-shadow: none;
+}
+.btn--ghost:hover {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--muted);
+  box-shadow: 0 4px 10px rgba(22,24,29,.20);
+}
+/* ghost on a tinted band (live .section--ink .btn--ghost) */
+.band .btn--ghost { color: #E9EBE7; border-color: #4a505c; }
+.band .btn--ghost:hover { color: #FFFFFF; border-color: #8F95A1; }
+:root[data-theme="light"] .band .btn--ghost { color: var(--ink); border-color: var(--line); }
+:root[data-theme="light"] .band .btn--ghost:hover { color: var(--ink); border-color: var(--muted); }
+
+/* hub access pill (live .hub-access a: "Access entrosana Hub →") */
+.btn--hub {
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  padding: .62em 1.3em;
+  border: 2px solid var(--seal);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--seal);
+  font-family: var(--font-sans);
+  font-size: .95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: normal;
+  box-shadow: none;
+  transition: background .15s ease, color .15s ease;
+}
+.btn--hub:hover,
+.btn--hub:focus-visible { background: var(--seal); border-color: var(--seal); color: var(--seal-ink); filter: none; box-shadow: none; }
+.btn--hub:focus-visible { outline: 2px solid var(--seal); outline-offset: 3px; }
+
+/* text link with an arrow, used inline, in cards and lists (live .tool__more a / .pillar3__more a / .link-jump) */
+.link {
+  display: inline-block;
+  border-bottom: 1px solid transparent;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 400;
+  letter-spacing: normal;
+  color: var(--seal);
+  text-decoration: none;
+}
+.link::after { content: " \2192"; }
+.link:hover { border-bottom-color: currentColor; }
+
+/* secondary inside an action group = the live ghost-turned-text-link (.is-ghost .wp-block-button__link) */
+.actions .link {
+  display: inline-flex;
+  align-items: center;
+  gap: .55em;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  font-weight: 500;
+  letter-spacing: .04em;
+  white-space: nowrap;
+  transition: filter .18s, border-color .18s, background .18s;
+}
+.actions .link::after { content: "\2192"; white-space: nowrap; }
+.actions .link:hover { color: var(--seal); border-bottom-color: currentColor; filter: brightness(1.1); }
+
+/* ── home only (live loads design-polish.css on the front page alone) ── */
+[data-page="home"] .btn:not(.btn--hub) { transition: filter .18s ease; }
+[data-page="home"] .btn:not(.btn--hub):hover { filter: brightness(1.1); }
+[data-page="home"] .actions .btn:not(.btn--ghost),
+[data-page="home"] .actions .btn:not(.btn--ghost):not(.btn--hub):hover { box-shadow: 0 1px 2px rgba(0,0,0,.18); transition: filter .18s ease; }
+[data-page="home"] .btn--ghost { box-shadow: none; transition: border-color .18s ease; }
+[data-page="home"] .btn--ghost:hover { filter: none; border-color: var(--seal); color: var(--seal); box-shadow: 0 4px 10px rgba(22,24,29,.20); }
+[data-page="home"] .band .btn--ghost:hover { color: #FFFFFF; border-color: #8F95A1; }
+:root[data-theme="light"] [data-page="home"] .band .btn--ghost:hover { color: var(--ink); border-color: var(--muted); }
+[data-page="home"] .actions .link { transition: border-color .18s ease; }
+[data-page="home"] :is(a, button):focus-visible { outline: 2px solid var(--seal); outline-offset: 3px; border-radius: 2px; }
+
+
+/* ══ surfaces — measured on entrosana.com ══ */
+/* ── card grids (live .tools) ── */
+.grid { display: grid; gap: clamp(1rem, .5rem + 2vw, 1.5rem); }        /* 24px at 1440 */
+.grid--2, .grid--3 { grid-template-columns: 1fr; }
+@media (min-width: 820px) {
+  .grid--2 { grid-template-columns: 1fr 1fr; }
+  .grid--3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ── cards (live .card + .tool, radius from shapes.css 2f) ── */
+.card {
+  position: relative;
+  display: flex; flex-direction: column; gap: .5rem;
+  background: var(--surface);                 /* #232833 · OS-light dark #2C323E · light #FFFFFF */
+  border: 1px solid var(--line);              /* #454E60 · #505A6E · light #86A0A6 */
+  border-radius: 14px;
+  padding: clamp(1.25rem, .8rem + 2vw, 1.9rem);   /* 30.4px at 1440 */
+  box-shadow: var(--shadow);                  /* live --shadow-1 */
+  transition: box-shadow .18s ease, transform .12s ease, border-color .15s;
+}
+[data-page="home"] .card { transition: border-color .22s; }
+/* live cards do not react to hover (the rule re-asserts --line); no lift, no accent border */
+.card:hover,
+.card--link:hover { border-color: var(--line); transform: none; }
+.card p { color: var(--ink-2); }
+/* "for …" line = live .tool__who */
+.card .for { font-family: var(--font-mono); font-size: var(--step--1); color: var(--seal); margin: 0; }
+
+/* card head = live .tool__head: inline on subpages (site.css), stacked on home (design-polish.css) */
+.card__head { display: flex; align-items: baseline; justify-content: space-between; gap: .5rem; }
+[data-page="home"] .card__head { flex-direction: column; align-items: flex-start; justify-content: flex-start; }
+
+/* cards on a band (live .section--ink .card) */
+.band .card { background: rgba(255, 255, 255, .04); box-shadow: 0 8px 24px rgba(0, 0, 0, .30); }
+[data-page="home"] .band .card { background: var(--bg); }
+:root[data-theme="light"] .band .card { background: var(--surface); box-shadow: var(--shadow); }
+
+/* ── label (live .card .tag) ── */
+.tag { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: .04em; color: var(--seal); margin: 0; }
+
+/* ── state pill = live .tool__state (no dot: the word carries the state) ── */
+.chip {
+  display: inline-block; width: fit-content;
+  padding: .15em .5em;                         /* 1.632px 5.44px */
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: .68rem;                           /* 10.88px */
+  font-weight: 400;
+  line-height: 1.6;                            /* pill height 22.64px */
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--muted);                         /* #8F95A1 · #9AA0AC · light #6C7078 */
+}
+.chip::before { content: none; }
+/* live .tool__state.open: "built", "online & on site", "as an engagement", "self-implementation" */
+.chip--built, .chip--live, .chip--open {
+  color: var(--seal);
+  border-color: color-mix(in srgb, var(--seal) 40%, var(--line));
+}
+/* "in development", "planned", "offline only", "on request": the plain pill */
+.chip--dev, .chip--planned { color: var(--muted); border: 1px solid var(--line); }
+.chip a { text-transform: none; letter-spacing: .06em; }
+
+/* ── status rows = live .chips: a line of facts, not pills ── */
+.status-list {
+  list-style: none; margin: 0; padding: 0; border: 0;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem 2rem;
+}
+.status-list li {
+  display: block; padding: 0; border: 0;
+  font-family: var(--font-mono); font-size: var(--step--1); font-weight: 400; line-height: 1.9;
+  color: var(--ink-2);
+}
+.status-list .what { font-weight: 400; }
+.status-list .chip {
+  display: inline; padding: 0; border: 0; border-radius: 0; background: none;
+  font: inherit; letter-spacing: normal; text-transform: none; white-space: normal; color: inherit;
+}
+.status-list .chip::before {
+  content: " · "; white-space: pre;
+  display: inline; width: auto; height: auto; border: 0; border-radius: 0; background: none;
+}
+/* home "Where we stand": each live chip keeps a 1rem paragraph margin (rows 21.6px apart) */
+[data-page="home"] .status-list { row-gap: calc(.35rem + 1rem); margin-bottom: 1rem; }
+
+/* ── numbered steps = live "How we work" arrow timeline (shapes.css 2g) ── */
+.steps {
+  list-style: none; margin: 2.5rem 0 0; padding: 0;
+  position: relative; counter-reset: step;
+  display: grid; gap: clamp(1rem, .5rem + 2vw, 2rem);               /* 32px at 1440 */
+}
+@media (min-width: 760px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+.steps > li { counter-increment: step; position: relative; padding-top: 3rem; }
+.steps > li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute; top: 0; left: 0;
+  box-sizing: content-box;
+  width: 2.2rem; height: 2.2rem; display: grid; place-items: center;
+  border: 1px solid var(--seal); border-radius: 50%;
+  background: var(--bg);                       /* live var(--paper), also on a band */
+  font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em; color: var(--seal);
+}
+.band .steps > li::before { background: var(--bg); }
+.steps > li::after { content: none; }
+@media (min-width: 820px) {
+  .steps { padding-top: 4.2rem; }
+  /* the axis stops at the third node */
+  .steps::before {
+    content: ""; position: absolute; top: 1.45rem; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, var(--seal) 0, var(--line) 64%, transparent 69%);
+  }
+  .steps > li { padding-top: 0; }
+  .steps > li::before { top: -3.85rem; }
+  /* arrowhead in the gutter, pointing at the next step */
+  .steps > li:not(:last-child)::after {
+    content: ""; position: absolute; top: -3.06rem; right: -1rem;
+    width: 0; height: 0;
+    border-left: 7px solid var(--seal);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    opacity: .8;
+  }
+}
+
+
+/* ══ SUBPAGE COMPONENTS — measured on entrosana.com 2026-10-16 ═══════════════
+   Sources: live site.css (facts, .form, .legal), shapes.css §2–§4, §8 (rows,
+   figures, market form), page-hero.css, modules.css. Values in comments are
+   the computed sizes at a 1440px viewport. Dark = no attribute; light only
+   under :root[data-theme="light"].
+   Replaces the blocks "facts", "forms" and the .prose block in global.css. */
+
+/* ── facts: key / value rows (live site.css .facts/.fact) ─────────────────── */
+.facts { display: grid; gap: 0; list-style: none; border-top: 1px solid var(--line); }
+.fact {
+  display: grid;
+  gap: .5rem;
+  padding-block: 1.4rem;                         /* 22.4px */
+  border-bottom: 1px solid var(--line);
+}
+@media (min-width: 760px) {
+  .fact { grid-template-columns: 14rem 1fr; gap: 2rem; align-items: baseline; }   /* 224px | 1fr, gap 32px */
+}
+.fact__k {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);                     /* 13.76px */
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: .08em;                         /* 1.1px */
+  text-transform: uppercase;
+  color: var(--seal);
+}
 .fact__v { margin: 0; color: var(--ink-2); max-width: 56ch; }
-.section--ink .fact { border-color: var(--line-2); }
-.section--ink .facts { border-color: var(--line-2); }
-.section--ink .fact__v { color: #C7CBD2; }
+/* inside a split, live's paragraph rule (.section .split p) gives both cells
+   a 1rem bottom margin; that is what sets the row height there */
+.split .fact > .fact__k,
+.split .fact > .fact__v { margin: 0 0 1rem; }
+/* on a band (live .section--ink): the stronger hairline and the lighter value */
+.band .facts, .band .fact { border-color: var(--line-2); }
+.band .fact__v { color: #c7cbd2; }
+:root[data-theme="light"] .band .facts,
+:root[data-theme="light"] .band .fact { border-color: var(--line); }
+:root[data-theme="light"] .band .fact__v { color: var(--ink-2); }
+
+
+/* ── forms (live site.css .form + blocks-bridge #6: request-access) ──────── */
+.form { display: grid; gap: 1rem; max-width: 560px; }
+.form__row { display: contents; }                /* live: one column, no paired fields */
+.field {
+  display: grid;
+  gap: .35rem;                                   /* 5.6px */
+  font-family: var(--font-sans);
+  font-size: var(--step--1);                     /* 13.76px */
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.field > span, .field > legend {
+  padding: 0;
+  font: inherit;
+  letter-spacing: normal;
+  color: inherit;
+}
+.field .opt { color: var(--muted); font-weight: 400; }
+.field input, .field select, .field textarea {
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: .6em .7em;                            /* 8.256px 9.632px */
+  border: 1px solid var(--control);              /* live --line-ui: #5A6273 / light #7F979E */
+  border-radius: 4px;                            /* live --radius token (not the 14px panel radius) */
+  background: var(--surface-2);                  /* live --field-bg: #1F232B / light #FFFFFF */
+  color: var(--ink);
+  font: inherit;                                 /* 13.76px sans, as the label */
+  box-shadow: inset 0 1px 2px rgba(22, 24, 29, .05);
+}
+.field textarea { height: 7rem; min-height: 7rem; resize: vertical; }   /* 112px whatever rows= says */
+.field input:focus-visible, .field select:focus-visible, .field textarea:focus-visible {
+  outline: 2px solid var(--seal);
+  outline-offset: 1px;
+}
+/* prototype-only (live has no invalid state): kept, in the warn token */
+.field input:user-invalid, .field select:user-invalid, .field textarea:user-invalid { border-color: var(--warn); }
+.field .hint { font-size: var(--step--1); color: var(--muted); margin: 0; }
+fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
+
+/* submit + status: live puts the button straight into the form grid, so it
+   spans the full 560px with its label at the left; the note follows in mono */
+.form__foot { display: grid; gap: 0; }
+.form-status {
+  margin: .6rem 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--muted);
+}
+.form-status:empty { margin: 0; min-height: 0; }
+.form-status[data-state="ok"] { color: var(--verify); }
+.form-status[data-state="warn"] { color: var(--warn); }
+.form-status a { color: var(--seal); }
+.form > p.small {                                /* live: p.mono.muted after the button */
+  margin: 1.6rem 0 1rem;                         /* 25.6px, after the 1rem form gap */
+  max-width: 62ch;                               /* in mono: 426px */
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* the market form (live shapes.css §8 .market__form): mono labels, 8px
+   fields on the faint hairline, button at its own width beside the status */
+.market__form .form { gap: .85rem; max-width: none; }                          /* 13.6px */
+.market__form .field { gap: .3rem; font-family: var(--font-mono); }            /* label 13.76px mono */
+.market__form .field input,
+.market__form .field select,
+.market__form .field textarea {
+  padding: .6em .75em;                           /* 8.256px 10.32px */
+  border-color: var(--line);                     /* live: --line here, not --line-ui */
+  border-radius: 8px;
+  font-family: var(--font-sans);
+}
+.market__form .field textarea { height: 6.66rem; min-height: 5.5rem; }        /* live rows=4: 106.5px; min 88px */
+.market__form .form__foot { display: flex; flex-wrap: wrap; align-items: center; gap: .9rem; margin-top: .3rem; }
+.market__form .form-status { margin: 0; max-width: 34ch; }
+.market__form .form > p.small { margin: .2rem 0 0; max-width: 40ch; }
+
+/* prototype-only: the request/propose switch, drawn in the live selection
+   language of modules.css (.tabs): seal fill plus a 2px bar, on a fading rule */
+.choice { position: relative; display: flex; flex-wrap: wrap; gap: .3rem; }
+.choice::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--seal) 26%, transparent), transparent 82%);
+}
+:root[data-theme="light"] .choice::after {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--seal) 60%, transparent), transparent 82%);
+}
+.choice label {
+  position: relative; z-index: 1;
+  display: inline-flex; align-items: center;
+  min-height: 2.75rem;
+  padding: .4rem .95rem;
+  border: 0;
+  border-radius: 8px 8px 0 0;
+  background: none;
+  color: var(--ink-2);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color .12s, color .12s;
+}
+.choice label:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
+.choice label:has(input:checked) { color: var(--ink); background: color-mix(in srgb, var(--seal) 12%, transparent); }
+.choice label:has(input:checked)::after {
+  content: ""; position: absolute; left: .6rem; right: .6rem; bottom: 0; height: 2px;
+  border-radius: 999px; background: var(--seal);
+}
+.choice label:has(input:focus-visible) { outline: 2px solid var(--seal); outline-offset: 2px; }
+.choice input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+
+
+/* ── row registers (live shapes.css §2b ladder, §2k offer, §2e, §3, §3a) ────
+   markup: data-shape="offer" | "ladder" on the .grid that holds the cards.
+   card → row:  .card__head = .tool__head · .for = .tool__who ·
+                p = prose · .link = .tool__more · .chip = .tool__state */
+.section [data-shape="offer"],
+.section [data-shape="ladder"] { display: grid; grid-template-columns: 1fr; gap: 0; }
+.section [data-shape="offer"] { border-top: 1px solid var(--line); }
+/* §2e: the ladder is one panel with the rows nested in it */
+.section [data-shape="ladder"] {
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: .4rem clamp(1.2rem, .6rem + 2vw, 2.6rem);          /* 6.4px 38.4px */
+}
+.section [data-shape="offer"] > .card,
+.section [data-shape="ladder"] > .card {
+  display: flex; flex-direction: column; gap: .5rem;            /* live .tool below the breakpoint */
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 1.7rem 0;                                            /* 27.2px */
+}
+.section [data-shape="offer"] > .card:last-child,
+.section [data-shape="ladder"] > .card:last-child { border-bottom: 0; }
+/* the name: these rows are .tool, not .card, on live → sans h3 at the UA 1.17em */
+.section [data-shape="offer"] > .card h3,
+.section [data-shape="ladder"] > .card h3 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1.17em;                                            /* 19.66px */
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -.01em;
+}
+
+/* row internals shared by every register shape */
+.section [data-shape] > .card > .card__head {
+  display: flex; flex-wrap: nowrap; align-items: baseline; justify-content: space-between; gap: .5rem;
+}
+.section [data-shape="offer"] > .card > .card__head { flex-wrap: wrap; gap: .8rem; }
+.section [data-shape] > .card > .for {
+  margin: 0;
+  max-width: none;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  letter-spacing: normal;
+  color: var(--seal);
+}
+.section [data-shape] > .card > p:not(.for):not(.tag) { margin: 0 0 1rem; color: var(--ink-2); }
+.section [data-shape] > .card > .link { margin: auto 0 0; align-self: flex-start; }
+
+/* the state as a word in a pill (live .tool__state); "built" is .open */
+.section [data-shape] .chip {
+  display: block;
+  gap: 0;
+  padding: .15em .5em;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: .68rem;                                            /* 10.88px */
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.section [data-shape] .chip::before { content: none; }
+.section [data-shape] .chip--built {
+  color: var(--seal);
+  border-color: color-mix(in srgb, var(--seal) 40%, var(--line));
+}
+
+@media (min-width: 820px) {
+  .section [data-shape="ladder"] > .card {
+    display: grid;
+    grid-template-columns: 17rem minmax(0, 1fr);                /* 272px | 1fr */
+    gap: .35rem 3rem;                                           /* 5.6px 48px */
+    align-items: start;
+  }
+  .section [data-shape="ladder"] > .card > .card__head { grid-column: 1; grid-row: 1; }
+  .section [data-shape="ladder"] > .card > .for { grid-column: 1; grid-row: 2; }
+  .section [data-shape="ladder"] > .card > :not(.card__head):not(.for) { grid-column: 2; margin: 0 0 .5rem; }
+}
+@media (min-width: 860px) {
+  .section [data-shape="offer"] > .card {
+    display: grid;
+    grid-template-columns: 17rem minmax(0, 1fr);
+    gap: .35rem 3rem;
+    align-items: start;
+  }
+  .section [data-shape="offer"] > .card > .card__head { grid-column: 1; grid-row: 1; }
+  .section [data-shape="offer"] > .card > .for { grid-column: 1; grid-row: 2; }
+  .section [data-shape="offer"] > .card > :not(.card__head):not(.for) { grid-column: 2; margin: 0 0 .6rem; }
+
+  /* §3: the name sizes row 1 alone; the label sits right under it and the
+     prose spans both tracks beside them */
+  .section [data-shape="offer"] > .card,
+  .section [data-shape="ladder"] > .card { grid-template-rows: min-content auto min-content; position: relative; }
+  .section [data-shape="offer"] > .card > .card__head,
+  .section [data-shape="ladder"] > .card > .card__head { grid-row: 1; align-self: start; }
+  .section [data-shape="offer"] > .card > .for,
+  .section [data-shape="ladder"] > .card > .for { grid-row: 2; align-self: start; margin-top: .1rem; }
+  .section [data-shape="offer"] > .card > p:not(.for):not(.tag),
+  .section [data-shape="ladder"] > .card > p:not(.for):not(.tag) { grid-row: 1 / span 2; margin: 0; }
+  .section [data-shape="offer"] > .card > .link,
+  .section [data-shape="ladder"] > .card > .link { grid-row: 3; }
+
+  /* §3a: the seal-tinted rule between the naming column and the prose */
+  .section [data-shape="offer"] > .card::before,
+  .section [data-shape="ladder"] > .card::before {
+    content: "";
+    position: absolute;
+    left: calc(17rem + 1.5rem);                                 /* 296px */
+    top: 1.7rem;
+    bottom: 1.7rem;
+    width: 1px;
+    background: color-mix(in srgb, var(--seal) 30%, transparent);
+  }
+  :root[data-theme="light"] .section [data-shape="offer"] > .card::before,
+  :root[data-theme="light"] .section [data-shape="ladder"] > .card::before {
+    background: color-mix(in srgb, var(--seal) 60%, transparent);
+  }
+}
+
+
+/* ── strata (live §2i, roadmap "The foundation is built") ───────────────────
+   markup: data-shape="strata" on #today .grid. DOM order bottom-up. */
+.section [data-shape="strata"] { display: flex; flex-direction: column-reverse; gap: .4rem; }
+.section [data-shape="strata"] > .card {
+  display: flex; flex-direction: column; gap: .5rem;
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--verify);
+  border-radius: 6px;
+  box-shadow: none;
+  padding: 1.3rem 1.5rem;                                       /* 20.8px 24px */
+}
+@media (min-width: 860px) {
+  .section [data-shape="strata"] > .card:nth-child(2) { margin-right: 3rem; }
+  .section [data-shape="strata"] > .card:nth-child(3) { margin-right: 6rem; }
+  .section [data-shape="strata"] > .card {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);                /* 240px | 1fr */
+    grid-template-rows: min-content auto min-content;
+    gap: .3rem 2.5rem;                                          /* 4.8px 40px */
+    align-items: start;
+  }
+  .section [data-shape="strata"] > .card > .card__head { grid-column: 1; grid-row: 1; align-self: start; }
+  .section [data-shape="strata"] > .card > .for { grid-column: 1; grid-row: 2; align-self: start; margin-top: .1rem; }
+  .section [data-shape="strata"] > .card > :not(.card__head):not(.for) { grid-column: 2; margin: 0 0 .4rem; }
+  .section [data-shape="strata"] > .card > p:not(.for):not(.tag) { grid-row: 1 / span 2; margin: 0; }
+}
+/* LIVE QUIRK (light only): the ink-section card rule outranks the strata
+   rule, so the slabs turn solid white with the card shadow, and "built"
+   falls back to ink-2. Drop these two rules to keep the translucent slab. */
+:root[data-theme="light"] .band [data-shape="strata"] > .card { background: var(--surface); box-shadow: var(--shadow); }
+:root[data-theme="light"] .band .chip { color: var(--ink-2); }
+
+
+/* ── principles (live §2j, roadmap "Three decisions") ───────────────────────
+   markup: data-shape="principles" on #decisions .grid */
+.section [data-shape="principles"] { display: grid; grid-template-columns: 1fr; gap: 2.6rem; }   /* 41.6px */
+.section [data-shape="principles"] > .card {
+  display: flex; flex-direction: column; gap: .5rem;
+  max-width: 62ch;                                              /* 527px */
+  padding: 0;
+  background: none; border: 0; border-radius: 0; box-shadow: none;
+}
+.section [data-shape="principles"] > .card h3 {
+  font-size: var(--step-2);                                     /* 33.6px mono */
+  line-height: 1.15;
+  margin-bottom: .5rem;
+}
+
+
+/* ── spectrum (live §2c + §7/7a, the tier columns) ──────────────────────────
+   markup: data-shape="spectrum" on service .tiers and on roadmap #tiers .grid */
+.section [data-shape="spectrum"] {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, .5rem + 2vw, 2rem);                          /* live .grid gap */
+  padding-inline: clamp(1.2rem, .6rem + 2vw, 2.6rem);           /* 38.4px */
+}
+@media (min-width: 760px) { .section [data-shape="spectrum"] { grid-template-columns: repeat(3, 1fr); } }
+.section [data-shape="spectrum"] > .card { display: flex; flex-direction: column; gap: .5rem; border-radius: 14px; }
+.section [data-shape="spectrum"] > .card > .tag { max-width: none; letter-spacing: .04em; color: var(--seal); }   /* .card p would win over .tag */
+.section [data-shape="spectrum"] > .card > .card__head { display: flex; flex-direction: column; align-items: stretch; gap: .5rem; }
+.section [data-shape="spectrum"] > .card > p:not(.tag):not(.for) { flex: 1; margin: 0 0 1rem; }
+/* LIVE QUIRK: on subpages the state pill is a block, so it runs the full
+   column width (the inline-block fix lives in the home-only stylesheet).
+   For a word-sized pill: width: fit-content. */
+.section [data-shape="spectrum"] .chip { width: auto; }
+@media (min-width: 820px) {
+  .section [data-shape="spectrum"] {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    position: relative;
+    padding-top: 2.6rem;                                        /* 41.6px */
+  }
+  /* the axis, seal fading to the hairline in the direction of travel */
+  .section [data-shape="spectrum"]::before {
+    content: ""; position: absolute; top: .8rem; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, var(--seal), var(--line));
+  }
+  .section [data-shape="spectrum"] > .card {
+    position: relative;
+    background: none; border: 0; box-shadow: none;
+    padding: 0 2.2rem 0 0;                                      /* 35.2px */
+  }
+  .section [data-shape="spectrum"] > .card + .card { border-left: 1px solid var(--line); padding-left: 2.2rem; }
+  /* the node on the axis above each tier */
+  .section [data-shape="spectrum"] > .card::after {
+    content: ""; position: absolute; top: -1.95rem; left: 0;
+    width: 9px; height: 9px; border-radius: 50%; background: var(--seal);
+  }
+  .section [data-shape="spectrum"] > .card + .card::after { left: 2.2rem; }
+}
+/* roadmap tiers: the "still needs" line is live .deploy__fact (mono, ink-2) */
+#tiers [data-shape="spectrum"] > .card > p:not(.tag) {
+  flex: 0 0 auto;
+  margin: .5rem 0 1rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+#tiers [data-shape="spectrum"] > .card > p:not(.tag) strong { font-weight: 400; }
+/* live turns the tier columns into white cards in light (ink section) with no
+   padding, so the text sits flush on the card edge; kept open as in dark */
+@media (min-width: 820px) {
+  :root[data-theme="light"] .band [data-shape="spectrum"] > .card { background: none; box-shadow: none; }
+}
+
+/* /service/ (live §7, 7a): the figure already names the tiers, so the column
+   heading is kept for screen readers only; the closing line leads in seal and
+   sits on one baseline across the three columns */
+.section .tiers[data-shape="spectrum"] { padding-top: 0; }
+.section .tiers[data-shape="spectrum"]::before,
+.section .tiers[data-shape="spectrum"] > .card::after { display: none; }
+.section .tiers[data-shape="spectrum"] > .card > h3 {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip-path: inset(50%);
+}
+.section .tiers[data-shape="spectrum"] > .card > .for {
+  margin: .5rem 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--seal);
+}
+@media (min-width: 820px) {
+  .section .tiers[data-shape="spectrum"] > .card { padding-bottom: 3.4rem; }        /* 54.4px */
+  .section .tiers[data-shape="spectrum"] > .card > .for { position: absolute; bottom: 0; left: 0; margin: 0; }
+  .section .tiers[data-shape="spectrum"] > .card + .card > .for { left: 2.2rem; }
+}
+
+
+/* ── figures (live shapes.css §4): only needed if a live SVG figure is
+   pasted in (scope rings, adapters). The HTML figures style themselves. ── */
+.diagram {
+  margin-top: 2.4rem;                                           /* 38.4px */
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  padding: clamp(.9rem, .5rem + 1.5vw, 1.6rem);                 /* 25.6px */
+  overflow: hidden;
+}
+.diagram svg { display: block; width: 100%; height: auto; }
+.diagram text { font-family: var(--font-mono); fill: var(--ink); font-size: 12px; }
+.diagram .small { font-size: 10px; fill: var(--muted); }
+.diagram .accent { fill: var(--seal); }
+.diagram .trail { stroke: var(--verify); }
+.diagram-mobile { display: none; }
+@media (max-width: 719px) {
+  .diagram svg { display: none; }
+  .diagram-mobile { display: grid; gap: .35rem; font-family: var(--font-mono); font-size: var(--step--1); }
+  .diagram-mobile strong { font-weight: 500; color: var(--seal); }
+  .diagram-mobile .muted { color: var(--muted); }
+  .diagram-mobile .accent { color: var(--seal); }
+}
+.diagram--scope .ring { font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em; fill: var(--ink-2); }
+.diagram--scope .ring--in { font-size: 15px; fill: var(--seal); }
+
+
+/* ── long-form text (live .legal) ─────────────────────────────────────────── */
+.prose { max-width: 70ch; }                                     /* 595px */
+.prose h2 {
+  margin: 2rem 0 0;                                             /* 32px above, none below: live */
+  font-size: var(--step-1);                                     /* 22.4px */
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -.01em;
+}
+.prose p, .prose li { color: var(--ink-2); }
+.prose p { max-width: 62ch; margin: 0 0 1rem; }                 /* 527px */
+.prose strong { color: inherit; font-weight: 700; }
+/* the legal column is one centred 70ch measure, hero included (live .wrap.legal) */
+.legal-wrap > .wrap { max-width: 70ch; }
+.section.legal-wrap { padding-top: 0; padding-bottom: clamp(2rem, 1rem + 3vw, 3rem); }   /* live: the .ph bottom */
+.section.ph + .section.legal-wrap:not(.band)::before { content: none; }                  /* one section on live: no seam */
+/* imprint opens on an h2: live collapses h1 (1.2rem) into h2 (2rem) = 32px */
+.legal-wrap .prose > h2:first-child { margin-top: .8rem; }
+
+
+/* live ladder rows keep the card radius (shapes.css 2f): the separators curl up at the ends */
+.section [data-shape="ladder"] > .card { border-radius: 14px; }
+
+/* ── fixes from the cross-check against live ── */
+/* whole card clickable through its one link (single tab stop, as live's stretched link) */
+.card--link .link::before { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.btn--hub:active { transform: none; }
+/* a lone ghost pill sits 16px under its paragraph, not in a CTA group (live p.x-inl) */
+.actions:has(> .btn--ghost:only-child) { margin-top: 0; }
+.actions > .btn--ghost:only-child { margin: 0; }
+/* card labels stay seal (.card p would otherwise win) */
+.tag.tag { color: var(--seal); }
+/* text-link hover: only register rows, CTA groups and jump links underline on live */
+.card .link:hover { border-bottom-color: transparent; }
+.section [data-shape="offer"] > .card .link:hover, .actions .link:hover, .toc a:hover { border-bottom-color: currentColor; }
+/* heading measures */
+.h2:has(+ .human) { max-width: 24ch; margin-bottom: 2.5rem; }
+#hub .h2 { max-width: 20ch; margin-bottom: 2.5rem; }
+
+/* register-row links stay text-wide in the row grids (live: inline a inside p.tool__more) */
+.section [data-shape] > .card > .link { justify-self: start; border-bottom: 0; }
+/* live draws the offer hover line right under the glyphs */
+.section [data-shape="offer"] > .card > .link:hover { text-decoration: underline 1px; text-underline-offset: .2em; text-decoration-skip-ink: none; }
+/* muted notes stay muted inside cards (.card p would win) */
+.card p.muted, .card .muted { color: var(--muted); }
+/* the band before the footer: one rule, not two */
+main > .band:last-child { border-bottom: 0; }
+/* the stretch below 560px that live gives its tabs */
+@media (max-width: 559.98px) {
+  .choice { gap: 0; }
+  .choice label { flex: 1 1 0; justify-content: center; padding-inline: .5rem; white-space: nowrap; }
+}
+/* a select still on its placeholder reads as a placeholder */
+.field select:has(option[value=""]:checked) { color: var(--muted); }
+.field select option { color: var(--ink); }
+
+/* ── skip link ─────────────────────────────────────────────────────────── */
+.skip {
+  position: absolute; left: 1rem; top: -4rem; z-index: 100;
+  padding: 0.6rem 1rem; border-radius: var(--radius-sm);
+  background: var(--seal); color: var(--seal-ink); font-family: var(--font-mono); text-decoration: none;
+}
+.skip:focus { top: 1rem; }

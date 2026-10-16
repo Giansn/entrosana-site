@@ -1,0 +1,81 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import ContactForm from "../components/islands/ContactForm";
+import { href, interests, MAIL } from "../lib/site";
+---
+<Layout title="Request pilot access for Swiss schools" description="Pilot access to entrosana is opening to a small group of Swiss schools and organisations. Tell us who you are and whether the back office, the Hub or the modules are the fit.">
+  <PageHero
+    eyebrow="Get in touch"
+    title="Request access."
+    lede="Pilot access is opening to a small group of Swiss organisations. Tell us who you are and whether the back office, the Hub or the modules are the fit. We reply personally." />
+
+  <section class="section access">
+    <div class="wrap">
+      <div class="access__form">
+        <h2 class="vh">Access request form</h2>
+        <ContactForm client:idle interests={interests} mail={MAIL} />
+      </div>
+    </div>
+  </section>
+
+  <!-- live: "What to expect" as three pillars on its own band -->
+  <section class="section band">
+    <div class="wrap">
+      <aside class="access__aside" aria-labelledby="expect-h">
+        <p class="eyebrow" id="expect-h">What to expect</p>
+        <ul class="facts">
+          <li class="fact"><span class="fact__k">scoped small</span><p class="fact__v">One workflow, real documents, a fixed price, and a defined end date.</p></li>
+          <li class="fact"><span class="fact__k">measured</span><p class="fact__v">Evaluated against your current process, not against a demo.</p></li>
+          <li class="fact"><span class="fact__k">honest</span><p class="fact__v">The platform is in development, and we say so. What you see in the record is what happened. <a href={href("/roadmap/")}>What is built today</a>.</p></li>
+        </ul>
+        <p class="small muted access__mail">Prefer plain email? Write to <a href={`mailto:${MAIL}`}>{MAIL}</a>. How we handle what you send is on the <a href={href("/privacy/")}>privacy page</a>.</p>
+      </aside>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+/* Live: the form stands alone in one 560px column, no card; "What to expect"
+   follows as three pillars on an ink band. */
+.access > .wrap.split { display: block; }
+.access__form {
+  display: block;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.access__form .form { margin-top: 1.5rem; }                       /* 24px */
+
+/* What to expect: live .pillars (works in place, or moved into its own .band section) */
+.access__aside { display: block; margin-top: var(--section); }
+.band .access__aside { margin-top: 0; }
+.access__aside .facts {
+  display: grid;
+  gap: clamp(1rem, .5rem + 2vw, 2rem);                              /* 32px */
+  margin-top: 2.5rem;                                               /* 40px */
+  border: 0;
+  list-style: none;
+}
+@media (min-width: 760px) { .access__aside .facts { grid-template-columns: repeat(3, 1fr); } }
+.access__aside .facts > .fact { display: block; padding: 0; border: 0; }
+.access__aside .facts > .fact > .fact__k {                          /* live .pillar__n */
+  display: block;
+  margin: 0 0 .5rem;                                                /* 8px */
+  font-family: var(--font-mono);
+  font-size: var(--step-0);                                         /* 16.8px */
+  line-height: 1.6;
+  letter-spacing: normal;
+  text-transform: none;
+  color: #fff;
+}
+.access__aside .facts > .fact > .fact__k::before { content: "\203A  "; white-space: pre; color: var(--seal); }   /* "› " */
+:root[data-theme="light"] .access__aside .facts > .fact > .fact__k { color: var(--ink); }
+.access__aside .facts > .fact > .fact__v { margin: 0 0 1rem; max-width: 62ch; color: var(--ink-2); }
+.band .access__aside .facts > .fact > .fact__v { color: #c7cbd2; }
+:root[data-theme="light"] .band .access__aside .facts > .fact > .fact__v { color: var(--ink-2); }
+.access__mail { margin-top: 1rem; font-family: var(--font-mono); font-size: var(--step--1); line-height: 1.6; color: var(--muted); }   /* live p.mono.muted */
+
+</style>

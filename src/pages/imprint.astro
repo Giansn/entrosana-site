@@ -1,0 +1,14 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import body from "../legal/imprint.html?raw";
+---
+<Layout title="Imprint" description="Legal notice for entrosana.com: provider identification, contact, and responsibility.">
+  <PageHero eyebrow="Legal notice" title="Imprint." />
+  <section class="section legal-wrap">
+    <div class="wrap">
+      <div class="prose legal" set:html={body} />
+    </div>
+  </section>
+</Layout>
+

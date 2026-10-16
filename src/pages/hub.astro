@@ -1,85 +1,158 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import PageHero from "../components/PageHero.astro";
-import SealRule from "../components/SealRule.astro";
+import { ext, href } from "../lib/site";
 
-const steps = [
-  ["Bring the expertise", "You carry the domain — a niche, a population, a method entrosana doesn't cover yet. Propose it as a track."],
-  ["We provide the scaffolding", "We pair the proposal with the technical scaffolding: the agent service, the audit plumbing, the deployment pipeline."],
-  ["It inherits the guarantees", "The same DLM engine, the same signed audit trail, the same Swiss/EU residency by design apply automatically — not re-implemented per track."],
+const structure = [
+  ["Overview", "what is running for you right now"],
+  ["Tools", "the back-office section, for the roles that need it"],
+  ["Modules", "the classroom section, online and on site"],
+  ["Projects", "what learners, parents, teachers and contributors build together"],
+  ["The record", "beside the work, not buried in settings"],
+  ["Contribute", "propose a module or a connector"],
 ];
 
-const open = [
-  ["Open source", "The full monorepo — agent service, public site, infrastructure config, deployment pipelines. Open under AGPL-3.0."],
-  ["Tests as spec", "CI/CD with tests-as-spec. Every deploy is reversible. Open where it makes sense, closed where data residency demands it."],
-  ["Shared runway", "Tracks share one cloud runway — no per-partner cloud-cost negotiations, no infrastructure bills passed through to schools or learners."],
+const people = [
+  { who: "The learner", tag: "self-serve",
+    body: "The learning experience is designed to adapt to every school age and to find a way into the topic or project you want. If you need support on a topic, the search finds modules and contributions that serve the cause and the kind of learning you are after." },
+  { who: "The parent", tag: "support",
+    body: "Unfit learning methods can end in frustration or in the loss of the will to learn. Providing adaptive learning is a difficult task, and we can offer our support with it." },
+  { who: "The teacher & director", tag: "your own Hub",
+    body: "Online tools have become a reality for most schools in Switzerland, and often several run side by side, creating confusion and obstacles. We offer a Hub dedicated to your needs, with full open-source insight and the option to self-host and maintain it." },
 ];
 ---
-<Layout title="Hub — an open foundation of audit-grade tracks">
+<Layout title="Hub: adaptive learning, co-created in the open" description="The entrosana Hub pairs students, parents, and teachers with contributors to develop adaptive learning and tooling in the open: theory and practice.">
   <PageHero
-    eyebrow="The open foundation"
-    title="Co-create the platform."
-    lede="entrosana is a foundation that hosts dedicated tracks — operational tools contributed by aligned practitioners or built in-house. One deterministic engine underneath, many tools on top." />
-  <SealRule sig="c2e7a9…f013" />
+    eyebrow="Learning Hub · for young and old"
+    title="Where learning theory meets practice."
+    lede="Students, parents and teachers working directly with contributors on self-deployed projects: purely educational, or a real-life use case with a scalable product, depending on the interests involved.">
+    <div class="actions">
+      <a class="btn btn--hub" href={ext.hub}>Access entrosana Hub →</a>
+      <a class="link" href={href("/request-access/?interest=hub")}>Join through a pilot</a>
+    </div>
+    <div slot="aside" class="card plan">
+      <p class="tag">entrosana.app · planned structure</p>
+      <p class="small muted">One sign-in for everyone in an organisation, with the work and the record in the same place.</p>
+      <ul class="plan__list">
+        {structure.map(([k, v]) => <li><b>{k}</b><span>{v}</span></li>)}
+      </ul>
+    </div>
+  </PageHero>
 
-  <!-- Contribution model -->
+  <!-- Who it's for -->
   <section class="section">
     <div class="wrap">
-      <span class="eyebrow">The contribution model</span>
-      <h2 class="display hub__h">Carry a scope we don't cover yet? Propose a track.</h2>
-      <div class="grid grid--3 steps">
-        {steps.map(([k, v], i) => (
-          <div class="card step">
-            <span class="step__n mono">{String(i + 1).padStart(2, "0")}</span>
-            <h3>{k}</h3>
-            <p>{v}</p>
-          </div>
+      <p class="eyebrow">Who it’s for</p>
+      <h2 class="h2">Learners, parents, teachers and schools.</h2>
+      <div class="grid grid--3">
+        {people.map((p) => (
+          <article class="card">
+            <p class="tag">{p.tag}</p>
+            <h3>{p.who}</h3>
+            <p>{p.body}</p>
+          </article>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- Open + runway -->
-  <section class="section section--ink">
+  <!-- What the Hub does -->
+  <section class="section">
     <div class="wrap">
-      <span class="eyebrow">Open by default</span>
-      <p class="human hub__lead">Open where it makes sense, closed where data residency demands it.</p>
-      <div class="facts">
-        {open.map(([k, v]) => (
-          <div class="fact"><span class="fact__k">{k}</span><p class="fact__v">{v}</p></div>
-        ))}
+      <p class="eyebrow">What the Hub does</p>
+      <h2 class="h2">Where the work is agreed, and where it runs.</h2>
+      <p class="intro">Someone needs a module or a connector, someone else can build it: the Hub is where they meet. And it is where the work then runs, with the record sitting beside it rather than buried in settings.</p>
+      <div class="grid grid--2" data-shape="ladder">
+        <article class="card">
+          <div class="card__head"><h3>The market</h3><span class="chip">open to requests</span></div>
+          <p class="for">for the people who need work and the people who can do it</p>
+          <p>Request a module built for your context, or propose one you would build yourself. Contributors and the organisations that need the work meet here rather than through an inbox, and what is agreed is scoped in the open under AGPL-3.0.</p>
+          <a class="link" href={href("/modules/#request")}>Request or propose a module</a>
+        </article>
+        <article class="card">
+          <div class="card__head"><h3>The console</h3><span class="chip chip--dev">in development</span></div>
+          <p class="for">for the work itself, and the record beside it</p>
+          <p>One place where projects, the services running for you and the record trail sit together. Every step you finish writes one line, sealed against the one before it, and the chain can be re-verified or exported without our help. Sign-in and the separation between organisations are built; the workspace around them is being filled in.</p>
+          <a class="link" href={ext.hub}>Open the Hub</a>
+        </article>
       </div>
-      <p class="hub__src">
-        <a href="https://gitlab.com/Giansn/entrosana-ai" class="btn btn--ghost" rel="noopener">View the source · gitlab.com/Giansn/entrosana-ai</a>
-      </p>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="section">
+  <!-- Open by default -->
+  <section class="section band">
     <div class="wrap split">
       <div>
-        <span class="eyebrow">Browse what's built</span>
-        <h2 class="display hub__h">See the tools already running on the engine.</h2>
+        <p class="eyebrow">In the open</p>
+        <h2 class="h2">Open by default.</h2>
+        <p>The platform is public under AGPL-3.0: the concept, the service, the infrastructure adaptation and the progressive deployment. Only deployment secrets and customer data stay private. Whoever contributes to entrosana must declare alignment with human rights.</p>
+        <div class="actions"><a class="btn btn--ghost" href={ext.source}>View the repository</a></div>
+      </div>
+      <ul class="facts">
+        <li class="fact"><span class="fact__k">Accessible by everyone</span><p class="fact__v">Open to everyone, and anyone can contribute. No geographic restrictions. The default language is English; we currently work in English, German and Spanish, and other languages can be requested.</p></li>
+        <li class="fact"><span class="fact__k">Your data</span><p class="fact__v">The Hub is gated and secured against malicious access. Your data is stored by entrosana in Switzerland, or with a provider you select. Details are on the <a href={href("/privacy/")}>privacy page</a>.</p></li>
+        <li class="fact"><span class="fact__k">One shared cloud</span><p class="fact__v">Contributions share one funded cloud: no per-partner cost negotiations, and no infrastructure bills passed on to schools or learners.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Partnerships -->
+  <section class="section">
+    <div class="wrap split split--stack">
+      <div>
+        <p class="eyebrow">Partnerships</p>
+        <h2 class="h2">Responsible tech, with evidence.</h2>
       </div>
       <div>
-        <p>The back-office assistant and the learning hub are live tracks today. Each is an operational tool with a clear who-it's-for — and a template for the next one.</p>
-        <div class="hub__cta">
-          <a href="/tools" class="btn">View tools</a>
-          <a href="/learn" class="btn btn--ghost">See the learning track</a>
+        <p>The Learning Hub is public-benefit digital infrastructure in the making: human-centred and transparent, verifiable and repairable, built against provider lock-in, and democratically controllable, because every decision can be audited by the people it affects.</p>
+        <p>The same standard applies to the curriculum. A Lehrplan 21 citation and navigation tool is being built so a claim about Lehrplan 21 can be checked against be.lehrplan.ch instead of trusted, whether it comes from a contributor or from a machine. Its source is already public; the <a href={href("/roadmap/")}>roadmap</a> states where it stands.</p>
+        <p>What is developed here is open under AGPL-3.0, so any school, public or private, can inherit it. Foundations and research partners who want to test, measure and scale child-centred learning are welcome.</p>
+        <div class="actions"><a class="btn btn--ghost" href={href("/request-access/?interest=partnership")}>Partner with the Hub</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Take part -->
+  <section class="section band">
+    <div class="wrap split split--stack">
+      <div>
+        <p class="eyebrow">Take part</p>
+        <h2 class="h2">Bring a class, a question, or a commit.</h2>
+      </div>
+      <div>
+        <p>Private schools and parents join through pilot sessions; engineers join through the repository. Both ends meet in the Hub. Working in a domain we do not cover yet? Propose it as a new track: you bring the domain knowledge, and the engine is built to supply the sealed record and the residency guarantees.</p>
+        <div class="actions">
+          <a class="btn" href={href("/request-access/?interest=hub")}>Join the Hub</a>
+          <a class="link" href={ext.contribute}>Contribute</a>
+          <a class="link" href={ext.profile}>Create your profile</a>
         </div>
       </div>
     </div>
   </section>
 </Layout>
 
-<style>
-  .hub__h { font-size: var(--step-3); max-width: 18ch; margin-bottom: 2.5rem; }
-  .steps { align-items: stretch; }
-  .step { display: flex; flex-direction: column; gap: 0.4rem; }
-  .step__n { color: var(--seal); font-size: var(--step-1); }
-  .step p { color: var(--ink-2); }
-  .hub__lead { max-width: 28ch; margin-bottom: 2.5rem; }
-  .hub__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.2rem; }
-  .hub__src { margin-top: 1.75rem; }
+<style is:global>
+.ph .plan {
+  display: flex; flex-direction: column; gap: 1rem;                 /* live .ph__col--b */
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.ph .plan > .tag { order: 3; margin-top: .8rem; letter-spacing: normal; color: var(--seal); }   /* live .tool__who: mono 13.76px seal */
+.ph .plan > p.small { font-size: var(--step-0); color: var(--ink); }    /* live col-B paragraph: 16.8px ink */
+.plan__list {
+  list-style: disc;
+  margin: 0;
+  padding-left: 40px;
+  border: 0;
+}
+.plan__list li { display: list-item; padding: 0; border: 0; color: var(--ink); }
+.plan__list b { font-family: var(--font-sans); font-size: inherit; font-weight: 700; color: var(--ink); }
+.plan__list b::after { content: " "; }
+.plan__list span { font-size: inherit; color: var(--ink); }
+
+/* live /hub/ also loads modules.css: half spacing after the page hero */
+.section.ph + .section { padding-top: clamp(1.75rem, 1rem + 2.5vw, 3.25rem); }
 </style>
