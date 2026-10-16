@@ -3,8 +3,10 @@ import Mark from "./Mark";
 import ThemeToggle from "./ThemeToggle";
 import "../../styles/nav.css";
 
-// Site header as one island (client:load): brand, primary links, the call
-// to action, the theme switch and, on narrow screens, the menu button.
+// Site header as one island (client:load), laid out as on entrosana.com:
+// the header itself is the floating pill; brand, links, theme switch, then
+// the call to action as a ghost pill. Below 760px: burger, theme switch,
+// and a floating menu panel under the pill.
 // Server-rendered first, so every link works before and without JS; with JS
 // off the narrow-screen menu simply stays expanded (see nav.css).
 
@@ -16,7 +18,7 @@ interface Props {
   cta: { href: string; label: string; current: boolean };
 }
 
-const WIDE = "(min-width: 880px)";
+const WIDE = "(min-width: 760px)";   // live breakpoint
 
 export default function SiteNav({ home, homeCurrent, links, cta }: Props) {
   const [open, setOpen] = useState(false);
@@ -51,9 +53,9 @@ export default function SiteNav({ home, homeCurrent, links, cta }: Props) {
 
   return (
     <header class="nav" data-open={String(open)} ref={header}>
-      <div class="wrap nav__bar">
+      <div class="nav__bar">
         <a href={home} class="brand" aria-label="entrosana — home" aria-current={homeCurrent ? "page" : undefined}>
-          <Mark size={30} class="brand__mark" />
+          <Mark size={40} class="brand__mark" />
           <span class="brand__word">entrosana</span>
         </a>
 
@@ -64,24 +66,26 @@ export default function SiteNav({ home, homeCurrent, links, cta }: Props) {
                 <a href={l.href} class="nav__link" aria-current={l.current ? "page" : undefined} onClick={close}>{l.label}</a>
               </li>
             ))}
+            {/* the call to action as the last row of the open phone menu */}
+            <li class="nav__cta-item">
+              <a href={cta.href} class="nav__link nav__link--cta" aria-current={cta.current ? "page" : undefined} onClick={close}>{cta.label}</a>
+            </li>
           </ul>
-          <a href={cta.href} class="btn nav__cta" aria-current={cta.current ? "page" : undefined} onClick={close}>{cta.label}</a>
         </nav>
 
-        <div class="nav__tools">
-          <ThemeToggle />
-          <button
-            ref={burger}
-            class="nav__burger"
-            type="button"
-            aria-expanded={open}
-            aria-controls="site-menu"
-            onClick={() => setOpen(!open)}
-          >
-            <span class="vh">Menu</span>
-            <span class="nav__burger-lines" aria-hidden="true" />
-          </button>
-        </div>
+        <button
+          ref={burger}
+          class="nav__burger"
+          type="button"
+          aria-expanded={open}
+          aria-controls="site-menu"
+          onClick={() => setOpen(!open)}
+        >
+          <span class="vh">Menu</span>
+          <span class="nav__burger-lines" aria-hidden="true" />
+        </button>
+        <ThemeToggle />
+        <a href={cta.href} class="btn btn--ghost nav__cta" aria-current={cta.current ? "page" : undefined}>{cta.label}</a>
       </div>
     </header>
   );

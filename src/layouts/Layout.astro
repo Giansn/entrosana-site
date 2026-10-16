@@ -3,11 +3,13 @@ import "@fontsource/carlito/latin-400.css";
 import "@fontsource/carlito/latin-700.css";
 import "@fontsource/carlito/latin-ext-400.css";
 import "@fontsource/carlito/latin-ext-700.css";
-import "@fontsource-variable/inconsolata/wght.css";
+import "@fontsource/carlito/latin-400-italic.css";
+import "@fontsource/carlito/latin-ext-400-italic.css";
 import "../styles/global.css";
+import incLatin from "../fonts/inconsolata-latin.woff2?url";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
-import { href } from "../lib/site";
+import { href, pagePath } from "../lib/site";
 
 interface Props {
   title?: string;
@@ -28,6 +30,8 @@ const canonical = new URL(Astro.url.pathname.replace(import.meta.env.BASE_URL.re
 const ogImage = new URL("/og.png", Astro.site);
 // Project-page previews (GitHub Pages under /entrosana-site/) stay out of
 // search results; the canonical origin is indexable.
+// live marks the front page on <body> (home-only button and focus details)
+const page = pagePath(Astro.url) === "/" ? "home" : "sub";
 const noindex = import.meta.env.BASE_URL !== "/" || process.env.ASTRO_NOINDEX === "1";
 ---
 <!doctype html>
@@ -40,8 +44,7 @@ const noindex = import.meta.env.BASE_URL !== "/" || process.env.ASTRO_NOINDEX ==
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
     {alternate && <link rel="alternate" hreflang={alternate.lang} href={new URL(alternate.path, Astro.site)} />}
-    <meta name="theme-color" content="#eef7f8" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1b1e24" media="(prefers-color-scheme: dark)" />
+    <link rel="preload" href={incLatin} as="font" type="font/woff2" crossorigin />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="entrosana" />
     <meta property="og:url" content={canonical} />
@@ -53,19 +56,20 @@ const noindex = import.meta.env.BASE_URL !== "/" || process.env.ASTRO_NOINDEX ==
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href={href("/favicon.svg")} type="image/svg+xml" />
     <link rel="apple-touch-icon" href={href("/apple-touch-icon.png")} />
-    <!-- Theme before first paint: an explicit choice wins, otherwise the OS decides. -->
+    <!-- Theme before first paint. As on the live site: dark is the state
+         without an attribute; light only when the toggle stored it. The OS
+         preference is deliberately not consulted (owner's decision). -->
     <script is:inline>
       (function () {
         var d = document.documentElement;
         d.classList.add("js");
         try {
-          var t = localStorage.getItem("entrosana-theme");
-          if (t === "light" || t === "dark") d.setAttribute("data-theme", t);
+          if (localStorage.getItem("entrosana-theme") === "light") d.setAttribute("data-theme", "light");
         } catch (e) {}
       })();
     </script>
   </head>
-  <body>
+  <body data-page={page}>
     <a class="skip" href="#main">Skip to content</a>
     <Nav />
     <main id="main" tabindex="-1">

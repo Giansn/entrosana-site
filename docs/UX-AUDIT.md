@@ -33,7 +33,7 @@ Der Prototyp in diesem Repo übernimmt **Inhalt und Marke der Live-Seite** (Grap
 - **Formulare ohne Backend**: Ohne `PUBLIC_CONTACT_ENDPOINT` öffnet sich das Mailprogramm mit ausgefüllter Nachricht; der Text bleibt auf der Seite. Mit Endpoint (gleiches JSON wie `/wp-json/entrosana/v1/contact`) wird direkt gesendet.
 - **GitHub-Pages-Kopie war kaputt** (CSS 404, fehlender Base-Path) → Workflow übergibt den Base-Path.
 - Alte Routen (`/tools`, `/learn`, `/hosted`, `/hybrid`, `/on-premises`) leiten weiter; URLs mit Schrägstrich wie live (`/service/`); 404-Seite.
-- Rechtstexte (Impressum, Datenschutz EN/DE) **wortgleich** von live übernommen (`src/content/legal/`).
+- Rechtstexte (Impressum, Datenschutz EN/DE) **wortgleich** von live übernommen (`src/legal/`).
 
 ## Offene Punkte für den Eigentümer
 1. **Hub-Status widersprüchlich**: Roadmap „Hub platform · concept“ vs. Hub-Seite „The console · in development, sign-in built“. Beide Texte sind unverändert übernommen; bitte eine Aussage wählen.

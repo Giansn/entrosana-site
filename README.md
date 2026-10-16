@@ -21,7 +21,7 @@ Signature element: the **record illustration** on the home page (`src/components
 - `/hub/` — the Learning Hub (entrosana.app)
 - `/roadmap/` — what is built, what is not, in what order
 - `/request-access/` — contact form (`?interest=<id>` preselects, ids in `src/lib/site.ts`)
-- `/imprint/`, `/privacy/`, `/privacy/de/` — legal texts, verbatim from the live site (`src/content/legal/`)
+- `/imprint/`, `/privacy/`, `/privacy/de/` — legal texts, verbatim from the live site (`src/legal/`)
 - `/tools`, `/learn`, `/hosted`, `/hybrid`, `/on-premises` — redirects from the June 2026 version
 
 ## Build-time settings
