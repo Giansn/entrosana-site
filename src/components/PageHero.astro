@@ -24,6 +24,9 @@ const hasAside = Astro.slots.has("aside");
 .ph .ph__grid { display: block; }
 .ph .ph__main > * { margin: 0; min-width: 0; }                        /* live .ph__col > * { margin: 0 } */
 .ph .ph__main > .eyebrow { margin-bottom: 1.25rem; }                  /* 20px */
+/* live: a grid item there, so no line-box strut above it (roadmap and the
+   legal pages keep live's inline eyebrow and its 6px drop) */
+.ph:not(:has(.glance)):not(:has(+ .legal-wrap)) .ph__main > .eyebrow { display: flex; width: fit-content; }
 
 /* live .display.ph__h */
 .ph .ph__h {
@@ -51,7 +54,7 @@ const hasAside = Astro.slots.has("aside");
     align-items: start;
   }
   .ph:not(.ph--aside):not(:has(+ .legal-wrap)) .ph__main > .eyebrow { grid-column: 1 / -1; grid-row: 1; justify-self: start; }
-  .ph:not(.ph--aside):not(:has(+ .legal-wrap)) .ph__main > .ph__h { grid-column: 1; grid-row: 2 / -1; max-width: 12ch; }    /* 282px */
+  .ph:not(.ph--aside):not(:has(+ .legal-wrap)) .ph__main > .ph__h { grid-column: 1; grid-row: 2 / -1; max-width: 12ch; margin-bottom: 0; }    /* 282px */
   .ph:not(.ph--aside):not(:has(+ .legal-wrap)) .ph__main > :not(.eyebrow):not(.ph__h) {
     grid-column: 2;
     max-width: calc(var(--step-0) * 31.39);                           /* live 62ch of the body face = 527px */
@@ -71,7 +74,7 @@ const hasAside = Astro.slots.has("aside");
   .ph.ph--aside .ph__aside { margin-top: calc(var(--step--1) * 1.6 + 1.25rem); }   /* 42px */
 }
 /* ── roadmap: live hero is a plain section, heading at h2 size (.display.h2.deploy__h) ── */
-.section.ph:has(.glance) { padding-bottom: 0; }
+.section.ph:has(.glance) { padding-bottom: var(--section); }
 .ph:has(.glance) .ph__h {
   max-width: 24ch;                                                    /* 428px */
   margin-bottom: 2.5rem;                                              /* 40px */
@@ -92,6 +95,7 @@ const hasAside = Astro.slots.has("aside");
 /* ── narrow: one column (live max-width 820) ── */
 @media (max-width: 820px) {
   .ph .ph__h { max-width: none; }
+  .ph.ph--aside .ph__aside { margin-top: .5rem; }                     /* live ~15px between the hero columns */
 }
 
 </style>

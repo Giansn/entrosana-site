@@ -54,8 +54,8 @@
     letter-spacing: normal;
     text-transform: uppercase;
     white-space: nowrap;
-    color: var(--muted);
   }
+  .dl .dl__zone { color: var(--muted); }            /* beats .card p on home */
   .dl__zl { left: calc(var(--pad) + 330 * var(--u)); }
   .dl__zo { left: calc(var(--pad) + 576 * var(--u)); }
 
@@ -135,8 +135,8 @@
     font-size: calc(10 * var(--u));
     line-height: 1;
     white-space: nowrap;
-    color: var(--warn);
   }
+  .dl .dl__stop { color: var(--warn); }
   .dl__stop::before {
     content: ""; position: absolute; left: 0; top: calc(3.35 * var(--u));
     width: calc(28 * var(--u)); height: calc(2 * var(--u)); background: var(--warn);
@@ -158,14 +158,18 @@
 /* text ladder (live .diagram-mobile) */
 @container dl (max-width: 618.98px) {
   .dl__grid > * { font-family: var(--font-mono); font-size: var(--step--1); line-height: 1.6; }
-  .dl__zone { text-transform: uppercase; letter-spacing: normal; color: var(--muted); }
+  .dl__zone { text-transform: uppercase; letter-spacing: normal; }
+  .dl .dl__zone, .dl .dl__stop { color: var(--muted); }
   .dl__zo, .dl__line { display: none; }
   .dl__box { display: block; padding: 0; border: 0; background: none; font-weight: 500; color: var(--seal); }
   .dl__box b { font-weight: 500; text-transform: uppercase; }
+  .dl__box span { font-weight: 400; text-transform: none; color: var(--muted); }
   .dl__box span::before { content: " · "; }
-  .dl__arrow, .dl__arrow--seal { display: block; width: auto; height: auto; background: none; color: var(--muted); }
+  .dl__arrow, .dl__arrow--seal { display: block; width: auto; height: auto; background: none; }
+  .dl .dl__arrow { color: var(--muted); }
   .dl__arrow::after { content: "\2193"; }
-  .dl__stop { color: var(--muted); }
+  .dl__a2::after { content: "\2193  stays on controlled hardware"; white-space: pre; }
+  .dl__d2::after { content: "\2193  may go outside"; white-space: pre; }
 }
 
 </style>

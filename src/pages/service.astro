@@ -82,7 +82,7 @@ const tiers = [
   <section class="section" id="deploy">
     <div class="wrap">
       <p class="eyebrow">Where it runs</p>
-      <h2 class="h2">You bring the demand. We provide the base.</h2>
+      <h2 class="h2">You bring the demand.<br /> We provide the base.</h2>
       <p class="intro">Three ways to run it, all in development. For an organisation answerable to the Swiss Data Protection Act (revDSG) or to the GDPR, this choice is the data protection decision: where the data sits, who can reach it, and what record exists of every step.</p>
       <DeployTable />
       <div class="grid grid--3 tiers" data-shape="spectrum">
@@ -120,6 +120,10 @@ const tiers = [
 </Layout>
 
 <style is:global>
+/* the longer title would run to five lines in live's 12ch measure: balance it over the full track */
+@media (min-width: 821px) {
+  body .ph:not(.ph--aside):not(:has(+ .legal-wrap)) .ph__main > .ph__h { max-width: none; text-wrap: balance; }
+}
 .section .tiers { margin-top: 2.4rem; }                              /* live: below the figure */
 .xref { margin-top: 1.25rem; color: var(--muted); }
 

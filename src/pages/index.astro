@@ -23,7 +23,7 @@ import { href, ext } from "../lib/site";
         <ul class="hero__facts" aria-label="Facts">
           <li>Sealed audit record</li>
           <li>Swiss/EU residency</li>
-          <li>Open source · AGPL-3.0</li>
+          <li>Open source · AGPL&#8209;3.0</li>
           <li>Engine in development</li>
         </ul>
       </div>
@@ -71,7 +71,7 @@ import { href, ext } from "../lib/site";
   <section class="section band" id="how">
     <div class="wrap">
       <p class="eyebrow">How we work</p>
-      <h2 class="h2">Built from the ground up, not configured.</h2>
+      <h2 class="h2">Built from the ground up,<br />not configured.</h2>
       <p class="human">Most solutions for educational organisations can only be configured.</p>
       <p class="human small">entrosana opens the room to decide what you need from the ground up: no tools full of functions nobody uses, and no learning tasks designed for repetitive mass learning.</p>
       <ol class="steps">
@@ -119,7 +119,7 @@ import { href, ext } from "../lib/site";
     <div class="wrap split split--stack">
       <div>
         <p class="eyebrow">Where we stand</p>
-        <h2 class="h2">In development. In the open.</h2>
+        <h2 class="h2">In development.<br />In the open.</h2>
       </div>
       <div>
         <p>entrosana is in development, and we say so wherever it matters. The engine behind the back-office tools is public under AGPL-3.0 and is not production software today. No school runs on the engine yet, and modules are delivered by people rather than by software. Pilot access is opening to a small group of Swiss organisations. The aim is systemic: an open service any school and any back office can inherit.</p>
@@ -154,22 +154,22 @@ import { href, ext } from "../lib/site";
   @media (min-width: 861px) {
     .hero__grid {
       grid-template-columns: 1.15fr .85fr;
-      grid-template-rows: auto auto 1fr auto auto auto 1fr;
-      grid-template-areas: "eb eb" "title title" ". demo" "lede demo" "cta demo" "facts demo" ". demo";
+      grid-template-rows: auto auto auto auto auto 1fr;
+      grid-template-areas: "eb eb" "title title" "lede demo" "cta demo" "facts demo" ". demo";
       row-gap: 0;
     }
     .hero__copy { display: contents; }
     .hero__copy > .eyebrow { grid-area: eb; }
     .hero__h { grid-area: title; }
-    .hero__copy > .lede { grid-area: lede; }
+    .hero__copy > .lede { grid-area: lede; margin-top: 1.75rem; }
     .hero__copy > .actions { grid-area: cta; align-self: start; }
     .hero__facts { grid-area: facts; align-self: start; }
     .hero__demo { grid-area: demo; position: relative; margin-top: 1.75rem; }
     /* the accent divider between the columns: 1px, fading at both ends */
     .hero__demo::before {
-      content: ""; position: absolute; top: 50%;
+      content: ""; position: absolute; top: 2.75rem;
       left: calc(-0.5 * clamp(2rem, 4vw, 4.5rem));
-      transform: translate(-50%, -50%);
+      transform: translateX(-50%);
       width: 1px; height: clamp(5.5rem, 26vh, 9.5rem);
       pointer-events: none;
       background: linear-gradient(180deg, transparent,
@@ -203,7 +203,7 @@ import { href, ext } from "../lib/site";
 
   .hero__copy > .lede { margin: 0 0 1rem; }
   @media (min-width: 1000px) {
-    .hero__copy > .lede { margin: 0; font-size: clamp(.95rem, .9rem + .3vw, 1.06rem); }
+    .hero__copy > .lede { margin: 2rem 0 0; font-size: clamp(.95rem, .9rem + .3vw, 1.06rem); }
   }
   .hero .actions { margin-top: 1.9rem; }
 
@@ -212,7 +212,7 @@ import { href, ext } from "../lib/site";
     list-style: none; padding: 0; margin: 0;
     display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem 2rem;
   }
-  @media (min-width: 1000px) { .hero__facts { margin-top: clamp(.9rem, 2vh, 1.35rem); } }
+  @media (min-width: 1000px) { .hero__facts { margin-top: clamp(.9rem, 2vh, 1.35rem); max-width: 28rem; } }
   .hero__facts > li { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 400; line-height: 1.9; color: var(--ink-2); }
   /* = live .hero__demohint */
   .hero__demonote { margin: 0; font-size: .72rem; max-width: 40ch; }
@@ -244,11 +244,12 @@ import { href, ext } from "../lib/site";
   .foundation .link { margin-top: .7rem; }
 
   /* ── the Hub: text, figure at full width, then the data card ── */
-  #hub :global(.hs) { margin-top: .4rem; }
+  #hub :global(.hs) { margin-top: 2.4rem; }
   .hub__text { margin-top: 1.6rem; }
   .hub__text .actions { margin-top: 1rem; }
-  .datanote { margin-top: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
-  .datanote .eyebrow { margin-bottom: .6rem; }
-  .datanote p { color: var(--ink-2); }
-  .datanote :global(.dl) { margin-top: 1rem; }
+  .hub__text .actions .link { font-weight: 400; letter-spacing: normal; }
+  .datanote { margin-top: clamp(1.5rem, 1rem + 2vw, 2.5rem); gap: 0; }
+  .datanote .eyebrow { color: var(--seal); margin-bottom: 1.25rem; }
+  .datanote > p:not(.eyebrow) { color: var(--ink); }
+  .datanote :global(.dl) { margin-top: 1.4rem; }
 </style>

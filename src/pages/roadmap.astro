@@ -59,6 +59,14 @@ const decisions = [
     eyebrow="Roadmap"
     title="What is built, what is not, and in what order."
     lede="entrosana is in development. This page says which parts run today, which do not, and the order we intend to build them. It carries stages rather than dates: an order we can hold is worth more than a date we cannot.">
+    <nav class="toc" aria-label="On this page">
+      <a href="#today">Runs today</a>
+      <a href="#engine">The engine</a>
+      <a href="#tiers">Where it runs</a>
+      <a href="#modules">Modules &amp; the Hub</a>
+      <a href="#decisions">Decisions</a>
+      <a href="#evidence">Evidence</a>
+    </nav>
     <div slot="aside" class="card glance">
       <p class="tag">At a glance</p>
       <ul class="glance__list">
@@ -68,15 +76,6 @@ const decisions = [
       </ul>
     </div>
   </PageHero>
-
-  <nav class="wrap toc" aria-label="On this page">
-    <a href="#today">Runs today</a>
-    <a href="#engine">The engine</a>
-    <a href="#tiers">Where it runs</a>
-    <a href="#modules">Modules &amp; the Hub</a>
-    <a href="#decisions">Decisions</a>
-    <a href="#evidence">Evidence</a>
-  </nav>
 
   <section class="section band" id="today">
     <div class="wrap">
@@ -133,7 +132,7 @@ const decisions = [
   </section>
 
   <section class="section" id="modules">
-    <div class="wrap split split--stack">
+    <div class="wrap split">
       <div>
         <p class="eyebrow">Modules &amp; the Hub</p>
         <h2 class="h2">Available now, because people deliver them.</h2>
@@ -157,6 +156,37 @@ const decisions = [
       <p class="eyebrow">Where the difficulty sits</p>
       <h2 class="h2">Three decisions that are expensive to change later.</h2>
       <p class="intro">The domain work above is ordinary engineering: known, estimable and reversible. These three are not. They were built first because retrofitting any of them means starting again.</p>
+      <div class="diagram diagram--executor">
+        <svg viewBox="0 0 900 300" role="img" aria-label="One executor reads a specification file per accounting backend, so adding a backend is a new specification rather than a fork of the code.">
+          <rect x="330" y="112" width="240" height="76" rx="5" fill="var(--bg-2)" stroke="var(--seal)" stroke-width="2"/>
+          <text x="352" y="144">ONE EXECUTOR</text>
+          <text x="352" y="166" class="small">no vendor knowledge inside</text>
+          <rect x="40" y="30" width="180" height="40" rx="5" fill="none" stroke="var(--line)" stroke-width="2"/>
+          <text x="58" y="55" class="small">CashCtrl · spec</text>
+          <rect x="40" y="86" width="180" height="40" rx="5" fill="none" stroke="var(--line)" stroke-width="2"/>
+          <text x="58" y="111" class="small">bexio · spec</text>
+          <rect x="40" y="142" width="180" height="40" rx="5" fill="none" stroke="var(--line)" stroke-width="2"/>
+          <text x="58" y="167" class="small">Abacus · spec</text>
+          <rect x="40" y="198" width="180" height="40" rx="5" fill="none" stroke="var(--line)" stroke-width="2"/>
+          <text x="58" y="223" class="small">Banana · spec</text>
+          <rect x="40" y="254" width="180" height="40" rx="5" fill="none" stroke="var(--seal)" stroke-width="2" stroke-dasharray="5 5"/>
+          <text x="58" y="279" class="small" style="fill:var(--seal)">the next one · spec</text>
+          <path d="M220 50H280v100M220 106H280M220 162H280M220 218H280v-68M220 274H280v-124" fill="none" stroke="var(--line)" stroke-width="2"/>
+          <path d="M280 150h42" fill="none" stroke="var(--seal)" stroke-width="2"/>
+          <polygon points="322,150 312,145 312,155" fill="var(--seal)"/>
+          <path d="M570 150h60" fill="none" stroke="var(--seal)" stroke-width="2"/>
+          <polygon points="630,150 620,145 620,155" fill="var(--seal)"/>
+          <rect x="638" y="112" width="222" height="76" rx="5" fill="none" stroke="var(--line)" stroke-width="2"/>
+          <text x="660" y="144">THE PROVIDER</text>
+          <text x="660" y="166" class="small">whichever the school runs</text>
+        </svg>
+        <div class="diagram-mobile">
+          <span class="muted">CashCtrl · bexio · Abacus · Banana — each a specification file</span>
+          <strong class="accent">↓ ONE EXECUTOR</strong>
+          <span class="muted">no vendor knowledge inside it</span>
+          <strong class="accent">↓ THE PROVIDER the school already runs</strong>
+        </div>
+      </div>
       <div class="grid grid--3" data-shape="principles">
         {decisions.map((d) => (
           <article class="card">
@@ -224,7 +254,7 @@ const decisions = [
 
 /* ── on this page (prototype-only): live jump links (.link-jump) in the
    place of the hero's .chips line ── */
-.toc { padding: 1.6rem 0 var(--section); }
+.ph .ph__main > .toc { padding: 0; margin-bottom: 1.6rem; }
 .toc a {
   display: inline-block;
   margin: 0 1.4rem 0 0;                                             /* 22.4px */
@@ -258,6 +288,7 @@ const decisions = [
   display: flex; flex-direction: column; gap: .5rem;
   padding: 1.7rem 0;                                                /* 27.2px */
   border-bottom: 1px solid var(--line);
+  border-radius: 14px;                                              /* live .card.tool: the hairline curls up at the ends */
 }
 .stage:last-child { border-bottom: 0; }
 .stage__n { display: none; }                                        /* live shows the number from 820px only */
@@ -311,7 +342,8 @@ const decisions = [
     letter-spacing: .1em;
     color: var(--seal);
   }
-  .stage__head { grid-column: 2; grid-row: 1; align-self: start; }
+  /* chip under the heading in every row: heading + chip overrun the 16rem column */
+  .stage__head { grid-column: 2; grid-row: 1; align-self: start; flex-direction: column; align-items: flex-start; gap: 0; }
   .stage .for { grid-column: 2; grid-row: 2; align-self: start; }
   .stage__body { grid-column: 3; grid-row: 1 / span 2; margin: 0; }
 }
@@ -360,4 +392,6 @@ const decisions = [
 .evidence li::before { content: none; }
 
 #modules .status-list li { margin-bottom: 1rem; }
+#modules .split .h2 { margin-bottom: 0; }
+#decisions .diagram { margin-bottom: 2.4rem; }
 </style>

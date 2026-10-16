@@ -5,8 +5,8 @@ import body from "../../legal/privacy.de.html?raw";
 import { href } from "../../lib/site";
 ---
 <Layout lang="de" title="Datenschutzerklärung" description="Wie entrosana.com mit Daten umgeht: Datenresidenz Schweiz/EU, was die Seite verarbeitet und was sie bewusst nicht erhebt." alternate={{ lang: "en", path: "/privacy/" }}>
-  <PageHero eyebrow="Datenschutz" title="Datenschutzerklärung" lede="Was diese Seite und der Hub über Sie wissen, wo es liegt und wo es verarbeitet wird.">
-    <p class="langswitch"><a href={href("/privacy/")} hreflang="en" lang="en">English version</a></p>
+  <PageHero eyebrow="Datenschutz" title="Datenschutzerklärung">
+    <p class="lede">Was diese Seite und der Hub über Sie wissen, wo es liegt und wo es verarbeitet wird. <a href={href("/privacy/")} hreflang="en" lang="en">English version</a>.</p>
   </PageHero>
   <section class="section legal-wrap">
     <div class="wrap">
@@ -14,12 +14,3 @@ import { href } from "../../lib/site";
     </div>
   </section>
 </Layout>
-
-<style is:global>
-.langswitch {                         /* live: the link sits at the end of the lede */
-  font-size: var(--step-1);
-  line-height: 1.6;
-  color: var(--ink-2);
-}
-
-</style>

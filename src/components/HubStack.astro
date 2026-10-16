@@ -16,7 +16,7 @@ import { href } from "../lib/site";
   </div>
   <a class="hs__slab hs__slab--hub" href={href("/hub/")}>
     <span class="hs__k mono">The Hub</span>
-    <span class="hs__v">shared identity · one licence · open under AGPL-3.0</span>
+    <span class="hs__v">shared identity · one licence · open under AGPL&#8209;3.0</span>
   </a>
   <div class="hs__slab hs__slab--record">
     <span class="hs__k mono">Sealed record</span>
@@ -131,6 +131,7 @@ import { href } from "../lib/site";
   .hs__block::before, .hs__slab--record::before { content: "\2193  "; }
   .hs__block .hs__k, .hs__slab--record .hs__k { text-transform: uppercase; }
   .hs__block .hs__v::before, .hs__slab--record .hs__v::before { content: " · "; }
+  .hs__slab--record .hs__v { display: none; }        /* live: one line, "↓ SEALED RECORD" */
 }
 
 </style>

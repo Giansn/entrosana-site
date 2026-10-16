@@ -185,8 +185,10 @@ strong, b { font-weight: 700; }
 .band :is(h1, h2, h3) { color: #F2F3F0; }
 .band p:not([class]) { color: var(--ink-2); }
 body:not([data-page="home"]) .band .eyebrow { color: #9aa0ad; }
-body:not([data-page="home"]) .band p:not([class]) { color: #c7cbd2; }
-:root[data-theme="light"] .band p:not([class]) { color: var(--ink-2); }
+body:not([data-page="home"]) .band p:not([class]),
+body:not([data-page="home"]) .band :is(.intro, .evidence li) { color: #c7cbd2; }
+:root[data-theme="light"] .band p:not([class]),
+:root[data-theme="light"] .band :is(.intro, .evidence li) { color: var(--ink-2); }
 :root[data-theme="light"] .band :is(h1, h2, h3) { color: var(--ink); }
 :root[data-theme="light"] .band .eyebrow { color: var(--ink-2); }
 
@@ -220,11 +222,15 @@ body:not([data-page="home"]) .band p:not([class]) { color: #c7cbd2; }
   .split--stack > :first-child { max-width: 46ch; margin-bottom: 1.6rem; }
   .split--stack > :last-child { max-width: 72ch; }
 }
+/* grid cells do not collapse margins: below 820 only the split gap separates
+   heading and text, as live (its .display.h2 has no margin there) */
+.split--stack > :first-child > :last-child { margin-bottom: 0; }
+.split > div > .h2:last-child { margin-bottom: 0; }
 .stack > * + * { margin-top: 1rem; }
 
 /* ── type helpers ─────────────────────────────────────────────────────── */
 .eyebrow {
-  display: inline-flex; align-items: center; gap: .6em;
+  display: inline-flex; align-items: flex-start; gap: .6em;
   margin: 0 0 1.25rem;
   font-family: var(--font-mono);
   font-size: var(--step--1);
@@ -233,7 +239,8 @@ body:not([data-page="home"]) .band p:not([class]) { color: #c7cbd2; }
   text-transform: uppercase;
   color: var(--seal);
 }
-.eyebrow::before { content: ""; width: 1.6em; height: 1px; background: var(--seal); opacity: .5; }
+/* rule level with the first line, also when the eyebrow wraps (.8em = half the 1.6 line) */
+.eyebrow::before { content: ""; flex: none; width: 1.6em; height: 1px; margin-top: calc(.8em - .5px); background: var(--seal); opacity: .5; }
 
 /* section heading = live .display.h2 */
 .h2 {
@@ -521,6 +528,7 @@ body:not([data-page="home"]) .band p:not([class]) { color: #c7cbd2; }
 .steps > li::before {
   content: counter(step, decimal-leading-zero);
   position: absolute; top: 0; left: 0;
+  box-sizing: content-box;
   width: 2.2rem; height: 2.2rem; display: grid; place-items: center;
   border: 1px solid var(--seal); border-radius: 50%;
   background: var(--bg);                       /* live var(--paper), also on a band */
@@ -937,10 +945,10 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
   color: var(--ink-2);
 }
 #tiers [data-shape="spectrum"] > .card > p:not(.tag) strong { font-weight: 400; }
-/* LIVE QUIRK (light only, ink section): the tier columns turn into white
-   cards with the card shadow, padding unchanged. Drop to keep them open. */
+/* live turns the tier columns into white cards in light (ink section) with no
+   padding, so the text sits flush on the card edge; kept open as in dark */
 @media (min-width: 820px) {
-  :root[data-theme="light"] .band [data-shape="spectrum"] > .card { background: var(--surface); box-shadow: var(--shadow); }
+  :root[data-theme="light"] .band [data-shape="spectrum"] > .card { background: none; box-shadow: none; }
 }
 
 /* /service/ (live §7, 7a): the figure already names the tiers, so the column
@@ -953,7 +961,7 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
   position: absolute; width: 1px; height: 1px; overflow: hidden; white-space: nowrap; clip-path: inset(50%);
 }
 .section .tiers[data-shape="spectrum"] > .card > .for {
-  margin: 0 0 .5rem;
+  margin: .5rem 0;
   font-family: var(--font-mono);
   font-size: var(--step--1);
   line-height: 1.6;
@@ -1031,6 +1039,23 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
 /* heading measures */
 .h2:has(+ .human) { max-width: 24ch; margin-bottom: 2.5rem; }
 #hub .h2 { max-width: 20ch; margin-bottom: 2.5rem; }
+
+/* register-row links stay text-wide in the row grids (live: inline a inside p.tool__more) */
+.section [data-shape] > .card > .link { justify-self: start; border-bottom: 0; }
+/* live draws the offer hover line right under the glyphs */
+.section [data-shape="offer"] > .card > .link:hover { text-decoration: underline 1px; text-underline-offset: .2em; text-decoration-skip-ink: none; }
+/* muted notes stay muted inside cards (.card p would win) */
+.card p.muted, .card .muted { color: var(--muted); }
+/* the band before the footer: one rule, not two */
+main > .band:last-child { border-bottom: 0; }
+/* the stretch below 560px that live gives its tabs */
+@media (max-width: 559.98px) {
+  .choice { gap: 0; }
+  .choice label { flex: 1 1 0; justify-content: center; padding-inline: .5rem; white-space: nowrap; }
+}
+/* a select still on its placeholder reads as a placeholder */
+.field select:has(option[value=""]:checked) { color: var(--muted); }
+.field select option { color: var(--ink); }
 
 /* ── skip link ─────────────────────────────────────────────────────────── */
 .skip {

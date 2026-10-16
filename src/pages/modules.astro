@@ -97,11 +97,14 @@ const areas = [
 
 .avail { display: grid; gap: 1.5rem 2.5rem; }
 @media (min-width: 880px) { .avail { grid-template-columns: 1.5fr 1fr; align-items: end; } }
-.avail .h2 { font-size: var(--step-2); margin-bottom: 1.25rem; }
+.avail .h2 { margin-bottom: 1.25rem; }
+.avail .card__head { max-width: 62ch; margin-bottom: 1.1rem; }   /* chip ends with the text measure */
+.avail__main > .for { margin: 0 0 1.5rem; }                      /* live: 16px + the 8px card gap */
+/* live modules.css: eyebrows are block flex, no line-box strut above them */
+main .eyebrow { display: flex; width: fit-content; max-width: none; }
 .avail__cta { display: grid; gap: 0.9rem; justify-items: start; }
 .market__paths { display: grid; gap: 1.25rem; margin-bottom: 1.5rem; }
 .market__paths h3 { margin-bottom: 0.35rem; }
-.market__paths p { color: var(--ink-2); }
 
 /* facts: live 14rem key column (the 9rem override goes) */
 .market__facts { list-style: none; margin-bottom: 1rem; }
