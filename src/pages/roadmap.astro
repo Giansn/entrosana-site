@@ -16,7 +16,7 @@ const glance: { what: string; state: State; label: string; to: string }[] = [
   { what: "The assistant", state: "planned", label: "planned · last", to: "#engine" },
   { what: "Hosted · Hybrid · On-premises", state: "dev", label: "in development", to: "#tiers" },
   { what: "Modules", state: "live", label: "online & on site", to: "#modules" },
-  { what: "Hub platform", state: "planned", label: "concept", to: "#modules" },
+  { what: "Hub platform", state: "dev", label: "in development", to: "#modules" },
 ];
 
 const today = [
@@ -138,10 +138,10 @@ const decisions = [
         <h2 class="h2">Available now, because people deliver them.</h2>
       </div>
       <div>
-        <p>Modules do not wait on the engine. They are scoped and delivered by educators, social workers and engineers, and they run online and on site today. The Hub as a platform, meaning one sign-in, shared projects and the record visible to parents and teachers, is at concept stage and follows the engine.</p>
+        <p>Modules do not wait on the engine. They are scoped and delivered by educators, social workers and engineers, and they run online and on site today. The Hub runs at <a href={ext.hub}>entrosana.app</a> as a first version: sign-in by mail link, the module catalogue, proposals with a person deciding on each, and the record trail on your device. One sign-in for a whole organisation, shared projects and a record that parents and teachers see together follow the engine.</p>
         <ul class="status-list">
           <li><span class="what">Modules</span><span class="chip chip--live">online &amp; on site</span></li>
-          <li><span class="what">Hub platform</span><span class="chip chip--planned">concept</span></li>
+          <li><span class="what">Hub platform</span><span class="chip chip--dev">in development</span></li>
         </ul>
         <div class="actions">
           <a class="btn" href={href("/request-access/")}>Request access</a>
@@ -210,7 +210,7 @@ const decisions = [
         <li>findings published in the repository</li>
       </ul>
       <p class="human small">Anyone holding the log can re-compute the chain themselves without our cooperation. A stored decision can be re-derived from its inputs and compared against what was recorded. In July an outside reviewer was asked to break the connector layer and reported nine findings; all nine were fixed, and both the brief and the report are in the repository. The gaps that remain are on this page rather than in a drawer.</p>
-      <div class="actions"><a class="link" href={ext.source}>Read the source and the audits</a></div>
+      <div class="actions"><a class="link" href={ext.engineSource}>Read the source and the audits</a></div>
     </div>
   </section>
 
