@@ -4,7 +4,7 @@ import PageHero from "../components/PageHero.astro";
 import { ext, href } from "../lib/site";
 
 type State = "built" | "dev" | "planned" | "live";
-const chip = (s: State) => `chip chip--${s}${s === "planned" ? "" : ""}`;
+const chip = (s: State) => `chip chip--${s}`;
 
 const glance: { what: string; state: State; label: string; to: string }[] = [
   { what: "Signed record", state: "built", label: "built", to: "#today" },
@@ -224,7 +224,7 @@ const decisions = [
 </Layout>
 
 <style is:global>
-/* ── At a glance (prototype-only): drawn as a live register panel (§2e) ── */
+/* ── At a glance (no WordPress counterpart): drawn as a live register panel (§2e) ── */
 .ph .glance {
   display: block;
   padding: .4rem clamp(1.2rem, .6rem + 2vw, 2.6rem);              /* 6.4px 38.4px */
@@ -252,7 +252,7 @@ const decisions = [
 }
 .ph .glance__list a:hover { border-bottom-color: currentColor; color: var(--ink); text-decoration: none; }
 
-/* ── on this page (prototype-only): live jump links (.link-jump) in the
+/* ── on this page (no WordPress counterpart): live jump links (.link-jump) in the
    place of the hero's .chips line ── */
 .ph .ph__main > .toc { padding: 0; margin-bottom: 1.6rem; }
 .toc a {
