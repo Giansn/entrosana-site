@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import PageHero from "../components/PageHero.astro";
 import ContactForm from "../components/islands/ContactForm";
-import { href, interests, MAIL } from "../lib/site";
+import { ext, href, interests, MAIL } from "../lib/site";
 ---
 <Layout title="Request pilot access for Swiss schools" description="Pilot access to entrosana is opening to a small group of Swiss schools and organisations. Tell us who you are and whether the back office, the Hub or the modules are the fit.">
   <PageHero
@@ -15,6 +15,7 @@ import { href, interests, MAIL } from "../lib/site";
       <div class="access__form">
         <h2 class="vh">Access request form</h2>
         <ContactForm client:idle interests={interests} mail={MAIL} />
+        <p class="small muted">To propose a module or join a project, go straight to the Hub; no account needed: <a href={ext.contribute}>entrosana.app/contribute</a>.</p>
       </div>
     </div>
   </section>

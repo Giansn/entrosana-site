@@ -50,5 +50,5 @@ export const interests = [
   { id: "modules", label: "Modules · for our school or family" },
   { id: "contributing", label: "Contributing · connector or module" },
   { id: "partnership", label: "Partnership · foundation or research" },
-  { id: "track", label: "Proposing · a new domain or track" },
+  { id: "track", label: "Proposing · a new domain" },   // id kept for old ?interest= links
 ] as const;
