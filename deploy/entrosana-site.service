@@ -1,12 +1,12 @@
 [Unit]
-Description=entrosana marketing site (static, sirv) on :4321 — behind Tailscale Funnel
+Description=entrosana.com (static, sirv) on 127.0.0.1:4321, behind the Cloudflare tunnel and the Tailscale Funnel
 After=network-online.target
 
 [Service]
 Type=simple
 WorkingDirectory=/home/g2thek/entrosana-site
 Environment=PORT=4321
-Environment=HOST=0.0.0.0
+Environment=HOST=127.0.0.1
 Environment=NODE_ENV=production
 ExecStart=/usr/bin/node /home/g2thek/entrosana-site/server.mjs
 Restart=always

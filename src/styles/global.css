@@ -1,5 +1,6 @@
 /* entrosana — design system, matched to entrosana.com (live theme CSS,
-   measured 2026-10-16). Dark is the state without an attribute; light only via
+   measured 2026-10-16). In comments across this site, «live» means that
+   WordPress theme, the one this site was ported from. Dark is the state without an attribute; light only via
    the toggle ([data-theme="light"]). The OS preference never switches theme;
    on light-OS machines the dark tones sit one step lighter, as on live. */
 
@@ -26,7 +27,7 @@
   --seal:      #2bd4e8;
   --seal-2:    #7FE7F3;   /* new: live --seal-2 */
   --seal-ink:  #071316;   /* live --btn-fg */
-  --seal-soft: color-mix(in srgb, var(--seal) 10%, transparent); /* prototype-only, no live token */
+  --seal-soft: color-mix(in srgb, var(--seal) 10%, transparent); /* no WordPress counterpart */
   --verify:    #2FB89E;
   --warn:      #D2685C;
   --shadow:    0 1px 2px rgba(0,0,0,.35),0 4px 12px rgba(0,0,0,.30);            /* live --shadow-1 */
@@ -293,7 +294,7 @@ body:not([data-page="home"]) .band :is(.intro, .evidence li) { color: #c7cbd2; }
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-/* live site.css: ring without radius change (the prototype's border-radius:4px squared the pills on focus) */
+/* live site.css: ring without radius change (a border-radius on focus squared the pills) */
 :focus-visible { outline: 2px solid var(--seal); outline-offset: 2px; }
 
 /* ── actions ───────────────────────────────────────────────────────────── */
@@ -632,7 +633,7 @@ body:not([data-page="home"]) .band :is(.intro, .evidence li) { color: #c7cbd2; }
   outline: 2px solid var(--seal);
   outline-offset: 1px;
 }
-/* prototype-only (live has no invalid state): kept, in the warn token */
+/* invalid state (no WordPress counterpart), in the warn token */
 .field input:user-invalid, .field select:user-invalid, .field textarea:user-invalid { border-color: var(--warn); }
 .field .hint { font-size: var(--step--1); color: var(--muted); margin: 0; }
 fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
@@ -677,7 +678,7 @@ fieldset.field { border: 0; margin: 0; padding: 0; min-width: 0; }
 .market__form .form-status { margin: 0; max-width: 34ch; }
 .market__form .form > p.small { margin: .2rem 0 0; max-width: 40ch; }
 
-/* prototype-only: the request/propose switch, drawn in the live selection
+/* the request/propose switch (no WordPress counterpart), drawn in the live selection
    language of modules.css (.tabs): seal fill plus a 2px bar, on a fading rule */
 .choice { position: relative; display: flex; flex-wrap: wrap; gap: .3rem; }
 .choice::after {

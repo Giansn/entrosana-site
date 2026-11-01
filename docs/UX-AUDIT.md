@@ -41,3 +41,10 @@ Der Prototyp in diesem Repo übernimmt **Inhalt und Marke der Live-Seite** (Grap
 3. **Datenschutz beschreibt die Auslieferung über Cloudflare an den eigenen Server.** Wird der Prototyp anders gehostet (z. B. GitHub Pages), muss Abschnitt 1 angepasst werden.
 4. **Kontakt-Endpoint** festlegen (WP-Endpoint mit CORS, oder `/request` im Hub), sonst bleibt der Mail-Fallback.
 5. **Hub-Anmeldung**: Bug gefunden und behoben in [Giansn/entrosana-app#1](https://github.com/Giansn/entrosana-app/pull/1) (Altersschalter unsichtbar + Absturz beim Absenden).
+
+## Stand 2026-10-31 (Launch-Bereitschaft)
+1. **Hub-Status**: Roadmap nennt den Hub jetzt «in development» und beschreibt die erste Fassung auf entrosana.app (Anmeldung per Mail-Verweis, Katalog, Vorschläge mit Entscheid, Spur auf dem Gerät). Was noch fehlt (eine Anmeldung je Organisation, geteilte Projekte, gemeinsame Spur), steht weiter als «folgt der Engine». Bitte bestätigen.
+2. **Datenschutz**: Der Verweis auf das Verzeichnis «am Ende dieser Erklärung» ist gestrichen; es gibt es auf Anfrage, wie in den Docs des Hubs. Sicherungskopie in beiden Sprachen bei Proton Drive (die deutsche Seite auf WordPress nennt noch Cloudflare R2). Datum 31. Oktober 2026.
+3. **Auslieferung**: Die Seite läuft hinter demselben Cloudflare-Tunnel wie heute WordPress (`deploy/DEPLOY.md`). Abschnitt 1 des Datenschutzes bleibt damit richtig.
+4. **Kontakt-Endpoint**: weiterhin offen. Vorschläge gehen jetzt in den Hub (`/contribute/submit`); Anfragen und «Request access» öffnen ohne Endpoint das Mailprogramm.
+5. **Hub-Anmeldung**: In Giansn/entrosana-app neu behoben (launch-readiness batch 1); PR #1 ist veraltet.

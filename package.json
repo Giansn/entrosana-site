@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "serve": "node server.mjs",
     "deploy": "astro build && systemctl --user restart entrosana-site",
-    "deploy:pages": "astro build && echo 'push to master to publish GitHub Pages (entrosana.com)'"
+    "deploy:pages": "astro build && echo 'push to master to publish the GitHub Pages preview copy (not entrosana.com)'"
   },
   "dependencies": {
     "@astrojs/preact": "^4.1.3",
