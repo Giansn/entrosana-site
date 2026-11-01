@@ -7,6 +7,7 @@ type State = "built" | "dev" | "planned" | "live";
 const chip = (s: State) => `chip chip--${s}`;
 
 const glance: { what: string; state: State; label: string; to: string }[] = [
+  { what: "Hub · entrosana.app", state: "live", label: "first version live", to: "#hub" },
   { what: "Signed record", state: "built", label: "built", to: "#today" },
   { what: "Sign-in & separation", state: "built", label: "built", to: "#today" },
   { what: "Provider-neutral connectors", state: "dev", label: "offline only", to: "#today" },
@@ -16,7 +17,6 @@ const glance: { what: string; state: State; label: string; to: string }[] = [
   { what: "The assistant", state: "planned", label: "planned · last", to: "#engine" },
   { what: "Hosted · Hybrid · On-premises", state: "dev", label: "in development", to: "#tiers" },
   { what: "Modules", state: "live", label: "online & on site", to: "#modules" },
-  { what: "Hub platform", state: "dev", label: "in development", to: "#modules" },
 ];
 
 const today = [
@@ -30,7 +30,7 @@ const today = [
 
 const engine = [
   { name: "Onboarding", state: "dev" as State, label: "in development · next", why: "no organisation can be taken on without these",
-    body: "An organisation register, so a school exists as a record rather than only as a claim in a token. Status changes, so an invoice can be marked paid and a contract signed. Roles, so a class teacher and the bookkeeper do not see the same thing. Full account handling: password reset, invitation, second factor, sign-out." },
+    body: "The Hub at entrosana.app already signs people in by mail link, without a password, and knows roles and invitations. The engine needs the same for whole organisations: an organisation register, so a school exists as a record rather than only as a claim in a token. Status changes, so an invoice can be marked paid and a contract signed. Roles, so a class teacher and the bookkeeper do not see the same thing. Full account handling: password reset, invitation, second factor, sign-out." },
   { name: "Trust & operation", state: "planned" as State, label: "planned · after onboarding", why: "what an auditor and an operator both need",
     body: "Automated checks running on every change. A written operating procedure covering deployment, secrets, backup and key rotation. Rotation made routine rather than indistinguishable from an attack. An anchor for the log outside the installation, which is what the Swiss sense of <i lang=\"de\">revisionssicher</i> requires." },
   { name: "The domain", state: "planned" as State, label: "planned", why: "the first thing worth showing a school",
@@ -60,10 +60,11 @@ const decisions = [
     title="What is built, what is not, and in what order."
     lede="entrosana is in development. This page says which parts run today, which do not, and the order we intend to build them. It carries stages rather than dates: an order we can hold is worth more than a date we cannot.">
     <nav class="toc" aria-label="On this page">
+      <a href="#hub">The Hub</a>
       <a href="#today">Runs today</a>
       <a href="#engine">The engine</a>
       <a href="#tiers">Where it runs</a>
-      <a href="#modules">Modules &amp; the Hub</a>
+      <a href="#modules">Modules</a>
       <a href="#decisions">Decisions</a>
       <a href="#evidence">Evidence</a>
     </nav>
@@ -76,6 +77,27 @@ const decisions = [
       </ul>
     </div>
   </PageHero>
+
+  <section class="section" id="hub">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow">The Hub · entrosana.app</p>
+        <h2 class="h2">Running now, as a first version.</h2>
+      </div>
+      <div>
+        <p>The Hub is where the work with schools, teachers and contributors happens. It runs at <a href={ext.hub}>entrosana.app</a> today: the module catalogue, sign-in by mail link, proposals with a person deciding on each and giving the reason, roles for contributors and the review team, invitations, and your own data to download or erase at any time. You can look around without an account.</p>
+        <p>Not there yet: one sign-in for a whole organisation, shared projects, and a record that parents and teachers see together. Those follow the engine below.</p>
+        <ul class="status-list">
+          <li><span class="what">Hub · entrosana.app</span><span class="chip chip--live">first version live</span></li>
+          <li><span class="what">Organisations, shared projects</span><span class="chip chip--planned">with the engine</span></li>
+        </ul>
+        <div class="actions">
+          <a class="btn" href={ext.hub}>Open entrosana.app</a>
+          <a class="link" href={ext.hubSource}>The Hub's source</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="section band" id="today">
     <div class="wrap">
@@ -134,14 +156,13 @@ const decisions = [
   <section class="section" id="modules">
     <div class="wrap split">
       <div>
-        <p class="eyebrow">Modules &amp; the Hub</p>
+        <p class="eyebrow">Modules</p>
         <h2 class="h2">Available now, because people deliver them.</h2>
       </div>
       <div>
-        <p>Modules do not wait on the engine. They are scoped and delivered by educators, social workers and engineers, and they run online and on site today. The Hub runs at <a href={ext.hub}>entrosana.app</a> as a first version: sign-in by mail link, the module catalogue, proposals with a person deciding on each, and the record trail on your device. One sign-in for a whole organisation, shared projects and a record that parents and teachers see together follow the engine.</p>
+        <p>Modules do not wait on the engine. They are scoped and delivered by educators, social workers and engineers, and they run online and on site today. The catalogue is in <a href={ext.hub}>the Hub</a>.</p>
         <ul class="status-list">
           <li><span class="what">Modules</span><span class="chip chip--live">online &amp; on site</span></li>
-          <li><span class="what">Hub platform</span><span class="chip chip--dev">in development</span></li>
         </ul>
         <div class="actions">
           <a class="btn" href={href("/request-access/")}>Request access</a>
