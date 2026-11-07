@@ -1,0 +1,19 @@
+[Unit]
+Description=entrosana.com Konsole (Texte, Vorschau, Veröffentlichen) on :8393, tailnet only
+After=network-online.target
+# Nach 5 Fehlstarts in 5 min aufgeben, damit ein Dauerfehler als «failed» sichtbar wird.
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+WorkingDirectory=%h/entrosana-com
+ExecStart=/usr/bin/python3 %h/entrosana-com/konsole/konsole.py
+Environment=PATH=%h/.npm-global/bin:/usr/local/bin:/usr/bin:/bin
+Restart=always
+RestartSec=2
+StandardOutput=append:%h/.sygnif/logs/entrosana-admin.log
+StandardError=append:%h/.sygnif/logs/entrosana-admin.log
+
+[Install]
+WantedBy=default.target

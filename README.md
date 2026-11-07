@@ -28,6 +28,13 @@ Signature element: the **record illustration** on the home page (`src/components
 - `/wp-content/uploads/…`: WordPress files that entrosana.app and others link to, kept at their old URLs
 - `/tools`, `/learn`, `/hosted`, `/hybrid`, `/on-premises`: redirects from the June 2026 version
 
+## Konsole (Texte bearbeiten ohne Editor)
+`konsole/konsole.py` läuft auf e14 als `entrosana-admin.service` (Tailnet, :8393). Sie zeigt die Texte jeder Quelldatei
+unter `src/` als Felder, schreibt Änderungen an ihrer Byteposition zurück (Markup, Klassen und Ausdrücke bleiben),
+baut `dist/` für die Vorschau auf :8394 (`entrosana-staging.service`) und veröffentlicht per
+`~/entrosana-metanet/deploy-com.sh` mit Commit und Push auf den Site-Branch. Unit-Dateien liegen in `konsole/`.
+Prüfen ohne zu schreiben: `python3 konsole/konsole.py --pruefen`.
+
 ## Build-time settings
 | Variable | Effect |
 |---|---|
