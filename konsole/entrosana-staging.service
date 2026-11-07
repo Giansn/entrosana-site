@@ -1,0 +1,13 @@
+[Unit]
+Description=entrosana.com Vorschau (dist/ der Konsole, tailnet only) on :8394
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/entrosana-com
+ExecStart=/usr/bin/python3 -m http.server 8394 --bind 100.115.236.97 --directory %h/entrosana-com/dist
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,18 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PageHero from "../components/PageHero.astro";
+import { href, nav } from "../lib/site";
+---
+<Layout title="Page not found">
+  <PageHero eyebrow="404" title="This page does not exist." lede="The link may be old: the site was reorganised. One of these is probably what you were looking for.">
+    <ul class="lost">
+      {nav.map((l) => <li><a class="link" href={href(l.href)}>{l.label}</a></li>)}
+      <li><a class="link" href={href("/request-access/")}>Request access</a></li>
+      <li><a class="link" href={href("/")}>Home</a></li>
+    </ul>
+  </PageHero>
+</Layout>
+
+<style>
+  .lost { list-style: none; display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; margin-top: 1rem; }
+</style>

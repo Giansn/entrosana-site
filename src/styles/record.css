@@ -1,0 +1,47 @@
+/* Record illustration island (RecordChain.tsx). */
+.rc {
+  margin: 0; max-width: 460px; overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: var(--shadow-2);
+  padding: 1.25rem 1.4rem 1.3rem;
+}
+/* live .receipt__perf */
+.rc::before {
+  content: ""; display: block; height: 10px;
+  margin: -1.25rem -1.4rem 1.25rem;
+  background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px);
+}
+.rc__cap { margin-bottom: 0.9rem; }
+.rc__log { list-style: none; display: grid; border-top: 1px dashed var(--line); }
+.rc__e {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.15rem 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+.rc__meta { grid-column: 1; font-size: 0.8rem; color: var(--muted); }
+.rc__what { grid-column: 1; font-size: 0.98rem; line-height: 1.4; color: var(--ink); }
+.rc__seal { grid-column: 1; font-size: 0.8rem; color: var(--muted); }
+.rc__seal code { font-family: var(--font-mono); color: var(--seal); }
+.rc__check {
+  grid-column: 2; grid-row: 1 / span 3; align-self: center;
+  display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-family: var(--font-mono); font-weight: 700;
+  color: var(--verify);
+}
+.rc__check[data-ok="false"] { color: var(--warn); }
+.rc__e[data-changed] .rc__what {
+  color: var(--warn);
+  text-decoration: underline wavy; text-decoration-thickness: 1px; text-underline-offset: 0.25em;
+}
+.rc__status { margin: 0.9rem 0 0; max-width: none; font-size: 0.86rem; color: var(--verify); }
+.rc__status[data-state="warn"] { color: var(--warn); }
+.rc__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; margin-top: 1rem; }
+.rc__btn { min-height: 44px; }
+.rc__hint { flex: 1 1 14rem; }
+/* without JS the button would do nothing: show the intact record only */
+html:not(.js) .rc__foot { display: none; }
