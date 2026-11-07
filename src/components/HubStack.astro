@@ -1,17 +1,17 @@
 ---
-// "One ground. What stands on it." Tools and modules stand on the Hub; the
+// "One ground. What stands on it." Modules and tools stand on the Hub; the
 // sealed record runs underneath all of it. Strata, read bottom-up.
 import { href } from "../lib/site";
 ---
-<figure class="hs" aria-label="The Hub carries Tools and Modules; the sealed record runs underneath both">
+<figure class="hs" aria-label="The Hub carries Modules and Tools; the sealed record runs underneath both">
   <div class="hs__top">
-    <a class="hs__block" href={href("/service/")}>
-      <span class="hs__k mono">Tools</span>
-      <span class="hs__v">back office</span>
-    </a>
     <a class="hs__block" href={href("/modules/")}>
       <span class="hs__k mono">Modules</span>
       <span class="hs__v">classroom</span>
+    </a>
+    <a class="hs__block" href={href("/service/")}>
+      <span class="hs__k mono">Tools</span>
+      <span class="hs__v">back office</span>
     </a>
   </div>
   <a class="hs__slab hs__slab--hub" href={href("/hub/")}>
@@ -68,7 +68,7 @@ import { href } from "../lib/site";
   .hs__slab--hub .hs__k { color: var(--seal); }
   .hs__slab--hub:hover { border-color: var(--seal); }
 
-  /* TOOLS / MODULES: rect 290×75 rx 5, stroke 2 --seal, fill --paper-2 */
+  /* MODULES / TOOLS: rect 290×75 rx 5, stroke 2 --seal, fill --paper-2 */
   .hs__block {
     z-index: 2;
     top: calc(var(--pad) + 131 * var(--u));
@@ -120,7 +120,7 @@ import { href } from "../lib/site";
   .hs__slab--record .hs__v { display: inline; margin: 0 0 0 1ch; }
 }
 
-/* text ladder (live .diagram-mobile): THE HUB / ↓ TOOLS / ↓ MODULES / ↓ SEALED RECORD */
+/* text ladder (live .diagram-mobile): THE HUB / ↓ MODULES / ↓ TOOLS / ↓ SEALED RECORD */
 @container hs (max-width: 618.98px) {
   .hs__top { display: contents; }
   .hs > *, .hs__top > * { font-family: var(--font-mono); font-size: var(--step--1); line-height: 1.6; }

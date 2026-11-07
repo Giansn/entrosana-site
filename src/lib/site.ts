@@ -35,10 +35,9 @@ export const ext = {
 
 /** Primary navigation. One name per area, used everywhere on the site. */
 export const nav = [
-  { href: "/service/", label: "Back office" },
   { href: "/modules/", label: "Modules" },
+  { href: "/service/", label: "Back office" },
   { href: "/hub/", label: "Hub" },
-  { href: "/roadmap/", label: "Roadmap" },
 ] as const;
 
 /** Values of the "Interested in" field; `?interest=<id>` preselects one. */

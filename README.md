@@ -17,7 +17,7 @@ The brand of entrosana.com: graphite `#1b1e24` and cyan `#2bd4e8` in dark; in li
 Signature element: the **record illustration** on the home page (`src/components/RecordChain.astro` + `islands/RecordChain.tsx`). Three log entries are sealed with real SHA-256; rewriting one makes the re-computed chain fail from that entry on.
 
 ## Routes
-- `/`: home (two services, the record, how we work, the Hub, where we stand)
+- `/`: home (modules and the back office, how we work, the Hub, where we stand, the record last)
 - `/service/`: back office (tools, consulting, data boundary, connectors, where it runs `#deploy`, pilot)
 - `/modules/`: learning modules (first module, three areas, request form; proposals go to the Hub)
 - `/hub/`: the Learning Hub (entrosana.app)
