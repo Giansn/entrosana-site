@@ -539,11 +539,14 @@ body:not([data-page="home"]) .band :is(.intro, .evidence li) { color: #c7cbd2; }
 .steps > li::after { content: none; }
 @media (min-width: 820px) {
   .steps { padding-top: 4.2rem; }
-  /* the axis stops at the third node */
+  /* the axis runs on past the third node to the right edge of the page
+     (right: 50% - 50vw reaches the viewport edge; the section clips the
+     scrollbar's width, see .section:has(.steps)) */
   .steps::before {
-    content: ""; position: absolute; top: 1.45rem; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, var(--seal) 0, var(--line) 64%, transparent 69%);
+    content: ""; position: absolute; top: 1.45rem; left: 0; right: calc(50% - 50vw); height: 1px;
+    background: linear-gradient(90deg, var(--seal) 0, var(--line) 45rem, var(--line));
   }
+  .section:has(.steps) { overflow-x: clip; }
   .steps > li { padding-top: 0; }
   .steps > li::before { top: -3.85rem; }
   /* arrowhead in the gutter, pointing at the next step */
