@@ -169,7 +169,7 @@ class Vorlage:
 
     def __init__(self, s: str, start: int, end: int):
         self.s, self.i, self.end = s, start, end
-        self.nodes, self.stack = [], []
+        self.nodes, self.stack, self.elements = [], [], []
 
     def flush(self, a: int, b: int):
         seg = self.s[a:b]
@@ -177,8 +177,22 @@ class Vorlage:
         if not st:
             return
         a2 = a + (len(seg) - len(seg.lstrip()))
-        self.nodes.append({"kind": "T", "a": a2, "b": a2 + len(st),
-                           "label": self.stack[-1] if self.stack else "text"})
+        top = self.stack[-1] if self.stack else None
+        self.nodes.append({"kind": "T", "a": a2, "b": a2 + len(st), "el": top,
+                           "label": (self.elements[top]["name"] or "fragment") if top is not None else "text"})
+
+    def betrete(self, name: str, start: int):
+        """Öffnet ein Element: Spanne ab «<», Inhalt ab der aktuellen Position."""
+        idx = len(self.elements)
+        self.elements.append({"name": name, "a": start, "ca": self.i, "cb": None, "b": None})
+        self.stack.append(idx)
+        self.template(name)
+        self.stack.pop()
+
+    def schliesse(self, start: int):
+        if self.stack:
+            e = self.elements[self.stack[-1]]
+            e["cb"], e["b"] = start, self.i
 
     def scan_tag(self):
         s = self.s
@@ -203,7 +217,7 @@ class Vorlage:
         self.i = j
         return closing, name, attrs, selfclosing
 
-    def open_element(self, name, attrs, selfclosing):
+    def open_element(self, name, attrs, selfclosing, start):
         for an, va, vb in attrs:
             if an.lower() in ATTRS and glatt(self.s[va:vb]):
                 self.nodes.append({"kind": "A", "a": va, "b": vb, "label": an})
@@ -214,9 +228,7 @@ class Vorlage:
             return
         if selfclosing or low in VOID:
             return
-        self.stack.append(name)
-        self.template(name)
-        self.stack.pop()
+        self.betrete(name, start)
 
     def template(self, close_name):
         s = self.s
@@ -239,15 +251,15 @@ class Vorlage:
                 if s.startswith("</>", self.i) or s.startswith("<>", self.i):
                     if text_start is not None:
                         self.flush(text_start, self.i); text_start = None
+                    start = self.i
                     if s.startswith("</>", self.i):
                         self.i += 3
                         if close_name == "":
+                            self.schliesse(start)
                             return
                         continue
                     self.i += 2
-                    self.stack.append("")
-                    self.template("")
-                    self.stack.pop()
+                    self.betrete("", start)
                     continue
                 if not TAG_RE.match(s, self.i):
                     if text_start is None:
@@ -256,12 +268,14 @@ class Vorlage:
                     continue
                 if text_start is not None:
                     self.flush(text_start, self.i); text_start = None
+                start = self.i
                 closing, name, attrs, selfclosing = self.scan_tag()
                 if closing:
                     if close_name is not None and name == close_name:
+                        self.schliesse(start)
                         return
                     continue
-                self.open_element(name, attrs, selfclosing)
+                self.open_element(name, attrs, selfclosing, start)
                 continue
             if c == "{":
                 if text_start is not None:
@@ -294,15 +308,15 @@ class Vorlage:
             if c == "/" and s.startswith("/*", self.i):
                 k = s.find("*/", self.i + 2); self.i = self.end if k < 0 else k + 2; continue
             if c == "<" and s.startswith("<>", self.i):
+                start = self.i
                 self.i += 2
-                self.stack.append("")
-                self.template("")
-                self.stack.pop()
+                self.betrete("", start)
                 continue
             if c == "<" and JSX_RE.match(s, self.i):
+                start = self.i
                 closing, name, attrs, selfclosing = self.scan_tag()
                 if not closing:
-                    self.open_element(name, attrs, selfclosing)
+                    self.open_element(name, attrs, selfclosing, start)
                 continue
             self.i += 1
 
@@ -367,11 +381,9 @@ def daten_nodes(s: str, start: int, end: int):
     return nodes
 
 
-def lies(key: str):
-    """(Quelltext, Stellen, Gruppen) einer Datei. Stellen tragen text = Anzeigeform."""
-    p = SRC / key
-    s = p.read_text(encoding="utf-8")
-    nodes = []
+def zerlege(key: str, s: str):
+    """(Stellen, Elemente, Vorlagenbeginn) für den Text s einer Datei key."""
+    nodes, elements = [], []
     t_start, t_end = 0, len(s)
     if key.endswith(".ts"):
         nodes = daten_nodes(s, 0, len(s))
@@ -385,7 +397,16 @@ def lies(key: str):
         v = Vorlage(s, t_start, t_end)
         v.template(None)
         nodes += v.nodes
+        elements = v.elements
     nodes.sort(key=lambda n: n["a"])
+    return nodes, elements, t_start
+
+
+def lies(key: str):
+    """(Quelltext, Stellen, Gruppen, Elemente) einer Datei. Stellen tragen text = Anzeigeform."""
+    p = SRC / key
+    s = p.read_text(encoding="utf-8")
+    nodes, elements, t_start = zerlege(key, s)
     for i, n in enumerate(nodes):
         n["i"] = i
         raw = s[n["a"]:n["b"]]
@@ -395,7 +416,7 @@ def lies(key: str):
             n["text"] = glatt(html.unescape(raw))
         else:
             n["text"] = js_unescape(raw)
-    return s, nodes, gruppen(s, nodes, t_start)
+    return s, nodes, gruppen(s, nodes, t_start), elements
 
 
 def abschnitte(s: str, start: int):
@@ -455,10 +476,52 @@ def pruefe_text(kind: str, t: str):
             raise ValueError("Spitze Klammern sind nicht erlaubt; Zeilenumbrüche nur als <br>")
 
 
+MARK = "\x00LEER\x00"
+# Diese Elemente bleiben stehen, wenn ihr Text geleert wird; alle anderen (p, li,
+# h2, span, a, b, …) verschwinden samt Zeile, sobald nichts mehr in ihnen steht.
+STRUKTUR = {"", "td", "th", "tr", "table", "thead", "tbody", "tfoot", "section", "div", "main", "nav",
+            "header", "footer", "html", "head", "body", "ul", "ol", "dl", "details", "article", "figure",
+            "form", "fieldset", "aside", "label", "button"}
+
+
+def leere_zeilen_weg(key: str, out: str) -> str:
+    """Geleerte Textknoten stehen als Marker im Text. Elemente, die nur noch Marker
+    und Leerraum enthalten, verschwinden (von innen nach aussen); am Ende gehen die
+    Marker, ein allein stehender nimmt seine Zeile mit."""
+    for _ in range(8):
+        _n, elements, _t = zerlege(key, out)
+        weg = [e for e in elements if e["cb"] is not None and e["name"].lower() not in STRUKTUR
+               and MARK in out[e["ca"]:e["cb"]] and out[e["ca"]:e["cb"]].replace(MARK, "").strip() == ""]
+        if not weg:
+            break
+        for e in sorted(weg, key=lambda e: e["a"], reverse=True):
+            out = out[:e["a"]] + MARK + out[e["b"]:]
+    while True:
+        k = out.rfind(MARK)
+        if k < 0:
+            break
+        ls = out.rfind("\n", 0, k) + 1
+        le = out.find("\n", k + len(MARK))
+        le = len(out) if le < 0 else le
+        if out[ls:k].strip() == "" and out[k + len(MARK):le].strip() == "":
+            out = out[:ls] + (out[le + 1:] if le < len(out) else "")
+        else:
+            vor, nach = out[:k], out[k + len(MARK):]
+            # kein doppeltes Leerzeichen und keines direkt hinter «>» oder vor «<»
+            if nach.startswith(" ") and (vor.endswith((" ", ">")) or vor.endswith("\n")):
+                nach = nach[1:]
+            elif vor.endswith(" ") and nach.startswith("<"):
+                vor = vor[:-1]
+            out = vor + nach
+    return out
+
+
 def schreibe(key: str, neu: dict, h: str):
-    """neu = {index: text}. Gibt die Liste der geänderten Stellen zurück."""
+    """neu = {index: text}. Gibt die Liste der geänderten Stellen zurück.
+    Ein leeres Feld entfernt seine Stelle: Text samt Element und Zeile, wenn das
+    Element sonst leer wäre; ein Attribut ganz; eine Datenzeichenkette bleibt leer."""
     p = SRC / key
-    s, nodes, _g = lies(key)
+    s, nodes, _g, _e = lies(key)
     if h and sha(s.encode("utf-8")) != h:
         raise ValueError("Die Datei hat sich seit dem Laden geändert. Neu laden und nochmals ändern.")
     geaendert = []
@@ -473,14 +536,24 @@ def schreibe(key: str, neu: dict, h: str):
             t = t.strip("\n")
         if t == n["text"]:
             continue
-        if not t and n["kind"] != "F":
-            raise ValueError(f"Feld {n['i'] + 1} ({n['label']}) darf nicht leer sein; sonst verschwindet die Stelle.")
         pruefe_text(n["kind"], t)
+        if t == "":
+            if n["kind"] == "A":
+                m = re.search(r'\s*[A-Za-z_:][\w:.-]*\s*=\s*"$', out[:n["a"]])
+                out = out[:m.start()] + out[n["b"] + 1:]
+            elif n["kind"] == "T":
+                out = out[:n["a"]] + MARK + out[n["b"]:]
+            else:
+                out = out[:n["a"]] + out[n["b"]:]
+            geaendert.append((n["label"], n["text"], ""))
+            continue
         enc = enc_text(t) if n["kind"] == "T" else enc_attr(t) if n["kind"] == "A" else js_escape(t)
         out = out[:n["a"]] + enc + out[n["b"]:]
         geaendert.append((n["label"], n["text"], t))
     if not geaendert:
         return []
+    if MARK in out:
+        out = leere_zeilen_weg(key, out)
     sicherung(p)
     p.write_text(out, encoding="utf-8")
     log(f"{key}: {len(geaendert)} Stellen geändert: " + "; ".join(f"{l}: {a[:40]!r} -> {b[:40]!r}" for l, a, b in geaendert[:6]))
@@ -669,7 +742,7 @@ def uebersicht(msg="", err=""):
         rows = ""
         for key, name, pfad, desc in liste:
             try:
-                _s, nodes, _g = lies(key)
+                _s, nodes, _g, _e = lies(key)
                 n = len(nodes)
             except OSError:
                 n = 0
@@ -702,7 +775,7 @@ def uebersicht(msg="", err=""):
 
 def editor(key: str, msg="", err=""):
     name, pfad, desc = EINTRAG[key]
-    s, nodes, grp = lies(key)
+    s, nodes, grp, _e = lies(key)
     h = sha(s.encode("utf-8"))
     st = git_stand()
     offen = any(o.endswith(key) for o in st["offen"])
@@ -726,7 +799,7 @@ def editor(key: str, msg="", err=""):
     vorschau = f"{PREVIEW}{basis}?v={int(time.time())}" + (f"#{frag}" if frag else "")
     body = (
         f"<p><a href='/'>&larr; Übersicht</a></p><h1>{html.escape(name)}</h1>"
-        f"<p class='mono'>{html.escape(key)} · {len(nodes)} Textstellen · {html.escape(desc)}"
+        f"<p class='mono'>{html.escape(key)} · {len(nodes)} Textstellen · {html.escape(desc)} · ein geleertes Feld nimmt seine Zeile mit"
         + (" · <span class='err'>geändert, noch nicht veröffentlicht</span>" if offen else "") + "</p>"
         + (f"<p class='ok'>{html.escape(msg)}</p>" if msg else "")
         + (f"<p class='err'>{html.escape(err)}</p>" if err else "")
@@ -878,7 +951,7 @@ def pruefen():
     fehler = 0
     for gname, liste in DATEIEN:
         for key, name, pfad, desc in liste:
-            s, nodes, grp = lies(key)
+            s, nodes, grp, _e = lies(key)
             arten = {k: sum(1 for n in nodes if n["kind"] == k) for k in "TAF"}
             # Stellen dürfen sich nicht überlappen und keinen Tag-Anfang enthalten
             ende = -1
