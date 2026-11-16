@@ -47,6 +47,7 @@ export const interests = [
   { id: "consulting", label: "Back office · consulting" },
   { id: "hub", label: "Hub · co-created learning" },
   { id: "modules", label: "Modules · for our school or family" },
+  { id: "offer", label: "Individual offer · organisation, group or family" },
   { id: "contributing", label: "Contributing · connector or module" },
   { id: "partnership", label: "Partnership · foundation or research" },
   { id: "track", label: "Proposing · a new domain" },   // id kept for old ?interest= links
