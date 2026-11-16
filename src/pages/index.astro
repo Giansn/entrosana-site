@@ -1,6 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import RecordChain from "../components/RecordChain.astro";
 import HubStack from "../components/HubStack.astro";
 import { href, ext } from "../lib/site";
 ---
@@ -123,20 +122,6 @@ import { href, ext } from "../lib/site";
       </div>
     </div>
   </section>
-
-  <!-- The record, last: what every finished step leaves behind (the illustration moved here from the hero) -->
-  <section class="section" id="record">
-    <div class="wrap split split--record">
-      <div class="record__text">
-        <p class="eyebrow">The record</p>
-        <h2 class="h2">A record underneath both.</h2>
-        <p class="intro">Whatever we touch leaves an entry in a sealed log: what happened, who did it, in what order. You can show it to a parent, a board or an auditor, and they can check it without taking our word for it.</p>
-        <p class="small muted record__note">In the Hub, every finished step writes one line like these, sealed against the one before it. Anyone holding the log can re-compute the chain without our help.</p>
-        <a class="link" href={href("/roadmap/")}>What is built, and what is not</a>
-      </div>
-      <RecordChain />
-    </div>
-  </section>
 </Layout>
 
 <style>
@@ -194,20 +179,4 @@ import { href, ext } from "../lib/site";
   .datanote .eyebrow { color: var(--seal); margin-bottom: 1.25rem; }
   .datanote > p:not(.eyebrow) { color: var(--ink); }
   .datanote .link { margin-top: 1rem; }
-
-  /* ── the record, last and quieter than it was in the hero ── */
-  .record__note { margin: 0 0 1.2rem; max-width: 44ch; }
-  @media (min-width: 820px) {
-    .split--record { grid-template-columns: 1.1fr .9fr; align-items: center; }
-    #record :global(.rc) { justify-self: end; }
-  }
-  #record :global(.rc) { padding: 1rem 1.15rem 1.1rem; max-width: 420px; }
-  #record :global(.rc)::before { margin: -1rem -1.15rem 1rem; }
-  #record :global(.rc__cap) { margin-bottom: .7rem; }
-  #record :global(.rc__e) { padding: .6rem 0; }
-  #record :global(.rc__what) { font-size: .9rem; }
-  #record :global(.rc__meta), #record :global(.rc__seal) { font-size: .74rem; }
-  #record :global(.rc__check) { width: 1.7rem; height: 1.7rem; font-size: .85rem; }
-  #record :global(.rc__status) { font-size: .8rem; }
-  #record :global(.rc__foot) { margin-top: .8rem; }
 </style>

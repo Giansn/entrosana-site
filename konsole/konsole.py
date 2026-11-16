@@ -46,7 +46,7 @@ PATH_ENV = f"{HOME}/.npm-global/bin:/usr/local/bin:/usr/bin:/bin:" + os.environ.
 # und live, Beschreibung). Die Reihenfolge ist die der Übersicht.
 DATEIEN = [
     ("Seiten", [
-        ("pages/index.astro", "Startseite", "/", "Kopf, zwei Dienste, Arbeitsweise, Hub, Stand, Kette"),
+        ("pages/index.astro", "Startseite", "/", "Kopf, zwei Dienste, Arbeitsweise, Hub, Stand"),
         ("pages/modules.astro", "Modules", "/modules/", "erstes Modul, drei Bereiche, Anfrage"),
         ("pages/service.astro", "Back office", "/service/", "Werkzeuge, Datenbild, Anbieter, Betriebsarten, Pilot"),
         ("pages/hub.astro", "Hub", "/hub/", "Aufbau, Rollen, was der Hub tut"),
@@ -59,7 +59,6 @@ DATEIEN = [
         ("components/HubStack.astro", "Hub-Bild", "/#hub", "Beschriftung der Figur auf der Startseite"),
         ("components/DataLayers.astro", "Datenbild", "/service/#data", "zwei Modellschichten, Back office"),
         ("components/DeployTable.astro", "Betriebsarten", "/service/#deploy", "Hosted, Hybrid, On-premises"),
-        ("components/RecordChain.astro", "Kette", "/#record", "Beispielzeilen der versiegelten Einträge"),
         ("layouts/Layout.astro", "Grundgerüst", "/", "Standardtitel und -beschreibung aller Seiten"),
         ("lib/site.ts", "Navigation und Auswahl", "/", "Menüpunkte, Adresse, Interessen im Formular"),
     ]),
