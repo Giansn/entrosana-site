@@ -18,8 +18,8 @@ export function pagePath(url: URL): string {
 export const MAIL = "info@entrosana.com";
 
 // entrosana.app links go to the page itself: the bare origin answers with a
-// redirect to /start. Two repositories, two sources: the engine behind the
-// back office (entrosana/hub) and the Hub at entrosana.app (Giansn/entrosana-app).
+// redirect to /start. Two repositories, two sources: the platform, the Hub at
+// entrosana.app (Giansn/entrosana-app), and the tool collection (entrosana/hub).
 export const ext = {
   hub: "https://entrosana.app/start",
   contribute: "https://entrosana.app/contribute",
@@ -27,7 +27,8 @@ export const ext = {
   account: "https://entrosana.app/me",
   firstModule: "https://entrosana.app/modules/your-value-system",
   lp21Tool: "https://entrosana.app/tools/lehrplan21-citation",
-  engineSource: "https://github.com/entrosana/hub",
+  toolsSource: "https://github.com/entrosana/hub",
+  engineSource: "https://github.com/entrosana/hub",   // same repository; still read by the roadmap page, which was left out of the 2026-11-16 rewording
   hubSource: "https://github.com/Giansn/entrosana-app",
   lp21: "https://github.com/entrosana/hub/tree/main/lp21-mcp",
   arboro: "https://arboro.entrosana.com/demo",

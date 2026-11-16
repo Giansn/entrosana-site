@@ -18,10 +18,10 @@ import { href, ext } from "../lib/site";
         <a class="link" href={href("/modules/#available")}>Try the first module</a>
       </div>
       <ul class="hero__facts" aria-label="Facts">
+        <li>Networking platform · first version live</li>
         <li>Modules online &amp; on site</li>
         <li>Swiss/EU residency</li>
         <li>Open source · AGPL&#8209;3.0</li>
-        <li>Engine in development</li>
       </ul>
     </div>
   </section>
@@ -78,7 +78,7 @@ import { href, ext } from "../lib/site";
     <div class="wrap">
       <p class="eyebrow">One ground. What stands on it.</p>
       <h2 class="h2">The Hub, and what runs in it.</h2>
-      <p class="intro">The Hub is the ground: shared identity, one sealed record, one licence. Modules run in the classroom on it; tools run the back office on it. Both leave the same trail, so what happened can be shown rather than asserted.</p>
+      <p class="intro">The Hub is the networking platform: one place where users find what contributors make. Shared identity, one sealed record, one licence. Everything on it leaves the same trail, so what happened can be shown rather than asserted.</p>
       <HubStack />
       <div class="hub__text">
         <p>Students, parents and teachers work alongside outside contributors, in the open under AGPL-3.0. The Hub is being built at <a href={ext.hub}><b>entrosana.app</b></a>.</p>
@@ -104,7 +104,7 @@ import { href, ext } from "../lib/site";
         <h2 class="h2">In development.<br />In the open.</h2>
       </div>
       <div>
-        <p>entrosana is in development, and we say so wherever it matters. The engine behind the back-office tools is public under AGPL-3.0 and is not production software today. No school runs on the engine yet, and modules are delivered by people rather than by software. Pilot access is opening to a small group of Swiss organisations. The aim is systemic: an open service any school and any back office can inherit.</p>
+        <p>entrosana is in development, and we say so wherever it matters. The platform runs today as a first version at <a href={ext.hub}>entrosana.app</a>, public under AGPL-3.0. It is not finished: parts are still being built, and modules are delivered by people rather than by software. Pilot access is opening to a small group of Swiss organisations. The aim is systemic: an open platform that serves the people who use it and the people who contribute to it.</p>
         <p>Founded by Gianluca Kühne.</p>
         <ul class="status-list" aria-label="Status by part">
           <li><span class="what">Modules</span><span class="chip chip--live">online &amp; on site</span></li>
@@ -115,8 +115,7 @@ import { href, ext } from "../lib/site";
         <p>To see current prototypes, open the Arboro showcase, developed for our first collaboration partner.</p>
         <div class="actions">
           <a class="btn" href={href("/request-access/")}>Request pilot access</a>
-          <a class="link" href={href("/roadmap/")}>Read the roadmap</a>
-          <a class="link" href={ext.engineSource}>View the source</a>
+          <a class="link" href={ext.hubSource}>View the source</a>
           <a class="link" href={ext.arboro}>Arboro showcase</a>
         </div>
       </div>
@@ -158,6 +157,11 @@ import { href, ext } from "../lib/site";
     display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem 2rem;
   }
   @media (min-width: 1000px) { .hero__facts { margin-top: clamp(.9rem, 2vh, 1.35rem); max-width: 28rem; } }
+  /* the facts row may use the full measure: the platform fact is long, and four in one row read as one line */
+  .hero__copy > .hero__facts { max-width: none; }
+  /* below the desktop row the four facts stand two by two, and one per line on phones: no fact left alone by a wrap */
+  @media (max-width: 999.98px) { .hero__facts { display: grid; grid-template-columns: repeat(2, max-content); } }
+  @media (max-width: 559.98px) { .hero__facts { grid-template-columns: 1fr; } }
   .hero__facts > li { font-family: var(--font-mono); font-size: var(--step--1); font-weight: 400; line-height: 1.9; color: var(--ink-2); }
 
   /* live entrance: a 10px rise, no fade, staggered */
