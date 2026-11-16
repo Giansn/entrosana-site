@@ -16,7 +16,7 @@ const people = [
   { who: "The learner", tag: "self-serve",
     body: "The learning experience is designed to adapt to every school age and to find a way into the topic or project you want. If you need support on a topic, the search finds modules and contributions that serve the cause and the kind of learning you are after." },
   { who: "The parent", tag: "support",
-    body: "Unfit learning methods can end in frustration or in the loss of the will to learn. Providing adaptive learning is a difficult task, and we can offer our support with it." },
+    body: "Learning methods that do not fit can end in frustration or in the loss of the will to learn. Providing adaptive learning is a difficult task, and we can offer our support with it." },
   { who: "The teacher & director", tag: "your own Hub",
     body: "Online tools have become a reality for most schools in Switzerland, and often several run side by side, creating confusion and obstacles. We offer a Hub dedicated to your needs, with full open-source insight and the option to self-host and maintain it." },
 ];
@@ -31,7 +31,7 @@ const people = [
       <a class="link" href={href("/request-access/?interest=hub")}>Join through a pilot</a>
     </div>
     <div slot="aside" class="card plan">
-      <p class="tag">entrosana.app · planned structure</p>
+      <p class="tag">entrosana.app · structure</p>
       <p class="small muted">One sign-in for everyone in an organisation, with the work and the record in the same place.</p>
       <ul class="plan__list">
         {structure.map(([k, v]) => <li><b>{k}</b><span>{v}</span></li>)}
