@@ -28,7 +28,6 @@ export const ext = {
   firstModule: "https://entrosana.app/modules/your-value-system",
   lp21Tool: "https://entrosana.app/tools/lehrplan21-citation",
   toolsSource: "https://github.com/entrosana/hub",
-  engineSource: "https://github.com/entrosana/hub",   // same repository; still read by the roadmap page, which was left out of the 2026-11-16 rewording
   hubSource: "https://github.com/Giansn/entrosana-app",
   lp21: "https://github.com/entrosana/hub/tree/main/lp21-mcp",
   arboro: "https://arboro.entrosana.com/demo",

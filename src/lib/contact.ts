@@ -21,7 +21,7 @@ export interface Message {
 
 export async function send(m: Message): Promise<{ status: Status; sent: boolean }> {
   // honeypot: people never see this field, bots fill it in
-  if (m.honeypot) return { status: { state: "ok", parts: ["Sent. We reply personally."] }, sent: true };
+  if (m.honeypot) return { status: { state: "ok", parts: ["Sent."] }, sent: true };
 
   const mailto = `mailto:${MAIL}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}`;
 
@@ -46,7 +46,7 @@ export async function send(m: Message): Promise<{ status: Status; sent: boolean 
       const j = await r.json().catch(() => ({}));
       throw new Error(r.status === 429 ? "Too many messages from here in the last hour." : (j && j.error) || "Sending failed.");
     }
-    return { status: { state: "ok", parts: ["Sent. We reply personally."] }, sent: true };
+    return { status: { state: "ok", parts: ["Sent."] }, sent: true };
   } catch (err) {
     return {
       sent: false,

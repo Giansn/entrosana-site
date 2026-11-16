@@ -73,7 +73,7 @@ export default function ContactForm({ interests, mail }: Props) {
         <button class="btn" type="submit" disabled={busy}>Send request</button>
         <StatusLine status={status} />
       </div>
-      <p class="small muted">Goes to <a href={`mailto:${mail}`}>{mail}</a>. We reply personally.</p>
+      <p class="small muted">Goes to <a href={`mailto:${mail}`}>{mail}</a>.</p>
     </form>
   );
 }

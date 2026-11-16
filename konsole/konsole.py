@@ -50,7 +50,6 @@ DATEIEN = [
         ("pages/modules.astro", "Modules", "/modules/", "erstes Modul, drei Bereiche, Anfrage"),
         ("pages/service.astro", "Back office", "/service/", "Werkzeuge, Datenbild, Anbieter, Betriebsarten, Pilot"),
         ("pages/hub.astro", "Hub", "/hub/", "Aufbau, Rollen, was der Hub tut"),
-        ("pages/roadmap.astro", "Roadmap", "/roadmap/", "gebaut, in Arbeit, geplant; drei Entscheide"),
         ("pages/request-access.astro", "Request access", "/request-access/", "Kontaktseite um das Formular"),
         ("pages/404.astro", "404-Seite", "/404.html", "Text bei unbekannter Adresse"),
     ]),
