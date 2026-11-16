@@ -1,13 +1,18 @@
 // Sending for the contact and module forms (used by the Preact islands).
 //
-// With PUBLIC_CONTACT_ENDPOINT set at build time, a form posts JSON there —
-// the shape the live endpoint /wp-json/entrosana/v1/contact accepts (name,
-// org, email, interest, msg). Without it (a static host has no backend) the
-// same message is composed in the visitor's mail app. Either way, what was
-// typed stays on screen until it has really gone out.
+// A form posts JSON (name, org, email, interest, msg) to the endpoint. On the
+// live site that is /api/contact on the same host: the web server hands it to
+// the Hub's API, which mails it to info@ with the sender as reply address and
+// stores nothing. PUBLIC_CONTACT_ENDPOINT overrides the address at build time.
+// Set it to an empty value, or build under a base path (a preview on a static
+// host has no backend), and the same message is composed in the visitor's
+// mail app instead. Either way, what was typed stays on screen until it has
+// really gone out.
 import { MAIL } from "./site";
 
-const ENDPOINT: string | undefined = import.meta.env.PUBLIC_CONTACT_ENDPOINT || undefined;
+const SET = import.meta.env.PUBLIC_CONTACT_ENDPOINT as string | undefined;
+const ENDPOINT: string | undefined =
+  SET !== undefined ? SET || undefined : import.meta.env.BASE_URL === "/" ? "/api/contact" : undefined;
 
 /** Status line: text, with [label, href] pairs rendered as links. */
 export interface Status { state: "" | "ok" | "warn"; parts: (string | [string, string])[] }

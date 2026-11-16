@@ -17,12 +17,11 @@ The brand of entrosana.com: graphite `#1b1e24` and cyan `#2bd4e8` in dark; in li
 Signature element: the **record illustration** on the home page (`src/components/RecordChain.astro` + `islands/RecordChain.tsx`). Three log entries are sealed with real SHA-256; rewriting one makes the re-computed chain fail from that entry on.
 
 ## Routes
-- `/`: home (modules and the back office, how we work, the Hub, where we stand, the record last)
+- `/`: home (modules and the back office, how we work, the Hub, where we stand)
 - `/service/`: back office (tools, consulting, data boundary, connectors, where it runs `#deploy`, pilot)
 - `/modules/`: learning modules (first module, three areas, request form; proposals go to the Hub)
 - `/hub/`: the Learning Hub (entrosana.app)
-- `/roadmap/`: what is built, what is not, in what order
-- `/request-access/`: contact form (`?interest=<id>` preselects; ids in `src/lib/site.ts`)
+- `/request-access/`: contact form (`?interest=<id>` preselects; ids in `src/lib/site.ts`); it and the request form on `/modules/` send through `POST /api/contact`
 - `/imprint/`, `/privacy/`, `/privacy/de/`: legal texts (`src/legal/`)
 - `/sitemap.xml` (built from `src/pages/`), `/robots.txt`
 - `/wp-content/uploads/…`: WordPress files that entrosana.app and others link to, kept at their old URLs
@@ -39,7 +38,7 @@ Prüfen ohne zu schreiben: `python3 konsole/konsole.py --pruefen`.
 | Variable | Effect |
 |---|---|
 | `ASTRO_BASE` | Serve from a sub-path (the Pages workflow sets it from `actions/configure-pages`) |
-| `PUBLIC_CONTACT_ENDPOINT` | Forms POST JSON (`name, org, email, interest, msg`) here. Unset: forms open the visitor's mail app with the message filled in |
+| `PUBLIC_CONTACT_ENDPOINT` | Where forms POST JSON (`name, org, email, interest, msg`). Unset: `/api/contact` on the same host, which the web server passes to the Hub's API (it mails info@ and stores nothing; the rule is written by `~/entrosana-metanet/build-htaccess.mjs`). Set to an empty value, or built under a base path: forms open the visitor's mail app with the message filled in |
 | `ASTRO_NOINDEX=1` | Adds `noindex` (sub-path builds get it automatically) |
 
 ## Develop
